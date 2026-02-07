@@ -1,0 +1,46 @@
+# P3: Hybrid Baseline — Vector seed → Entity link → Graph expand → Merge
+# No defenses enabled. This is the "attack surface" configuration.
+pipeline:
+  name: hybrid_baseline
+  variant: P3
+
+vector:
+  model: all-MiniLM-L6-v2
+  top_k: 10
+  similarity_threshold: 0.3
+  auth_prefilter: true
+
+graph:
+  enabled: true
+  max_hops: 3           # Intentionally generous for baseline
+  max_branching_factor: 15
+  max_total_nodes: 100
+  expansion_algo: bfs
+  edge_types:
+    - CONTAINS
+    - MENTIONS
+    - BELONGS_TO
+    - DEPENDS_ON
+    - OWNED_BY
+    - DERIVED_FROM
+    - RELATED_TO
+
+entity_linking:
+  enabled: true
+  method: ner_lookup     # ner_lookup | embedding_match | hybrid
+  confidence_threshold: 0.5
+
+merge:
+  strategy: union        # union | intersection | weighted
+  dedup: true
+  max_context_chunks: 20
+
+reranker:
+  enabled: false
+
+defenses:
+  per_hop_authz: false
+  edge_allowlist: false
+  budgets: false
+  trust_weighting: false
+  merge_filter: false

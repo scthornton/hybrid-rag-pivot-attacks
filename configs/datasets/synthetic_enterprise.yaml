@@ -1,0 +1,92 @@
+# Synthetic Enterprise Dataset Configuration
+# Generates a realistic multi-tenant enterprise knowledge base
+
+dataset:
+  name: synthetic_enterprise
+  version: "1.0"
+
+scale:
+  preset: small           # small | medium | large
+  presets:
+    small:
+      total_documents: 1000
+      chunks_per_doc: 3
+      entities_per_chunk: 2
+    medium:
+      total_documents: 10000
+      chunks_per_doc: 4
+      entities_per_chunk: 3
+    large:
+      total_documents: 100000
+      chunks_per_doc: 5
+      entities_per_chunk: 3
+
+chunking:
+  target_size: 300        # tokens
+  overlap: 50             # tokens
+  tokenizer: tiktoken     # tiktoken | spacy
+
+tenants:
+  count: 4
+  names:
+    - acme_engineering
+    - globex_finance
+    - initech_hr
+    - umbrella_security
+  # Distribution of documents per tenant (roughly equal, some variation)
+  distribution: uniform
+
+sensitivity_tiers:
+  - name: PUBLIC
+    fraction: 0.40        # 40% of docs
+    description: "General knowledge, public docs, open-source references"
+  - name: INTERNAL
+    fraction: 0.30
+    description: "Internal wikis, runbooks, architecture docs"
+  - name: CONFIDENTIAL
+    fraction: 0.20
+    description: "M&A plans, vendor contracts, budget details"
+  - name: RESTRICTED
+    fraction: 0.10
+    description: "Credentials, PII, security vulnerabilities, incident details"
+
+domains:
+  engineering:
+    doc_types: [runbook, architecture_doc, code_doc, api_spec, incident_report]
+    entity_types: [System, Service, API, Technology, Version]
+    tenant: acme_engineering
+  finance:
+    doc_types: [budget, contract, vendor_agreement, audit_report, ma_plan]
+    entity_types: [Company, Account, Amount, Contract, Regulation]
+    tenant: globex_finance
+  hr:
+    doc_types: [policy, employee_record, compensation, org_chart, review]
+    entity_types: [Person, Department, Role, Salary, Benefit]
+    tenant: initech_hr
+  security:
+    doc_types: [vuln_assessment, incident_report, credential_store, pentest, advisory]
+    entity_types: [CVE, System, Attack, Mitigation, Credential]
+    tenant: umbrella_security
+
+# Bridge entities — shared across tenants to create realistic cross-boundary paths
+bridge_entities:
+  count: 15
+  types:
+    - name: shared_vendor
+      connects: [finance, engineering]
+      description: "Vendors shared between finance contracts and engineering systems"
+    - name: shared_infrastructure
+      connects: [engineering, security]
+      description: "Infrastructure systems referenced in both eng docs and security assessments"
+    - name: shared_personnel
+      connects: [hr, engineering]
+      description: "Employees referenced in both HR records and engineering ownership"
+    - name: shared_compliance
+      connects: [finance, security]
+      description: "Compliance frameworks referenced in both financial audits and security"
+    - name: shared_project
+      connects: [engineering, finance, hr]
+      description: "Cross-functional projects spanning multiple departments"
+
+# Seed for reproducibility
+random_seed: 42

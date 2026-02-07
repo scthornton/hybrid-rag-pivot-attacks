@@ -1,0 +1,26 @@
+# GCP Project Configuration (no secrets — those go in .env or Secret Manager)
+gcp:
+  region: us-central1
+  zone: us-central1-a
+
+compute:
+  machine_type: e2-standard-4
+  disk_size_gb: 100
+  image_family: ubuntu-2204-lts
+
+chromadb:
+  host: localhost
+  port: 8000
+  persist_directory: /opt/pivorag/chroma_data
+
+neo4j:
+  # Connection details come from Secret Manager at runtime
+  # These are non-sensitive defaults
+  database: neo4j
+  max_connection_pool_size: 50
+  connection_timeout_seconds: 30
+
+storage:
+  bucket_prefix: pivorag-artifacts
+  data_prefix: data/
+  results_prefix: results/

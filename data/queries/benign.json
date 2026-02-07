@@ -1,0 +1,82 @@
+[
+  {
+    "query_id": "B001",
+    "text": "What is the architecture of the payment processing system?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B002",
+    "text": "Show me the Q3 budget summary for the marketing department.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B003",
+    "text": "What is the company vacation policy?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B004",
+    "text": "Describe the incident response procedures for ransomware.",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B005",
+    "text": "How does the API gateway handle rate limiting?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B006",
+    "text": "What are the onboarding steps for new employees?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B007",
+    "text": "List the approved cloud vendors and their SLAs.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B008",
+    "text": "What is the current status of the data center migration project?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B009",
+    "text": "Summarize the Q4 revenue projections.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B010",
+    "text": "What security certifications does the organization hold?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  }
+]

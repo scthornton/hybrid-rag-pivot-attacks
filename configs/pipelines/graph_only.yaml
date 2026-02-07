@@ -1,0 +1,33 @@
+# P2: Graph-Only Retrieval Pipeline
+# Baseline — entity extraction from query, graph traversal only
+pipeline:
+  name: graph_only
+  variant: P2
+
+vector:
+  enabled: false
+
+graph:
+  enabled: true
+  max_hops: 2
+  max_branching_factor: 10
+  max_total_nodes: 50
+  expansion_algo: bfs  # bfs | rwr | community
+  edge_types:
+    - CONTAINS
+    - MENTIONS
+    - BELONGS_TO
+    - DEPENDS_ON
+    - OWNED_BY
+    - DERIVED_FROM
+    - RELATED_TO
+
+reranker:
+  enabled: false
+
+defenses:
+  per_hop_authz: false
+  edge_allowlist: false
+  budgets: false
+  trust_weighting: false
+  merge_filter: false

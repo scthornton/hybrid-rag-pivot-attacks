@@ -1,0 +1,25 @@
+# P1: Vector-Only RAG Pipeline
+# Baseline for comparison — no graph expansion
+pipeline:
+  name: vector_only
+  variant: P1
+
+vector:
+  model: all-MiniLM-L6-v2
+  top_k: 10
+  similarity_threshold: 0.3
+  auth_prefilter: true  # Filter by user authorization before retrieval
+
+reranker:
+  enabled: false
+  model: null
+
+graph:
+  enabled: false
+
+defenses:
+  per_hop_authz: false
+  edge_allowlist: false
+  budgets: false
+  trust_weighting: false
+  merge_filter: false

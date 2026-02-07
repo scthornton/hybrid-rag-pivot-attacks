@@ -1,0 +1,179 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Retrieval Pivot Attacks in Hybrid RAG:\\
+Measuring and Mitigating Amplified Leakage from\\
+Vector Seeds to Graph Expansion}
+
+\author{
+\IEEEauthorblockN{Scott Thornton}
+\IEEEauthorblockA{perfecXion.ai \\
+scthornton@gmail.com}
+}
+
+\maketitle
+
+% ============================================================
+\begin{abstract}
+Hybrid Retrieval-Augmented Generation (RAG) pipelines that combine
+vector similarity search with knowledge graph expansion are increasingly
+deployed in enterprise settings for their superior multi-hop reasoning
+capabilities. However, this architectural pattern introduces a critical
+security vulnerability we term \textbf{Retrieval Pivot Risk (RPR)}:
+a semantically retrieved ``seed'' chunk can \emph{pivot} through entity
+linking into sensitive graph neighborhoods, yielding data leakage that
+is absent or far weaker in vector-only or graph-only retrieval.
+
+We formalize RPR and its associated metrics---Amplification Factor,
+Pivot Depth, and Leakage@k---and present a taxonomy of four
+\textbf{Retrieval Pivot Attacks} that exploit the vector-to-graph
+transition with small injection budgets. Our evaluation on a synthetic
+multi-tenant enterprise corpus demonstrates that hybrid baselines
+exhibit $\text{AF} \gg 1$ compared to vector-only retrieval, and
+that attacks A1--A4 dramatically increase leakage with as few as
+10 injected chunks.
+
+We propose and evaluate five defenses---per-hop authorization,
+edge allowlisting, budgeted traversal, trust-weighted expansion,
+and merge-time policy filtering---showing that practical combinations
+reduce RPR by [X]\% while retaining [Y]\% of answer quality.
+
+% TODO: Fill in actual numbers from experiments
+\end{abstract}
+
+\begin{IEEEkeywords}
+retrieval-augmented generation, knowledge graphs, adversarial machine
+learning, hybrid RAG, graph security, data exfiltration
+\end{IEEEkeywords}
+
+% ============================================================
+\section{Introduction}
+\label{sec:introduction}
+% - Hybrid RAG adoption trend
+% - Gap: cross-store security is unstudied
+% - Our contributions (3-part package)
+
+\textbf{TODO}: Write introduction covering hybrid RAG adoption,
+the security gap at the vector-to-graph boundary, and our three
+contributions: (1) formalization of RPR metrics, (2) attack
+taxonomy, (3) defense suite with utility tradeoffs.
+
+% ============================================================
+\section{Background}
+\label{sec:background}
+% - Vector retrieval
+% - GraphRAG and knowledge graph retrieval
+% - Hybrid RAG patterns (vector → entity link → graph expand)
+
+% ============================================================
+\section{Threat Model}
+\label{sec:threat_model}
+% - Attacker capabilities (content injection)
+% - System assumptions (vector + graph pipeline)
+% - Attacker goals (exfiltration, policy bypass, manipulation)
+
+% ============================================================
+\section{Retrieval Pivot Attacks}
+\label{sec:attacks}
+% - A1: Vector Seed Steering
+% - A2: Entity Anchor Injection
+% - A3: Neighborhood Flooding
+% - A4: Bridge Node Attack
+
+% ============================================================
+\section{Metrics}
+\label{sec:metrics}
+% - RPR definition and operationalization
+% - Leakage@k
+% - Amplification Factor (AF)
+% - Pivot Depth (PD)
+% - Utility metrics
+
+\subsection{Retrieval Pivot Risk (RPR)}
+\begin{equation}
+\text{RPR} = \Pr_{q \sim \mathcal{Q}}\left[\exists x \in S(q): \text{Sensitive}(x)\right]
+\end{equation}
+
+\subsection{Amplification Factor (AF)}
+\begin{equation}
+\text{AF} = \frac{\mathbb{E}[\text{Leakage@k}]_{\text{hybrid}}}{\mathbb{E}[\text{Leakage@k}]_{\text{vector}}}
+\end{equation}
+
+% ============================================================
+\section{Experimental Setup}
+\label{sec:setup}
+% - Synthetic enterprise dataset
+% - Graph schema
+% - Pipeline variants (P1--P8)
+% - Evaluation methodology
+
+% ============================================================
+\section{Results}
+\label{sec:results}
+% - Baseline comparisons (P1 vs P2 vs P3)
+% - Attack impact (A1--A4 on P3)
+% - Tables and plots
+
+% ============================================================
+\section{Mitigations}
+\label{sec:mitigations}
+% - D1: Per-hop authorization
+% - D2: Edge allowlisting
+% - D3: Budgeted traversal
+% - D4: Trust-weighted expansion
+% - D5: Merge-time policy filter
+% - Ablation studies
+
+% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+% - Security vs utility tradeoffs
+% - Operational guidance
+% - Comparison with GRAGPoison, PoisonedRAG
+
+% ============================================================
+\section{Limitations}
+\label{sec:limitations}
+% - Synthetic dataset
+% - Attack simulation (not real-world deployment)
+% - LLM generation not tested (retrieval-only measurement)
+
+% ============================================================
+\section{Related Work}
+\label{sec:related_work}
+% - Vector RAG poisoning
+% - GraphRAG security
+% - Graph access control
+% - Privacy in RAG
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+% ============================================================
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% ============================================================
+\appendix
+\section{Artifact Appendix}
+\label{sec:artifact}
+% - Repository URL
+% - Configuration files
+% - Reproducibility steps
+% - Hardware/software requirements
+
+\end{document}

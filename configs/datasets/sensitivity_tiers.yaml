@@ -1,0 +1,54 @@
+# Sensitivity Tier Definitions and Authorization Rules
+# Used by both dataset generation and defense evaluation
+
+tiers:
+  PUBLIC:
+    level: 0
+    description: "No access restrictions"
+    authorized_roles: [public, internal, confidential, restricted]
+
+  INTERNAL:
+    level: 1
+    description: "Requires authenticated internal user"
+    authorized_roles: [internal, confidential, restricted]
+
+  CONFIDENTIAL:
+    level: 2
+    description: "Requires need-to-know and department membership"
+    authorized_roles: [confidential, restricted]
+
+  RESTRICTED:
+    level: 3
+    description: "Requires explicit grant and audit trail"
+    authorized_roles: [restricted]
+
+# User roles for evaluation
+roles:
+  public_user:
+    clearance: PUBLIC
+    description: "External user, unauthenticated or basic access"
+    tenants: []
+
+  standard_employee:
+    clearance: INTERNAL
+    description: "Authenticated employee with basic internal access"
+    tenants: [acme_engineering]  # Single-tenant access
+
+  department_lead:
+    clearance: CONFIDENTIAL
+    description: "Department lead with confidential access to own dept"
+    tenants: [acme_engineering]
+
+  executive:
+    clearance: RESTRICTED
+    description: "C-level with cross-tenant restricted access"
+    tenants: [acme_engineering, globex_finance, initech_hr, umbrella_security]
+
+# Cross-tier traversal policy
+traversal_policy:
+  # Can traversal cross from lower tier to higher tier?
+  allow_escalation: false
+  # Maximum tier difference allowed in a single hop
+  max_tier_jump: 1
+  # Require explicit grant for cross-tenant traversal?
+  require_cross_tenant_grant: true

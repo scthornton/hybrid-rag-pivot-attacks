@@ -1,0 +1,83 @@
+# P4-P8: Hybrid with defenses — configurable defense toggles
+# Each defense can be enabled/disabled for ablation studies
+pipeline:
+  name: hybrid_defended
+  variant: P4_all_defenses
+
+vector:
+  model: all-MiniLM-L6-v2
+  top_k: 10
+  similarity_threshold: 0.3
+  auth_prefilter: true
+
+graph:
+  enabled: true
+  max_hops: 2             # Tighter than baseline
+  max_branching_factor: 10
+  max_total_nodes: 50
+  expansion_algo: bfs
+  edge_types:
+    - CONTAINS
+    - MENTIONS
+    - BELONGS_TO
+    - DEPENDS_ON
+    - OWNED_BY
+    - DERIVED_FROM
+
+entity_linking:
+  enabled: true
+  method: ner_lookup
+  confidence_threshold: 0.7   # Higher threshold under defense
+
+merge:
+  strategy: weighted
+  dedup: true
+  max_context_chunks: 15
+
+reranker:
+  enabled: true
+  model: cross-encoder/ms-marco-MiniLM-L-6-v2
+
+defenses:
+  # D1: Policy-checked expansion — authZ check at every hop
+  per_hop_authz:
+    enabled: true
+    deny_cross_tenant: true
+    deny_sensitivity_escalation: true  # Cannot traverse to higher tier
+
+  # D2: Edge-type allowlisting — query-class-aware
+  edge_allowlist:
+    enabled: true
+    query_classes:
+      dependency:
+        allowed: [DEPENDS_ON, CONTAINS, MENTIONS]
+      ownership:
+        allowed: [OWNED_BY, BELONGS_TO]
+        max_hops: 1
+      general:
+        allowed: [CONTAINS, MENTIONS, BELONGS_TO]
+
+  # D3: Budgeted traversal — hard caps
+  budgets:
+    enabled: true
+    max_hops: 2
+    max_branching_factor: 8
+    max_total_nodes: 40
+    timeout_ms: 2000
+
+  # D4: Provenance/trust-weighted expansion
+  trust_weighting:
+    enabled: true
+    min_trust_score: 0.6
+    trust_decay_per_hop: 0.15
+    low_trust_sources:
+      - user_generated
+      - web_scraped
+      - llm_extracted
+
+  # D5: Merge-time policy filter + rerank
+  merge_filter:
+    enabled: true
+    deny_by_default: true
+    penalize_low_trust: true
+    penalize_near_duplicate: true
