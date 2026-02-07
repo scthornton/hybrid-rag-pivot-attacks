@@ -18,11 +18,15 @@ data/embeddings/
 data/graphs/
 chroma_db/
 
-# Results (generated)
-results/tables/*.csv
-results/tables/*.json
-results/plots/*.png
-results/plots/*.pdf
+# Results (per-variant raw files excluded, publication outputs tracked)
+results/tables/P[0-9]_*.json
+results/tables/attack_experiments_*.json
+
+# Keep publication outputs (LaTeX, summary CSV, aggregate experiment JSONs, plots)
+# results/latex/ — tracked
+# results/plots/ — tracked
+# results/experiment_summary.csv — tracked
+# results/tables/experiment_*.json — tracked
 
 # Environment and secrets
 .env

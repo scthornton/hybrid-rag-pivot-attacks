@@ -69,8 +69,10 @@ class BenchmarkRunner:
         af = 1.0
         if vector_baseline_contexts:
             af = amplification_factor(contexts, vector_baseline_contexts)
-        mean_pd = sum(pivot_depth(ctx) for ctx in contexts) / max(len(contexts), 1)
         queries_with_leak = sum(1 for ctx in contexts if leakage_at_k(ctx) > 0)
+        # Mean PD only over queries that have leakage (inf values excluded)
+        pd_values = [pivot_depth(ctx) for ctx in contexts if leakage_at_k(ctx) > 0]
+        mean_pd = sum(pd_values) / len(pd_values) if pd_values else float("inf")
 
         security = SecurityMetrics(
             rpr=rpr,

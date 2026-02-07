@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Defense ablation: security metrics across pipeline variants. RPR = Retrieval Pivot Risk, Leak = mean Leakage@k, PD = Pivot Depth (hops), Ctx = mean context size.}
+\label{tab:defense-ablation}
+\small
+\begin{tabular}{l|cccc|cccc}
+\toprule
+ & \multicolumn{4}{c|}{\textbf{Benign Queries}} & \multicolumn{4}{c}{\textbf{Adversarial Queries}} \\
+\textbf{Variant} & RPR & Leak & PD & Ctx & RPR & Leak & PD & Ctx \\
+\midrule
+  P1 (Vector-only) & 0.000 & 0.0 & -- & 10 & 0.000 & 0.0 & -- & 10 \\
+  P3 (Hybrid) & 0.800 & 17.4 & 2.0 & 110 & 1.000 & 20.5 & 2.0 & 110 \\
+  P4 (+D1) & 0.000 & 0.0 & -- & 50 & 0.000 & 0.0 & -- & 57 \\
+  P5 (+D1,D2) & 0.000 & 0.0 & -- & 53 & 0.000 & 0.0 & -- & 57 \\
+  P6 (+D1-D3) & 0.000 & 0.0 & -- & 28 & 0.000 & 0.0 & -- & 29 \\
+  P7 (+D1-D4) & 0.000 & 0.0 & -- & 27 & 0.000 & 0.0 & -- & 26 \\
+  P8 (All) & 0.000 & 0.0 & -- & 19 & 0.000 & 0.0 & -- & 23 \\
+\bottomrule
+\end{tabular}
+\end{table}

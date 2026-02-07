@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from pivorag.config import PipelineConfig, SensitivityTier
-from pivorag.graph.schema import Chunk, Document, Entity, GraphEdge, GraphNode
+from pivorag.config import PipelineConfig
+from pivorag.graph.schema import Chunk, Document, Entity, GraphNode
 
 
 @pytest.fixture

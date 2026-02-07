@@ -23,6 +23,7 @@ class ExpansionResult:
     total_hops: int
     nodes_visited: int
     edges_traversed: int
+    node_depths: dict[str, int] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 
@@ -45,6 +46,9 @@ class GraphExpander:
         This is the core operation that can cause retrieval pivot risk:
         starting from vector-retrieved seeds, BFS walks into potentially
         unauthorized graph neighborhoods.
+
+        Uses apoc.path.spanningTree to track per-node hop distance,
+        which feeds the pivot_depth (PD) metric.
         """
         edge_filter = ""
         if allowed_edge_types:
@@ -54,22 +58,26 @@ class GraphExpander:
         query = f"""
         UNWIND $seed_ids AS seed_id
         MATCH (start {{node_id: seed_id}})
-        CALL apoc.path.subgraphNodes(start, {{
+        CALL apoc.path.spanningTree(start, {{
             maxLevel: $max_hops,
             relationshipFilter: '{edge_filter}',
             limit: $max_total
         }})
-        YIELD node
-        RETURN DISTINCT node.node_id AS node_id,
+        YIELD path
+        WITH last(nodes(path)) AS node, length(path) AS depth
+        RETURN node.node_id AS node_id,
                labels(node)[0] AS node_type,
                node.tenant AS tenant,
                node.sensitivity AS sensitivity,
                node.provenance_score AS provenance_score,
-               properties(node) AS props
+               properties(node) AS props,
+               min(depth) AS hop_depth
+        ORDER BY hop_depth
         LIMIT $max_total
         """
 
         expanded = []
+        node_depths: dict[str, int] = {}
         with self.driver.session() as session:
             result = session.run(query, {
                 "seed_ids": seed_node_ids,
@@ -77,14 +85,16 @@ class GraphExpander:
                 "max_total": max_total_nodes,
             })
             for record in result:
+                node_id = record["node_id"]
                 expanded.append(GraphNode(
-                    node_id=record["node_id"],
+                    node_id=node_id,
                     node_type=record["node_type"] or "Unknown",
                     tenant=record["tenant"] or "",
                     sensitivity=record["sensitivity"] or "PUBLIC",
                     provenance_score=record["provenance_score"] or 1.0,
                     properties=dict(record["props"]) if record["props"] else {},
                 ))
+                node_depths[node_id] = record["hop_depth"]
 
         return ExpansionResult(
             seed_nodes=seed_node_ids,
@@ -93,6 +103,7 @@ class GraphExpander:
             total_hops=max_hops,
             nodes_visited=len(expanded),
             edges_traversed=0,
+            node_depths=node_depths,
         )
 
     def rwr_expand(

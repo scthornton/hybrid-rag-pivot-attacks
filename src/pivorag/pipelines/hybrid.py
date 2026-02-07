@@ -65,16 +65,17 @@ class HybridPipeline(BasePipeline):
 
         # Step 3: Graph expansion with defense configuration
         graph_nodes = []
+        node_depths: dict[str, int] = {}
         if self.config.graph.enabled and seed_node_ids:
-            expansion_result = self._expand_with_defenses(
+            graph_nodes, node_depths = self._expand_with_defenses(
                 seed_node_ids=seed_node_ids,
                 user_tenant=user_tenant,
                 user_clearance=user_clearance,
             )
-            graph_nodes = expansion_result
             traversal_log.append({
                 "step": "graph_expansion",
                 "expanded_nodes": len(graph_nodes),
+                "node_depths": node_depths,
             })
 
         # Step 4: Merge vector + graph results
@@ -111,6 +112,7 @@ class HybridPipeline(BasePipeline):
                     "tenant": n.tenant,
                     "sensitivity": n.sensitivity,
                     "provenance_score": n.provenance_score,
+                    "hop_depth": node_depths.get(n.node_id, -1),
                     **n.properties,
                 }
                 for n in graph_nodes
@@ -139,8 +141,12 @@ class HybridPipeline(BasePipeline):
         seed_node_ids: list[str],
         user_tenant: str,
         user_clearance: SensitivityTier,
-    ) -> list:
-        """Run graph expansion with defense stack applied."""
+    ) -> tuple[list, dict[str, int]]:
+        """Run graph expansion with defense stack applied.
+
+        Returns (expanded_nodes, node_depths) where node_depths maps
+        node_id → minimum hop distance from the nearest seed node.
+        """
         # Determine expansion parameters based on defense config
         max_hops = self.config.graph.max_hops
         max_branching = self.config.graph.max_branching_factor
@@ -171,6 +177,7 @@ class HybridPipeline(BasePipeline):
         )
 
         nodes = result.expanded_nodes
+        node_depths = result.node_depths
 
         # D1: Per-hop authorization filter
         authz_cfg = self.config.defenses.per_hop_authz
@@ -189,7 +196,7 @@ class HybridPipeline(BasePipeline):
             min_trust = trust_cfg.get("min_trust_score", 0.6)
             nodes = [n for n in nodes if n.provenance_score >= min_trust]
 
-        return nodes
+        return nodes, node_depths
 
     def _apply_merge_filter(self, graph_nodes, user_clearance: SensitivityTier) -> list:
         """D5: Post-merge policy filter."""

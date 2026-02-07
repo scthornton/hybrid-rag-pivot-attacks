@@ -1,8 +1,6 @@
 """Tests for defense implementations."""
 
 from pivorag.config import SensitivityTier
-from pivorag.defenses.budgets import BudgetDefense
-from pivorag.defenses.edge_allowlist import EdgeAllowlistDefense
 from pivorag.defenses.merge_filter import MergeFilterDefense
 from pivorag.defenses.per_hop_authz import PerHopAuthzDefense
 from pivorag.defenses.trust_weighting import TrustWeightingDefense

@@ -1,0 +1,36 @@
+# Local development services for PivoRAG integration testing.
+# Start: docker compose up -d
+# Stop:  docker compose down
+# Reset: docker compose down -v  (removes data volumes)
+
+services:
+  neo4j:
+    image: neo4j:5.15-community
+    container_name: pivorag-neo4j
+    ports:
+      - "7474:7474"  # HTTP browser
+      - "7687:7687"  # Bolt protocol
+    environment:
+      NEO4J_AUTH: neo4j/pivorag_dev_2025
+      NEO4J_PLUGINS: '["apoc"]'
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD", "neo4j", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: pivorag-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      ANONYMIZED_TELEMETRY: "false"
+
+volumes:
+  neo4j_data:
+  chroma_data:

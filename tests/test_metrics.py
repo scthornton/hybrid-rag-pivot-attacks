@@ -4,7 +4,6 @@ from pivorag.config import SensitivityTier
 from pivorag.eval.metrics import (
     amplification_factor,
     leakage_at_k,
-    pivot_depth,
     retrieval_pivot_risk,
 )
 from pivorag.pipelines.base import RetrievalContext

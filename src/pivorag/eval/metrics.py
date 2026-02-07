@@ -81,17 +81,18 @@ def pivot_depth(context: RetrievalContext) -> int | float:
     PD(q) = min{d(seed, x) : x in S(q) ∧ Sensitive(x)}
     Returns inf if no sensitive nodes found.
 
-    Note: Requires traversal path data in context.traversal_log.
-    This is a simplified version using available metadata.
+    Reads per-node hop_depth from graph_nodes (populated by
+    GraphExpander.bfs_expand via apoc.path.spanningTree).
     """
-    # Check if any graph nodes are sensitive (unauthorized)
+    min_depth = float("inf")
     for node in context.graph_nodes:
         node_tier = SensitivityTier(node.get("sensitivity", "PUBLIC"))
-        if node_tier > context.user_clearance:
-            # Found a sensitive node — estimate depth from traversal log
-            # Full implementation would track per-node hop distance
-            return 1  # Placeholder: assume 1 hop for now
-    return float("inf")
+        is_over_clearance = node_tier > context.user_clearance
+        is_wrong_tenant = node.get("tenant") and node["tenant"] != context.user_tenant
+        if is_over_clearance or is_wrong_tenant:
+            hop = node.get("hop_depth", -1)
+            min_depth = min(min_depth, hop) if hop >= 0 else min(min_depth, 1)
+    return min_depth
 
 
 @dataclass
