@@ -28,8 +28,9 @@ chown -R pivorag:pivorag "$PIVORAG_HOME"
 sudo -u pivorag python3.11 -m venv "$PIVORAG_HOME/venv"
 sudo -u pivorag "$PIVORAG_HOME/venv/bin/pip" install --upgrade pip
 
-# Install ChromaDB
+# Install ChromaDB and pivorag with LLM extras
 sudo -u pivorag "$PIVORAG_HOME/venv/bin/pip" install chromadb
+sudo -u pivorag "$PIVORAG_HOME/venv/bin/pip" install "pivorag[llm]" 2>/dev/null || true
 
 # ChromaDB systemd service
 cat > /etc/systemd/system/chromadb.service << 'UNIT'
@@ -55,12 +56,30 @@ systemctl enable chromadb
 systemctl start chromadb
 
 # Fetch Neo4j credentials from Secret Manager
-echo "=== Fetching Neo4j credentials ==="
+echo "=== Fetching credentials from Secret Manager ==="
 NEO4J_CREDS=$(gcloud secrets versions access latest --secret=pivorag-neo4j-credentials 2>/dev/null || echo "{}")
 echo "$NEO4J_CREDS" > "$PIVORAG_HOME/.neo4j-creds.json"
 chmod 600 "$PIVORAG_HOME/.neo4j-creds.json"
 chown pivorag:pivorag "$PIVORAG_HOME/.neo4j-creds.json"
 
+# Fetch LLM API keys for generation evaluation
+ENV_FILE="$PIVORAG_HOME/.env"
+touch "$ENV_FILE"
+chmod 600 "$ENV_FILE"
+
+OPENAI_KEY=$(gcloud secrets versions access latest --secret=pivorag-openai-api-key 2>/dev/null || echo "")
+ANTHROPIC_KEY=$(gcloud secrets versions access latest --secret=pivorag-anthropic-api-key 2>/dev/null || echo "")
+DEEPSEEK_KEY=$(gcloud secrets versions access latest --secret=pivorag-deepseek-api-key 2>/dev/null || echo "")
+
+{
+    [ -n "$OPENAI_KEY" ] && echo "OPENAI_API_KEY=$OPENAI_KEY"
+    [ -n "$ANTHROPIC_KEY" ] && echo "ANTHROPIC_API_KEY=$ANTHROPIC_KEY"
+    [ -n "$DEEPSEEK_KEY" ] && echo "DEEPSEEK_API_KEY=$DEEPSEEK_KEY"
+} > "$ENV_FILE"
+
+chown pivorag:pivorag "$ENV_FILE"
+
 echo "=== PivoRAG GCE Setup Complete ==="
 echo "ChromaDB running on port 8000"
 echo "Neo4j credentials stored at $PIVORAG_HOME/.neo4j-creds.json"
+echo "LLM API keys stored at $ENV_FILE"

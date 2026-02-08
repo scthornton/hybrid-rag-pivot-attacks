@@ -1,0 +1,61 @@
+# Master experiment configuration for USENIX Security 2026 paper.
+# Orchestrates all experiment phases across datasets and pipelines.
+
+datasets:
+  - synthetic
+  - enron
+  - edgar
+
+# Experiment 1: Cross-Dataset Baseline
+baseline:
+  pipelines: [P1, P3, P4, P5, P6, P7, P8]
+  queries_per_dataset: 200
+  query_types: [benign, adversarial]
+  metrics: [RPR, Leakage_at_k, AF, PD, SWL, Context_Recall, Context_Precision]
+  bootstrap_samples: 10000
+  confidence_level: 0.95
+
+# Experiment 2: Generation Contamination
+generation:
+  pipelines: [P3, P4]
+  llm_providers: [openai, anthropic, deepseek]
+  queries_per_dataset: 200
+  metrics: [ECR, ILS, FCR, GRR]
+  judge_model: gpt-4o
+  budget_usd: 50.0
+
+# Experiment 3: Adaptive Attacker
+adaptive_attacks:
+  attacks:
+    - name: A5_metadata_forgery
+      forgery_rates: [0.01, 0.05, 0.10]
+      injection_budget: 10
+    - name: A6_entity_manipulation
+      namespaces: [security_personnel, hr_personnel, finance_vendors]
+      injection_budget: 10
+    - name: A7_query_manipulation
+      recon_targets: [security_recon, hr_recon, finance_recon]
+      injection_budget: 10
+  target_pipelines: [P3, P4, P7, P8]
+
+# Experiment 4: Graph Topology Comparison
+topology:
+  metrics: [PD_distribution, bridge_entity_count, graph_density]
+  min_bridges: 0
+  max_bridges: 40
+  bridge_step: 5
+
+# Experiment 5: Non-adaptive attacks (existing A1-A4)
+non_adaptive_attacks:
+  attacks: [A1, A2, A3, A4]
+  target_pipelines: [P3, P4, P6, P8]
+  injection_budget: 10
+
+# Execution settings
+execution:
+  seed: 42
+  checkpoint_dir: results/checkpoints
+  output_dir: results/tables
+  log_level: INFO
+  parallel_datasets: false
+  resume_from_checkpoint: true

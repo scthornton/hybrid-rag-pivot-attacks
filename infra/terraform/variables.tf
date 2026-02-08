@@ -24,7 +24,7 @@ variable "environment" {
 variable "gce_machine_type" {
   description = "GCE instance machine type"
   type        = string
-  default     = "e2-standard-4"
+  default     = "e2-standard-8"
 }
 
 variable "gce_disk_size_gb" {
@@ -49,4 +49,25 @@ variable "allowed_ssh_cidrs" {
   description = "CIDR blocks allowed to SSH into GCE instance"
   type        = list(string)
   default     = []
+}
+
+variable "openai_api_key" {
+  description = "OpenAI API key for generation evaluation"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "anthropic_api_key" {
+  description = "Anthropic API key for generation evaluation"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "deepseek_api_key" {
+  description = "DeepSeek API key for generation evaluation"
+  type        = string
+  sensitive   = true
+  default     = ""
 }

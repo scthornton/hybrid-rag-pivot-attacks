@@ -13,6 +13,9 @@ services:
     environment:
       NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/pivorag_dev_2025}
       NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_server_memory_heap_initial__size: "2g"
+      NEO4J_server_memory_heap_max__size: "4g"
+      NEO4J_server_memory_pagecache_size: "1g"
     volumes:
       - neo4j_data:/data
     healthcheck:
