@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{RPR under adaptive attacks (A5--A7) across pipeline variants.
+A5 tests metadata forgery at three rates; A6 tests entity manipulation;
+A7 tests query manipulation. Leakage@k shown in parentheses.}
+\label{tab:adaptive-attacks}
+\small
+\begin{tabular}{ll|cccc}
+\toprule
+\textbf{Attack} & \textbf{Rate} & \textbf{P3} & \textbf{P4} & \textbf{P7} & \textbf{P8} \\
+\midrule
+  A5 & 1\%  & 1.00 (7.8) & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
+  A5 & 5\%  & 1.00 (7.8) & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
+  A5 & 10\% & 1.00 (7.8) & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
+\midrule
+  A6 & ---  & 1.00 (7.8) & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
+  A7 & ---  & \multicolumn{4}{c}{\textit{query-only (no injection)}} \\
+\bottomrule
+\end{tabular}
+\end{table}
