@@ -59,3 +59,12 @@ Thumbs.db
 # Coverage
 .coverage
 htmlcov/
+
+# Research artifacts (keep locally, don't track)
+reviews/
+*.zip
+
+# Build caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
