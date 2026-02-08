@@ -88,7 +88,8 @@ structurally related context before passing the assembled results to a
 large language model (LLM).
 
 This pivot mechanism---the vector-to-graph transition---introduces a
-security boundary that no prior work has studied. Consider an analyst
+security boundary that has not been systematically measured or
+formalized in prior work. Consider an analyst
 at an engineering firm who queries a hybrid RAG system about Kubernetes
 cluster configurations. Vector retrieval returns authorized
 engineering documents. But those documents mention shared entities
@@ -453,6 +454,16 @@ rather the pivot bridges through which leakage propagates). Let
 $\text{Seeds}(q) \subseteq S_k(q)$ denote the set of entity nodes
 that are linked from vector-retrieved chunks via NER extraction---these
 are the graph entry points that initiate BFS expansion.
+
+\textbf{Item serialization.} Each \emph{item} in $S_k(q)$ is a node
+serialized for the LLM context: chunk nodes are serialized as their
+source text; entity nodes are serialized as
+\texttt{\{name, type, top-3 relations\}}. Context size counts the
+total number of serialized nodes (chunks + entities) presented to
+the LLM. The default pipeline configuration (depth $d=2$, branching
+$\leq 10$, total $\leq 100$ nodes, top-$k{=}10$ vector results)
+produces ${\sim}$110 items per query in the undefended hybrid
+pipeline (P3).
 
 \subsection{Retrieval Pivot Risk (RPR)}
 
@@ -973,18 +984,21 @@ created).
 \end{tabular}
 \end{table}
 
-Two aspects of this uniformity are themselves findings. First, all
-four attacks produce identical Leakage@k ($\approx$20.5) against P3.
-This is because the bottleneck is the \emph{unguarded graph traversal},
-not the injection strategy---all four attacks simply steer queries into
-the same undefended 2-hop expansion path, and the resulting leakage is
-bounded by the expansion window size, not the attack mechanism. Second,
-D1 blocks \emph{all} four strategies because it operates on node
-\emph{properties} (tenant, sensitivity) rather than graph
-\emph{structure} (paths, edges). The attacks manipulate paths---optimizing
-similarity (A1), creating dense connections (A2), inflating density (A3),
-or bridging boundaries (A4)---but D1 filters on properties at each hop,
-making the path irrelevant.
+Two aspects of this uniformity are themselves findings.
+\textbf{Leakage is bounded by the expansion window, not the attack
+mechanism}: all four attacks produce identical Leakage@k
+($\approx$20.5) against P3 because the bottleneck is the
+\emph{unguarded graph traversal}---all four simply steer queries into
+the same undefended 2-hop expansion path, and the total\_nodes budget
+(100) caps the leaked volume. This means more sophisticated injection
+strategies yield no additional leakage beyond what organic entity
+overlap already provides. Second, D1 blocks \emph{all} four strategies
+because it operates on node \emph{properties} (tenant, sensitivity)
+rather than graph \emph{structure} (paths, edges). The attacks
+manipulate paths---optimizing similarity (A1), creating dense
+connections (A2), inflating density (A3), or bridging boundaries
+(A4)---but D1 filters on properties at each hop, making the path
+irrelevant.
 
 \subsection{Traversal Parameter Sweep}
 \label{sec:traversal-sweep}
@@ -1275,11 +1289,19 @@ trade-off is that entity information (which may be useful for answer
 generation) is excluded from the final context. We quantify this
 impact in Section~\ref{sec:discussion}.
 
-Alternative designs could assign entities to multiple tenants (the set
-of tenants whose documents mention them) or introduce a
-\texttt{SHARED} tenant class with explicit access grants. These
-designs would preserve entity context at the cost of more complex
-authorization logic and a larger attack surface.
+We acknowledge that D1's entity filtering is functionally equivalent
+to disabling entity traversal---a valid criticism. However, this is
+the \emph{minimum viable defense}, not the optimal one. A
+finer-grained \textbf{entity-aware authorization} scheme would: (a)
+label each entity with the set of tenants whose documents mention it
+(e.g., ``CloudCorp'' $\to$ \{acme, globex\}), (b) allow traversal
+\emph{through} entities whose tenant set includes $t_u$, and (c) apply
+the authorization check only at \emph{chunk} nodes (the terminal
+nodes that carry sensitive text). This design would preserve entity
+context for within-tenant traversals while still blocking cross-tenant
+chunk access. We leave its implementation and security analysis
+to future work, and position D1 as the conservative baseline that
+demonstrates the \emph{existence} of the boundary problem.
 
 The critical insight is that \emph{existing graph databases already
 store the metadata needed for this check} (tenant labels, sensitivity
@@ -1474,7 +1496,12 @@ to mirror realistic deployments, real-world knowledge graphs may
 exhibit different connectivity patterns that affect pivot attack
 reach. The bipartite chunk-entity graph topology in our construction
 produces a uniform PD=2 signature that may not hold in graphs with
-richer entity-to-entity relationships.
+richer entity-to-entity relationships. Our synthetic graph exhibits
+power-law-like degree distribution among entity nodes (a few
+high-connectivity entities such as ``auth-service'' and ``SOC2-audit''
+connected to 50+ chunks, while most entities connect to $<$5), which
+is consistent with enterprise knowledge graph characteristics
+reported in prior work~\cite{microsoftgraphrag2024}.
 
 \textbf{Retrieval-only measurement.} We measure what enters the LLM's
 context window but do not evaluate whether the LLM reproduces
@@ -1501,10 +1528,16 @@ cross-tenant grants. Such designs would recover entity utility at the
 cost of more complex authorization logic and a larger attack surface.
 
 \textbf{Non-adaptive attacker.} Our attacks are crafted against the
-baseline pipeline. While we evaluate adaptive strategies against D1
-(metadata corruption, \S\ref{sec:mislabel}) and show robustness up to
-5\% mislabel rates, we do not evaluate attackers who target D2--D5
-specifically (e.g., crafting high-provenance payloads to bypass D4).
+baseline pipeline. Our mislabel stress test (\S\ref{sec:mislabel})
+evaluates \emph{random} sensitivity corruption up to 5\% and shows D1
+remains robust. However, we do not evaluate \emph{targeted} metadata
+forgery---e.g., an attacker who relabels all injected nodes as
+\texttt{acme\_engineering} to bypass D1's tenant check. Such targeted
+forgery requires write access to graph node metadata, which our threat
+model assumes is system-assigned (\S\ref{sec:metadata-integrity}).
+We also do not evaluate attackers who target D2--D5 specifically
+(e.g., crafting high-provenance payloads to bypass D4, or adversarial
+query phrasing to manipulate D2's query classifier).
 
 \textbf{Graph-only baseline (P2).} We omit a graph-only RAG baseline
 because graph-only retrieval without vector seeding does not involve
@@ -1567,12 +1600,26 @@ All operate within a single retrieval modality. Our defense suite
 boundary, with per-hop authorization as the cornerstone mechanism.
 
 % ============================================================
+\subsection{Ethical Considerations}
+
+All experiments in this paper use a synthetic corpus generated by
+the authors. No real enterprise data, user accounts, or confidential
+documents were used at any stage of the research. The attack
+implementations (A1--A4) target our own evaluation infrastructure
+and are designed to characterize vulnerabilities, not exploit
+production systems. Our primary contribution is the defense (D1),
+which we release alongside the attack code to ensure that the net
+effect of publication is protective. The released code does not
+include tools for targeting external systems; all components require
+a local Neo4j and ChromaDB deployment to operate.
+
+% ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
 Hybrid RAG pipelines that combine vector retrieval with knowledge
-graph expansion introduce a previously unstudied attack surface at
-the vector-to-graph boundary. We formalized this threat as Retrieval
+graph expansion introduce an attack surface at the vector-to-graph
+boundary that has received limited explicit treatment in prior work. We formalized this threat as Retrieval
 Pivot Risk (RPR) and demonstrated through 500 evaluation queries with
 bootstrap confidence intervals that undefended hybrid pipelines
 exhibit $\text{RPR} = 0.95 \pm 0.02$---compared to $0.0$ for
