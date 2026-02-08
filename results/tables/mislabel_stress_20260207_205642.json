@@ -1,0 +1,47 @@
+{
+  "0.1": {
+    "rpr": 0.0,
+    "mean_leakage": 0.0,
+    "queries_with_leakage": 0,
+    "total_queries": 100,
+    "mean_pivot_depth": -1,
+    "ctx_size": 50.09,
+    "latency_ms": 81.27106586936861
+  },
+  "0.5": {
+    "rpr": 0.0,
+    "mean_leakage": 0.0,
+    "queries_with_leakage": 0,
+    "total_queries": 100,
+    "mean_pivot_depth": -1,
+    "ctx_size": 49.86,
+    "latency_ms": 33.63825340013136
+  },
+  "1.0": {
+    "rpr": 0.0,
+    "mean_leakage": 0.0,
+    "queries_with_leakage": 0,
+    "total_queries": 100,
+    "mean_pivot_depth": -1,
+    "ctx_size": 49.73,
+    "latency_ms": 35.38913377960853
+  },
+  "2.0": {
+    "rpr": 0.0,
+    "mean_leakage": 0.0,
+    "queries_with_leakage": 0,
+    "total_queries": 100,
+    "mean_pivot_depth": -1,
+    "ctx_size": 49.2,
+    "latency_ms": 38.29186791990651
+  },
+  "5.0": {
+    "rpr": 0.0,
+    "mean_leakage": 0.0,
+    "queries_with_leakage": 0,
+    "total_queries": 100,
+    "mean_pivot_depth": -1,
+    "ctx_size": 47.88,
+    "latency_ms": 34.12406089999422
+  }
+}

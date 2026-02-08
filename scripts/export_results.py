@@ -319,37 +319,367 @@ def plot_defense_heatmap(
     click.echo(f"  Plot: {output_path}")
 
 
+# ── New Reviewer-Response Outputs ───────────────────────────────
+
+def generate_latex_latency_table(
+    benign: dict, adversarial: dict, output_path: Path,
+) -> None:
+    """Generate LaTeX latency table: variant → mean/p50/p95 latency, ctx size, RPR."""
+    lines = [
+        r"\begin{table}[t]",
+        r"\centering",
+        r"\caption{Latency and context size across pipeline variants. "
+        r"Latency is measured in milliseconds.}",
+        r"\label{tab:latency}",
+        r"\small",
+        r"\begin{tabular}{l|ccc|c|c}",
+        r"\toprule",
+        r"\textbf{Variant} & \textbf{p50} & \textbf{p95} & \textbf{Mean}"
+        r" & \textbf{Ctx Size} & \textbf{RPR} \\",
+        r"\midrule",
+        r"\multicolumn{6}{c}{\textit{Benign Queries}} \\",
+        r"\midrule",
+    ]
+
+    for variant in VARIANT_ORDER:
+        if variant not in benign:
+            continue
+        util = benign[variant]["utility"]
+        sec = benign[variant]["security"]
+        mean_lat = (util["p50_latency_ms"] + util["p95_latency_ms"]) / 2
+        lines.append(
+            f"  {VARIANT_LABELS.get(variant, variant)}"
+            f" & {util['p50_latency_ms']:.1f}"
+            f" & {util['p95_latency_ms']:.1f}"
+            f" & {mean_lat:.1f}"
+            f" & {util['mean_context_size']:.0f}"
+            f" & {sec['rpr']:.3f} \\\\"
+        )
+
+    lines.extend([
+        r"\midrule",
+        r"\multicolumn{6}{c}{\textit{Adversarial Queries}} \\",
+        r"\midrule",
+    ])
+
+    for variant in VARIANT_ORDER:
+        if variant not in adversarial:
+            continue
+        util = adversarial[variant]["utility"]
+        sec = adversarial[variant]["security"]
+        mean_lat = (util["p50_latency_ms"] + util["p95_latency_ms"]) / 2
+        lines.append(
+            f"  {VARIANT_LABELS.get(variant, variant)}"
+            f" & {util['p50_latency_ms']:.1f}"
+            f" & {util['p95_latency_ms']:.1f}"
+            f" & {mean_lat:.1f}"
+            f" & {util['mean_context_size']:.0f}"
+            f" & {sec['rpr']:.3f} \\\\"
+        )
+
+    lines.extend([
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\end{table}",
+    ])
+
+    output_path.write_text("\n".join(lines))
+    click.echo(f"  LaTeX table: {output_path}")
+
+
+def generate_latex_attack_heatmap_table(
+    attack_data: dict, output_path: Path,
+) -> None:
+    """Generate LaTeX attack × pipeline heatmap table.
+
+    Expects attack_data keyed by attack type (A1-A4), each containing
+    pipeline variant results.
+    """
+    pipelines = ["P3", "P4", "P6", "P8"]
+    lines = [
+        r"\begin{table}[t]",
+        r"\centering",
+        r"\caption{RPR under each attack type across pipeline variants. "
+        r"Leakage@k shown in parentheses.}",
+        r"\label{tab:attack-heatmap}",
+        r"\small",
+        r"\begin{tabular}{l|" + "c" * len(pipelines) + "}",
+        r"\toprule",
+        r"\textbf{Attack} & " + " & ".join(
+            rf"\textbf{{{p}}}" for p in pipelines
+        ) + r" \\",
+        r"\midrule",
+    ]
+
+    for attack in ["A1", "A2", "A3", "A4"]:
+        if attack not in attack_data:
+            continue
+        a = attack_data[attack]
+        cells = []
+        for pipe in pipelines:
+            key = f"{pipe}_under_attack"
+            if key in a:
+                rpr = a[key].get("rpr", 0)
+                leak = a[key].get("mean_leakage", 0)
+                cells.append(f"{rpr:.2f} ({leak:.1f})")
+            else:
+                cells.append("--")
+        lines.append(f"  {attack} & " + " & ".join(cells) + r" \\")
+
+    lines.extend([
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\end{table}",
+    ])
+
+    output_path.write_text("\n".join(lines))
+    click.echo(f"  LaTeX table: {output_path}")
+
+
+def plot_connectivity_sweep(
+    sweep_data: dict, output_path: Path,
+) -> None:
+    """Line plot: shared-entity count → RPR for benign and adversarial.
+
+    sweep_data: {bridge_count: {"benign": {rpr, leakage}, "adversarial": {rpr, leakage}}}
+    """
+    counts = sorted(sweep_data.keys(), key=int)
+    b_rpr = [sweep_data[c]["benign"]["rpr"] for c in counts]
+    a_rpr = [sweep_data[c]["adversarial"]["rpr"] for c in counts]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot(counts, b_rpr, "o-", color="#3498DB", linewidth=2,
+            markersize=8, label="Benign")
+    ax.plot(counts, a_rpr, "s--", color="#E74C3C", linewidth=2,
+            markersize=8, label="Adversarial")
+
+    ax.set_xlabel("Number of Shared Bridge Entities", fontsize=12)
+    ax.set_ylabel("Retrieval Pivot Risk (RPR)", fontsize=12)
+    ax.set_title("RPR vs. Cross-Tenant Entity Connectivity",
+                 fontsize=14, fontweight="bold")
+    ax.legend(fontsize=10)
+    ax.set_ylim(-0.05, 1.15)
+    ax.grid(axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    click.echo(f"  Plot: {output_path}")
+
+
+def plot_pd_distribution(
+    adversarial: dict, output_path: Path,
+) -> None:
+    """Box plot of pivot depth distribution across pipeline variants."""
+    variants = [v for v in VARIANT_ORDER if v in adversarial]
+
+    all_depths = []
+    variant_labels = []
+    for v in variants:
+        per_query = adversarial[v]["per_query"]
+        for q in per_query:
+            pd = q.get("pivot_depth", float("inf"))
+            if pd != float("inf") and pd >= 0:
+                all_depths.append(pd)
+                variant_labels.append(VARIANT_LABELS.get(v, v))
+
+    if not all_depths:
+        click.echo("  Skipping PD distribution plot (no finite depths)")
+        return
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    # Group by variant
+    import pandas as pd
+    df = pd.DataFrame({"Pivot Depth": all_depths, "Variant": variant_labels})
+    sns.boxplot(data=df, x="Variant", y="Pivot Depth", ax=ax,
+                palette=[VARIANT_COLORS.get(v, "#999999") for v in variants
+                         if VARIANT_LABELS.get(v, v) in variant_labels])
+
+    ax.set_ylabel("Pivot Depth (hops)", fontsize=12)
+    ax.set_title("Pivot Depth Distribution by Pipeline Variant",
+                 fontsize=14, fontweight="bold")
+    plt.xticks(rotation=30, ha="right", fontsize=9)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    click.echo(f"  Plot: {output_path}")
+
+
+def plot_rpr_with_ci(
+    benign: dict, adversarial: dict, output_path: Path,
+) -> None:
+    """Bar chart of RPR with bootstrap 95% CI error bars."""
+    variants = [v for v in VARIANT_ORDER if v in benign and v in adversarial]
+    labels = [VARIANT_LABELS.get(v, v) for v in variants]
+
+    b_rpr = [benign[v]["security"]["rpr"] for v in variants]
+    a_rpr = [adversarial[v]["security"]["rpr"] for v in variants]
+
+    # Extract CIs if available
+    b_err = []
+    a_err = []
+    has_ci = False
+    for v in variants:
+        b_ci = benign[v]["security"].get("rpr_ci")
+        a_ci = adversarial[v]["security"].get("rpr_ci")
+        if b_ci and len(b_ci) == 3:
+            has_ci = True
+            b_err.append([b_ci[0] - b_ci[1], b_ci[2] - b_ci[0]])
+            a_err.append([a_ci[0] - a_ci[1], a_ci[2] - a_ci[0]])
+        else:
+            b_err.append([0, 0])
+            a_err.append([0, 0])
+
+    x = np.arange(len(variants))
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    if has_ci:
+        b_yerr = np.array(b_err).T
+        a_yerr = np.array(a_err).T
+        ax.bar(x - width / 2, b_rpr, width, label="Benign",
+               color="#3498DB", alpha=0.85, yerr=b_yerr, capsize=4)
+        ax.bar(x + width / 2, a_rpr, width, label="Adversarial",
+               color="#E74C3C", alpha=0.85, yerr=a_yerr, capsize=4)
+    else:
+        ax.bar(x - width / 2, b_rpr, width, label="Benign",
+               color="#3498DB", alpha=0.85)
+        ax.bar(x + width / 2, a_rpr, width, label="Adversarial",
+               color="#E74C3C", alpha=0.85)
+
+    ax.set_ylabel("Retrieval Pivot Risk (RPR)", fontsize=12)
+    title = "RPR Across Pipeline Variants"
+    if has_ci:
+        title += " (with 95% CI)"
+    ax.set_title(title, fontsize=14, fontweight="bold")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=30, ha="right", fontsize=9)
+    ax.legend(fontsize=10)
+    ax.set_ylim(0, 1.15)
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    click.echo(f"  Plot: {output_path}")
+
+
+def plot_traversal_sweep(
+    sweep_data: list[dict], output_path: Path,
+) -> None:
+    """Pareto scatter: context_size × latency, colored by RPR.
+
+    sweep_data: list of {depth, branching, total_nodes, rpr, leakage, ctx_size, latency_ms}
+    """
+    if not sweep_data:
+        click.echo("  Skipping traversal sweep plot (no data)")
+        return
+
+    ctx_sizes = [d["ctx_size"] for d in sweep_data]
+    latencies = [d["latency_ms"] for d in sweep_data]
+    rprs = [d["rpr"] for d in sweep_data]
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    scatter = ax.scatter(ctx_sizes, latencies, c=rprs, cmap="RdYlGn_r",
+                         s=100, edgecolor="black", linewidth=0.5, vmin=0, vmax=1)
+    fig.colorbar(scatter, ax=ax, label="RPR")
+
+    ax.set_xlabel("Context Size (items)", fontsize=12)
+    ax.set_ylabel("Latency (ms)", fontsize=12)
+    ax.set_title("Traversal Parameter Space: Context × Latency × RPR",
+                 fontsize=14, fontweight="bold")
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    click.echo(f"  Plot: {output_path}")
+
+
+def plot_mislabel_rate(
+    mislabel_data: dict, output_path: Path,
+) -> None:
+    """Line plot: mislabel rate → RPR under D1 defense.
+
+    mislabel_data: {rate_pct: {"rpr": float, "mean_leakage": float}}
+    """
+    if not mislabel_data:
+        click.echo("  Skipping mislabel plot (no data)")
+        return
+
+    rates = sorted(mislabel_data.keys(), key=float)
+    rprs = [mislabel_data[r]["rpr"] for r in rates]
+    leakages = [mislabel_data[r]["mean_leakage"] for r in rates]
+
+    fig, ax1 = plt.subplots(figsize=(8, 5))
+    ax2 = ax1.twinx()
+
+    l1 = ax1.plot(rates, rprs, "o-", color="#E74C3C", linewidth=2,
+                  markersize=8, label="RPR")
+    l2 = ax2.plot(rates, leakages, "s--", color="#3498DB", linewidth=2,
+                  markersize=8, label="Mean Leakage@k")
+
+    ax1.set_xlabel("Mislabel Rate (%)", fontsize=12)
+    ax1.set_ylabel("RPR", fontsize=12, color="#E74C3C")
+    ax2.set_ylabel("Mean Leakage@k", fontsize=12, color="#3498DB")
+    ax1.set_title("D1 Defense Under Metadata Mislabeling",
+                  fontsize=14, fontweight="bold")
+
+    lines = l1 + l2
+    labels = [line.get_label() for line in lines]
+    ax1.legend(lines, labels, fontsize=10, loc="upper left")
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    click.echo(f"  Plot: {output_path}")
+
+
 # ── CSV Export ──────────────────────────────────────────────────
 
 def export_csv(
     benign: dict, adversarial: dict, output_path: Path,
 ) -> None:
-    """Export summary CSV for external analysis."""
+    """Export summary CSV for external analysis (extended with new metrics)."""
     variants = [v for v in VARIANT_ORDER if v in benign and v in adversarial]
 
     with output_path.open("w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow([
             "variant", "query_set", "rpr", "mean_leakage",
-            "amplification_factor", "mean_pivot_depth",
+            "amplification_factor", "af_epsilon", "delta_leakage",
+            "severity_weighted_leakage", "mean_pivot_depth",
+            "pd_min", "pd_median", "pd_max",
             "queries_with_leakage", "total_queries",
             "p50_latency_ms", "p95_latency_ms", "mean_context_size",
+            "rpr_ci_low", "rpr_ci_high",
         ])
         for qset_name, data in [("benign", benign), ("adversarial", adversarial)]:
             for v in variants:
                 sec = data[v]["security"]
                 util = data[v]["utility"]
+                pd_dist = sec.get("pd_distribution", {})
+                rpr_ci = sec.get("rpr_ci")
                 writer.writerow([
                     v, qset_name,
                     f"{sec['rpr']:.4f}",
                     f"{sec['mean_leakage']:.2f}",
                     f"{sec['amplification_factor']:.2f}",
+                    f"{sec.get('af_epsilon', 0):.2f}",
+                    f"{sec.get('delta_leakage', 0):.2f}",
+                    f"{sec.get('mean_severity_weighted_leakage', 0):.2f}",
                     f"{sec['mean_pivot_depth']:.2f}",
+                    f"{pd_dist.get('min', -1):.1f}",
+                    f"{pd_dist.get('median', -1):.1f}",
+                    f"{pd_dist.get('max', -1):.1f}",
                     sec["queries_with_leakage"],
                     sec["total_queries"],
                     f"{util['p50_latency_ms']:.1f}",
                     f"{util['p95_latency_ms']:.1f}",
                     f"{util['mean_context_size']:.1f}",
+                    f"{rpr_ci[1]:.4f}" if rpr_ci else "",
+                    f"{rpr_ci[2]:.4f}" if rpr_ci else "",
                 ])
 
     click.echo(f"  CSV: {output_path}")
@@ -364,12 +694,27 @@ def export_csv(
     "--attack-results", type=click.Path(exists=True),
     help="Attack experiment results JSON",
 )
+@click.option(
+    "--sweep-results", type=click.Path(exists=True),
+    help="Connectivity sweep results JSON",
+)
+@click.option(
+    "--traversal-sweep", type=click.Path(exists=True),
+    help="Traversal regime sweep results JSON",
+)
+@click.option(
+    "--mislabel-results", type=click.Path(exists=True),
+    help="Metadata mislabel stress test results JSON",
+)
 @click.option("--latest", is_flag=True, help="Auto-detect latest result files")
 @click.option("--output", "-o", default="results", help="Output directory")
 def main(
     benign: str | None,
     adversarial: str | None,
     attack_results: str | None,
+    sweep_results: str | None,
+    traversal_sweep: str | None,
+    mislabel_results: str | None,
     latest: bool,
     output: str,
 ) -> None:
@@ -388,10 +733,19 @@ def main(
         adv_path = find_latest(results_dir, "adversarial")
         attack_candidates = sorted(results_dir.glob("attack_experiments_*.json"))
         attack_path = attack_candidates[-1] if attack_candidates else None
+        sweep_candidates = sorted(results_dir.glob("connectivity_sweep_*.json"))
+        sweep_path = sweep_candidates[-1] if sweep_candidates else None
+        trav_candidates = sorted(results_dir.glob("traversal_sweep_*.json"))
+        trav_path = trav_candidates[-1] if trav_candidates else None
+        mis_candidates = sorted(results_dir.glob("mislabel_stress_*.json"))
+        mis_path = mis_candidates[-1] if mis_candidates else None
     else:
         benign_path = Path(benign) if benign else None
         adv_path = Path(adversarial) if adversarial else None
         attack_path = Path(attack_results) if attack_results else None
+        sweep_path = Path(sweep_results) if sweep_results else None
+        trav_path = Path(traversal_sweep) if traversal_sweep else None
+        mis_path = Path(mislabel_results) if mislabel_results else None
 
     if not benign_path or not adv_path:
         click.echo("Error: Need both benign and adversarial results.")
@@ -407,19 +761,45 @@ def main(
 
     # LaTeX tables
     click.echo("\n--- LaTeX Tables ---")
-    generate_latex_defense_table(benign_data, adv_data, tables_dir / "defense_ablation.tex")
+    generate_latex_defense_table(
+        benign_data, adv_data, tables_dir / "defense_ablation.tex",
+    )
+    generate_latex_latency_table(
+        benign_data, adv_data, tables_dir / "latency.tex",
+    )
 
     if attack_path:
         click.echo(f"Loading attack results:       {attack_path.name}")
         attack_data = json.loads(attack_path.read_text())
         generate_latex_attack_table(attack_data, tables_dir / "attack_results.tex")
+        generate_latex_attack_heatmap_table(
+            attack_data, tables_dir / "attack_heatmap.tex",
+        )
 
     # Plots
     click.echo("\n--- Plots ---")
     plot_rpr_comparison(benign_data, adv_data, plots_dir / "rpr_comparison.png")
+    plot_rpr_with_ci(benign_data, adv_data, plots_dir / "rpr_with_ci.png")
     plot_leakage_distribution(adv_data, plots_dir / "leakage_distribution.png")
     plot_context_size_reduction(benign_data, adv_data, plots_dir / "context_size.png")
     plot_defense_heatmap(benign_data, adv_data, plots_dir / "defense_heatmap.png")
+    plot_pd_distribution(adv_data, plots_dir / "pd_distribution.png")
+
+    # Optional sweep plots
+    if sweep_path:
+        click.echo(f"Loading sweep results:        {sweep_path.name}")
+        sweep_data = json.loads(sweep_path.read_text())
+        plot_connectivity_sweep(sweep_data, plots_dir / "connectivity_sweep.png")
+
+    if trav_path:
+        click.echo(f"Loading traversal sweep:      {trav_path.name}")
+        trav_data = json.loads(trav_path.read_text())
+        plot_traversal_sweep(trav_data, plots_dir / "traversal_pareto.png")
+
+    if mis_path:
+        click.echo(f"Loading mislabel results:     {mis_path.name}")
+        mis_data = json.loads(mis_path.read_text())
+        plot_mislabel_rate(mis_data, plots_dir / "mislabel_rate.png")
 
     # CSV
     click.echo("\n--- CSV ---")

@@ -456,12 +456,14 @@ def main(
         )
         p3_attack_metrics = compute_metrics(p3_attack_contexts)
 
-        # Also measure P4 (D1 defense) under attack
-        p4_attack_contexts = run_pipeline_queries(
-            "P4", queries, chroma_host, chroma_port,
-            neo4j_uri, neo4j_user, neo4j_pass,
-        )
-        p4_attack_metrics = compute_metrics(p4_attack_contexts)
+        # Measure defended pipelines (P4, P6, P8) under attack
+        defense_metrics = {}
+        for dvar in ["P4", "P6", "P8"]:
+            dvar_contexts = run_pipeline_queries(
+                dvar, queries, chroma_host, chroma_port,
+                neo4j_uri, neo4j_user, neo4j_pass,
+            )
+            defense_metrics[dvar] = compute_metrics(dvar_contexts)
 
         # Compute AF: P3_attack vs P3_clean
         af = amplification_factor(p3_attack_contexts, p3_clean_contexts)
@@ -471,7 +473,9 @@ def main(
             "payloads": len(payloads),
             "injection_stats": inject_stats,
             "P3_under_attack": p3_attack_metrics,
-            "P4_under_attack": p4_attack_metrics,
+            "P4_under_attack": defense_metrics["P4"],
+            "P6_under_attack": defense_metrics["P6"],
+            "P8_under_attack": defense_metrics["P8"],
             "amplification_factor_vs_clean": af,
         }
         all_results[f"{attack_name}"] = attack_result
@@ -481,11 +485,12 @@ def main(
             f"    RPR={p3_attack_metrics['rpr']:.3f}, "
             f"Leak={p3_attack_metrics['mean_leakage']:.2f}, AF={af:.2f}"
         )
-        click.echo(f"  P4 + {attack_name} (D1 defense):")
-        click.echo(
-            f"    RPR={p4_attack_metrics['rpr']:.3f}, "
-            f"Leak={p4_attack_metrics['mean_leakage']:.2f}"
-        )
+        for dvar in ["P4", "P6", "P8"]:
+            dm = defense_metrics[dvar]
+            click.echo(f"  {dvar} + {attack_name}:")
+            click.echo(
+                f"    RPR={dm['rpr']:.3f}, Leak={dm['mean_leakage']:.2f}"
+            )
 
         driver.close()
 
@@ -519,12 +524,15 @@ def main(
             f"{p3m['mean_leakage']:>6.2f} {af_str:>6} "
             f"{p3m['queries_with_leakage']}/{p3m['total_queries']:>4}"
         )
-        p4m = ar["P4_under_attack"]
-        click.echo(
-            f"{'P4 + ' + attack_name + ' (D1)':<25} {p4m['rpr']:>6.3f} "
-            f"{p4m['mean_leakage']:>6.2f} {'--':>6} "
-            f"{p4m['queries_with_leakage']}/{p4m['total_queries']:>4}"
-        )
+        for dvar in ["P4", "P6", "P8"]:
+            dm = ar.get(f"{dvar}_under_attack", {})
+            if dm:
+                label = f"{dvar} + {attack_name}"
+                click.echo(
+                    f"{label:<25} {dm['rpr']:>6.3f} "
+                    f"{dm['mean_leakage']:>6.2f} {'--':>6} "
+                    f"{dm['queries_with_leakage']}/{dm['total_queries']:>4}"
+                )
 
     click.echo("-" * 60)
 

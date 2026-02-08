@@ -1,0 +1,40 @@
+{
+  "experiment": "E5_embedding_sensitivity",
+  "models": [
+    {
+      "model": "all-MiniLM-L6-v2",
+      "dimension": 384,
+      "benign_rpr": 0.954,
+      "benign_mean_leakage": 15.99,
+      "benign_rpr_ci": [
+        0.931,
+        0.974
+      ],
+      "adversarial_rpr": 0.947,
+      "adversarial_mean_leakage": 19.38,
+      "adversarial_rpr_ci": [
+        0.907,
+        0.98
+      ],
+      "pd": 2.0
+    },
+    {
+      "model": "all-mpnet-base-v2",
+      "dimension": 768,
+      "benign_rpr": 0.994,
+      "benign_mean_leakage": 19.42,
+      "benign_rpr_ci": [
+        0.986,
+        1.0
+      ],
+      "adversarial_rpr": 0.98,
+      "adversarial_mean_leakage": 28.39,
+      "adversarial_rpr_ci": [
+        0.953,
+        1.0
+      ],
+      "pd": 2.0
+    }
+  ],
+  "conclusion": "Higher-quality embeddings slightly increase RPR and mean leakage. The vulnerability is structural, not embedding-dependent."
+}

@@ -1,0 +1,649 @@
+{
+  "experiment": "baseline_benign",
+  "timestamp": "20260207_071722",
+  "variants": {
+    "P1": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 13.390957999945385,
+        "p95_latency_ms": 4199.338687500396,
+        "mean_context_size": 10.0,
+        "total_queries": 10
+      },
+      "per_query": [
+        {
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 7390.0,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 7,
+            "INTERNAL": 3
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 35.9,
+          "tenant_distribution": {
+            "globex_finance": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 4,
+            "PUBLIC": 6
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 299.7,
+          "tenant_distribution": {
+            "initech_hr": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 30.8,
+          "tenant_distribution": {
+            "umbrella_security": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 7,
+            "INTERNAL": 2,
+            "CONFIDENTIAL": 1
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 13.4,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 6,
+            "PUBLIC": 4
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 13.4,
+          "tenant_distribution": {
+            "initech_hr": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 12.9,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 7,
+            "INTERNAL": 3
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 12.7,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "CONFIDENTIAL": 4,
+            "PUBLIC": 2,
+            "INTERNAL": 4
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 12.3,
+          "tenant_distribution": {
+            "globex_finance": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 5,
+            "CONFIDENTIAL": 2,
+            "INTERNAL": 3
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 11.5,
+          "tenant_distribution": {
+            "umbrella_security": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        }
+      ]
+    },
+    "P3": {
+      "security": {
+        "rpr": 0.9,
+        "mean_leakage": 24.2,
+        "amplification_factor": Infinity,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 9
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 27.559375000237196,
+        "p95_latency_ms": 711.499397549777,
+        "mean_context_size": 110.0,
+        "total_queries": 10
+      },
+      "per_query": [
+        {
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 6,
+          "over_clearance_items": 21,
+          "leakage_at_k": 27,
+          "pivot_depth": 1,
+          "latency_ms": 1234.1,
+          "tenant_distribution": {
+            "acme_engineering": 92,
+            "": 12,
+            "initech_hr": 6
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 64,
+            "INTERNAL": 25,
+            "CONFIDENTIAL": 16,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 72.8,
+          "tenant_distribution": {
+            "globex_finance": 12,
+            "": 98
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 6,
+            "PUBLIC": 104
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 5,
+          "over_clearance_items": 46,
+          "leakage_at_k": 46,
+          "pivot_depth": 1,
+          "latency_ms": 27.0,
+          "tenant_distribution": {
+            "initech_hr": 77,
+            "": 28,
+            "globex_finance": 5
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 64,
+            "RESTRICTED": 11,
+            "INTERNAL": 20,
+            "CONFIDENTIAL": 15
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 8,
+          "leakage_at_k": 8,
+          "pivot_depth": 1,
+          "latency_ms": 29.6,
+          "tenant_distribution": {
+            "umbrella_security": 79,
+            "": 31
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 66,
+            "INTERNAL": 23,
+            "CONFIDENTIAL": 13,
+            "RESTRICTED": 8
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 22,
+          "leakage_at_k": 22,
+          "pivot_depth": 1,
+          "latency_ms": 20.6,
+          "tenant_distribution": {
+            "acme_engineering": 69,
+            "": 41
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 24,
+            "PUBLIC": 64,
+            "CONFIDENTIAL": 17,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 5,
+          "over_clearance_items": 46,
+          "leakage_at_k": 46,
+          "pivot_depth": 1,
+          "latency_ms": 17.9,
+          "tenant_distribution": {
+            "initech_hr": 77,
+            "": 28,
+            "globex_finance": 5
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 64,
+            "RESTRICTED": 11,
+            "INTERNAL": 20,
+            "CONFIDENTIAL": 15
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 21,
+          "leakage_at_k": 21,
+          "pivot_depth": 1,
+          "latency_ms": 17.1,
+          "tenant_distribution": {
+            "acme_engineering": 70,
+            "": 40
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 70,
+            "INTERNAL": 19,
+            "CONFIDENTIAL": 16,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 7,
+          "over_clearance_items": 4,
+          "leakage_at_k": 11,
+          "pivot_depth": 1,
+          "latency_ms": 18.7,
+          "tenant_distribution": {
+            "acme_engineering": 71,
+            "": 32,
+            "initech_hr": 7
+          },
+          "sensitivity_distribution": {
+            "CONFIDENTIAL": 19,
+            "PUBLIC": 62,
+            "INTERNAL": 25,
+            "RESTRICTED": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 1,
+          "leakage_at_k": 1,
+          "pivot_depth": 1,
+          "latency_ms": 28.1,
+          "tenant_distribution": {
+            "globex_finance": 30,
+            "": 80
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 96,
+            "CONFIDENTIAL": 5,
+            "INTERNAL": 8,
+            "RESTRICTED": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 5,
+          "over_clearance_items": 60,
+          "leakage_at_k": 60,
+          "pivot_depth": 1,
+          "latency_ms": 33.4,
+          "tenant_distribution": {
+            "umbrella_security": 99,
+            "": 6,
+            "initech_hr": 5
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 50,
+            "CONFIDENTIAL": 24,
+            "INTERNAL": 33,
+            "RESTRICTED": 3
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

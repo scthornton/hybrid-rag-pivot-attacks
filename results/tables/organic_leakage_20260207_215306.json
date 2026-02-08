@@ -1,0 +1,176 @@
+{
+  "benign": {
+    "experiment_file": "results/tables/experiment_benign_20260207_204249.json",
+    "total_queries": 350,
+    "leaking_queries": 334,
+    "clean_queries": 16,
+    "rpr": 0.9542857142857143,
+    "total_leakage_items": 5595,
+    "mean_leakage_per_query": 15.985714285714286,
+    "mean_leakage_per_leaking_query": 16.751497005988025,
+    "bridge_category_breakdown": {
+      "queries_with_bridge_in_path": 159,
+      "queries_without_bridge_in_path": 175,
+      "category_query_counts": {
+        "shared_personnel": 104,
+        "shared_compliance": 46,
+        "shared_infrastructure": 43,
+        "shared_project": 7
+      },
+      "category_attributed_leakage": {
+        "shared_personnel": 1320.5,
+        "shared_compliance": 782.0,
+        "shared_infrastructure": 406.0,
+        "shared_project": 86.5
+      }
+    },
+    "hop1_ner_type_distribution": {
+      "ORG": 2551,
+      "PERSON": 1675,
+      "MONEY": 1277,
+      "DATE": 1042,
+      "CARDINAL": 670,
+      "GPE": 309,
+      "PRODUCT": 193,
+      "PERCENT": 184,
+      "TIME": 176,
+      "ORDINAL": 74,
+      "NORP": 71,
+      "ART": 50,
+      "EVENT": 38,
+      "LAW": 27,
+      "LOC": 14,
+      "FAC": 1
+    },
+    "per_tenant_leakage": {
+      "acme_engineering": {
+        "total_queries": 85,
+        "leaking_queries": 85,
+        "rpr": 1.0,
+        "total_leakage": 1372,
+        "bridge_categories": {
+          "shared_personnel": 85,
+          "shared_infrastructure": 34,
+          "shared_project": 7
+        }
+      },
+      "globex_finance": {
+        "total_queries": 88,
+        "leaking_queries": 72,
+        "rpr": 0.818,
+        "total_leakage": 1005,
+        "bridge_categories": {
+          "shared_compliance": 6
+        }
+      },
+      "initech_hr": {
+        "total_queries": 89,
+        "leaking_queries": 89,
+        "rpr": 1.0,
+        "total_leakage": 1859,
+        "bridge_categories": {
+          "shared_personnel": 19
+        }
+      },
+      "umbrella_security": {
+        "total_queries": 88,
+        "leaking_queries": 88,
+        "rpr": 1.0,
+        "total_leakage": 1359,
+        "bridge_categories": {
+          "shared_compliance": 40,
+          "shared_infrastructure": 9
+        }
+      }
+    }
+  },
+  "adversarial": {
+    "experiment_file": "results/tables/experiment_adversarial_20260207_204401.json",
+    "total_queries": 150,
+    "leaking_queries": 142,
+    "clean_queries": 8,
+    "rpr": 0.9466666666666667,
+    "total_leakage_items": 2907,
+    "mean_leakage_per_query": 19.38,
+    "mean_leakage_per_leaking_query": 20.471830985915492,
+    "bridge_category_breakdown": {
+      "queries_with_bridge_in_path": 120,
+      "queries_without_bridge_in_path": 22,
+      "category_query_counts": {
+        "shared_personnel": 67,
+        "shared_compliance": 33,
+        "shared_vendor": 30,
+        "shared_project": 24,
+        "shared_infrastructure": 16
+      },
+      "category_attributed_leakage": {
+        "shared_personnel": 1243.7,
+        "shared_compliance": 489.3,
+        "shared_project": 228.0,
+        "shared_vendor": 218.2,
+        "shared_infrastructure": 212.8
+      }
+    },
+    "hop1_ner_type_distribution": {
+      "ORG": 1134,
+      "PERSON": 724,
+      "DATE": 584,
+      "MONEY": 309,
+      "CARDINAL": 299,
+      "GPE": 106,
+      "TIME": 101,
+      "PRODUCT": 72,
+      "PERCENT": 41,
+      "NORP": 34,
+      "ORDINAL": 30,
+      "LAW": 12,
+      "LOC": 7,
+      "ART": 7,
+      "EVENT": 6
+    },
+    "per_tenant_leakage": {
+      "acme_engineering": {
+        "total_queries": 38,
+        "leaking_queries": 38,
+        "rpr": 1.0,
+        "total_leakage": 860,
+        "bridge_categories": {
+          "shared_personnel": 38,
+          "shared_project": 12,
+          "shared_vendor": 11,
+          "shared_infrastructure": 10
+        }
+      },
+      "globex_finance": {
+        "total_queries": 39,
+        "leaking_queries": 31,
+        "rpr": 0.795,
+        "total_leakage": 259,
+        "bridge_categories": {
+          "shared_vendor": 19,
+          "shared_compliance": 12,
+          "shared_project": 12
+        }
+      },
+      "initech_hr": {
+        "total_queries": 36,
+        "leaking_queries": 36,
+        "rpr": 1.0,
+        "total_leakage": 911,
+        "bridge_categories": {
+          "shared_personnel": 29
+        }
+      },
+      "umbrella_security": {
+        "total_queries": 37,
+        "leaking_queries": 37,
+        "rpr": 1.0,
+        "total_leakage": 877,
+        "bridge_categories": {
+          "shared_compliance": 21,
+          "shared_infrastructure": 6
+        }
+      }
+    }
+  }
+}

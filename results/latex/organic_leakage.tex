@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Organic leakage breakdown by bridge entity category under P3 (no injection). Query involvement shows the fraction of leaking queries where that bridge type appears at hop 1 in the traversal path.}
+\label{tab:organic-leakage}
+\small
+\begin{tabular}{l|rr|rr}
+\toprule
+\textbf{Bridge Category} & \multicolumn{2}{c|}{\textbf{Benign}} & \multicolumn{2}{c}{\textbf{Adversarial}} \\
+ & Queries & Leak & Queries & Leak \\
+\midrule
+  Vendor & 0 & 0 & 30 & 218 \\
+  Infrastructure & 43 & 406 & 16 & 213 \\
+  Personnel & 104 & 1320 & 67 & 1244 \\
+  Compliance & 46 & 782 & 33 & 489 \\
+  Project & 7 & 86 & 24 & 228 \\
+\midrule
+  Total & 334 & 5595 & 142 & 2907 \\
+\bottomrule
+\end{tabular}
+\end{table}

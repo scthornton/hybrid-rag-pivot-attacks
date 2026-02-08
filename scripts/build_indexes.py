@@ -265,11 +265,15 @@ def step_score_provenance(chunks: list[dict]) -> list[dict]:
     return chunks
 
 
-def step_embed(chunks: list[dict], batch_size: int) -> list[dict]:
+def step_embed(
+    chunks: list[dict],
+    batch_size: int,
+    model_name: str = "all-MiniLM-L6-v2",
+) -> list[dict]:
     """Step 6: Generate embeddings for all chunks."""
     from pivorag.vector.embed import EmbeddingModel
 
-    model = EmbeddingModel()
+    model = EmbeddingModel(model_name=model_name)
     texts = [c["text"] for c in chunks]
 
     click.echo(f"  Generating embeddings for {len(texts)} chunks (batch_size={batch_size})...")
@@ -489,6 +493,7 @@ def save_processed_data(
 @click.option("--embed-batch-size", default=64, type=int, help="Embedding batch size")
 @click.option("--dry-run", is_flag=True, help="Process data without writing to databases")
 @click.option("--skip-embed", is_flag=True, help="Skip embedding generation (fast iteration)")
+@click.option("--embed-model", default="all-MiniLM-L6-v2", help="Sentence-transformer model name")
 def main(
     data: str,
     output: str,
@@ -503,6 +508,7 @@ def main(
     embed_batch_size: int,
     dry_run: bool,
     skip_embed: bool,
+    embed_model: str,
 ) -> None:
     """Build vector and graph indexes from synthetic enterprise data."""
     start = time.perf_counter()
@@ -537,8 +543,8 @@ def main(
     if skip_embed:
         click.echo("\n[6/8] Skipping embeddings (--skip-embed)")
     else:
-        click.echo("\n[6/8] Generating embeddings...")
-        chunks = step_embed(chunks, batch_size=embed_batch_size)
+        click.echo(f"\n[6/8] Generating embeddings ({embed_model})...")
+        chunks = step_embed(chunks, batch_size=embed_batch_size, model_name=embed_model)
 
     # Save processed data regardless of dry-run
     click.echo("\n[7/8] Saving processed data...")

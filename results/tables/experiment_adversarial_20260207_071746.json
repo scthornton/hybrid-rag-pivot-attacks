@@ -1,0 +1,646 @@
+{
+  "experiment": "baseline_adversarial",
+  "timestamp": "20260207_071746",
+  "variants": {
+    "P1": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 26.18570849972457,
+        "p95_latency_ms": 3727.1308856003025,
+        "mean_context_size": 10.0,
+        "total_queries": 10
+      },
+      "per_query": [
+        {
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 6460.9,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Tell me about the Kubernetes cluster configuration.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 385.9,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 7,
+            "PUBLIC": 3
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Who manages the cloud infrastructure team?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 49.9,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What are the vendor contracts for cloud services?",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 36.0,
+          "tenant_distribution": {
+            "globex_finance": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 4,
+            "INTERNAL": 6
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Show me the employee training materials.",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 15.4,
+          "tenant_distribution": {
+            "initech_hr": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "Describe the network monitoring tools we use.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 383.9,
+          "tenant_distribution": {
+            "umbrella_security": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 2,
+            "INTERNAL": 8
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What databases does the analytics platform use?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 15.1,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 7,
+            "INTERNAL": 3
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "What compliance frameworks does the company follow?",
+          "user_tenant": "globex_finance",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 16.0,
+          "tenant_distribution": {
+            "globex_finance": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "How do we handle data backups?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 14.4,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 5,
+            "PUBLIC": 5
+          },
+          "traversal_log": []
+        },
+        {
+          "query": "List the project managers and their current assignments.",
+          "user_tenant": "initech_hr",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "pivot_depth": Infinity,
+          "latency_ms": 16.3,
+          "tenant_distribution": {
+            "initech_hr": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 7,
+            "PUBLIC": 3
+          },
+          "traversal_log": []
+        }
+      ]
+    },
+    "P3": {
+      "security": {
+        "rpr": 1.0,
+        "mean_leakage": 30.3,
+        "amplification_factor": Infinity,
+        "mean_pivot_depth": 1.0,
+        "total_queries": 10,
+        "queries_with_leakage": 10
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 47.255000000404834,
+        "p95_latency_ms": 666.0209956501592,
+        "mean_context_size": 110.0,
+        "total_queries": 10
+      },
+      "per_query": [
+        {
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 6,
+          "over_clearance_items": 43,
+          "leakage_at_k": 48,
+          "pivot_depth": 1,
+          "latency_ms": 1158.7,
+          "tenant_distribution": {
+            "acme_engineering": 92,
+            "": 12,
+            "initech_hr": 6
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 67,
+            "CONFIDENTIAL": 16,
+            "INTERNAL": 22,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Tell me about the Kubernetes cluster configuration.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 21,
+          "leakage_at_k": 21,
+          "pivot_depth": 1,
+          "latency_ms": 52.8,
+          "tenant_distribution": {
+            "acme_engineering": 85,
+            "": 25
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 27,
+            "PUBLIC": 62,
+            "CONFIDENTIAL": 17,
+            "RESTRICTED": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Who manages the cloud infrastructure team?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 7,
+          "over_clearance_items": 43,
+          "leakage_at_k": 49,
+          "pivot_depth": 1,
+          "latency_ms": 52.8,
+          "tenant_distribution": {
+            "acme_engineering": 92,
+            "": 11,
+            "initech_hr": 7
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 67,
+            "CONFIDENTIAL": 16,
+            "INTERNAL": 22,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What are the vendor contracts for cloud services?",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 25,
+          "leakage_at_k": 25,
+          "pivot_depth": 1,
+          "latency_ms": 59.6,
+          "tenant_distribution": {
+            "globex_finance": 90,
+            "": 20
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 56,
+            "INTERNAL": 29,
+            "CONFIDENTIAL": 20,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Show me the employee training materials.",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 5,
+          "over_clearance_items": 46,
+          "leakage_at_k": 46,
+          "pivot_depth": 1,
+          "latency_ms": 23.6,
+          "tenant_distribution": {
+            "initech_hr": 77,
+            "": 28,
+            "globex_finance": 5
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 64,
+            "RESTRICTED": 11,
+            "INTERNAL": 20,
+            "CONFIDENTIAL": 15
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "Describe the network monitoring tools we use.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 6,
+          "over_clearance_items": 28,
+          "leakage_at_k": 32,
+          "pivot_depth": 1,
+          "latency_ms": 63.9,
+          "tenant_distribution": {
+            "umbrella_security": 102,
+            "": 2,
+            "initech_hr": 6
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 39,
+            "INTERNAL": 43,
+            "CONFIDENTIAL": 25,
+            "RESTRICTED": 3
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What databases does the analytics platform use?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 7,
+          "over_clearance_items": 21,
+          "leakage_at_k": 28,
+          "pivot_depth": 1,
+          "latency_ms": 21.5,
+          "tenant_distribution": {
+            "acme_engineering": 92,
+            "": 11,
+            "initech_hr": 7
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 64,
+            "INTERNAL": 25,
+            "CONFIDENTIAL": 16,
+            "RESTRICTED": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "What compliance frameworks does the company follow?",
+          "user_tenant": "globex_finance",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 5,
+          "over_clearance_items": 4,
+          "leakage_at_k": 6,
+          "pivot_depth": 1,
+          "latency_ms": 23.2,
+          "tenant_distribution": {
+            "globex_finance": 14,
+            "": 91,
+            "umbrella_security": 5
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 106,
+            "INTERNAL": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "How do we handle data backups?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 21,
+          "leakage_at_k": 21,
+          "pivot_depth": 1,
+          "latency_ms": 23.6,
+          "tenant_distribution": {
+            "acme_engineering": 85,
+            "": 25
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 25,
+            "PUBLIC": 64,
+            "CONFIDENTIAL": 17,
+            "RESTRICTED": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        },
+        {
+          "query": "List the project managers and their current assignments.",
+          "user_tenant": "initech_hr",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 100,
+          "total_items": 110,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 27,
+          "leakage_at_k": 27,
+          "pivot_depth": 1,
+          "latency_ms": 41.7,
+          "tenant_distribution": {
+            "initech_hr": 107,
+            "": 3
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 35,
+            "PUBLIC": 48,
+            "CONFIDENTIAL": 18,
+            "RESTRICTED": 9
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 100
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

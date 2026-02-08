@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Embedding model sensitivity: P3 RPR and mean Leakage@k across two embedding models. The vulnerability persists regardless of embedding quality.}
+\label{tab:embedding-sensitivity}
+\small
+\begin{tabular}{l|cc|cc}
+\toprule
+\textbf{Model} & \multicolumn{2}{c|}{\textbf{Benign}} & \multicolumn{2}{c}{\textbf{Adversarial}} \\
+ & RPR & Leak & RPR & Leak \\
+\midrule
+  MiniLM-L6 (384d) & 0.954 & 16.0 & 0.947 & 19.4 \\
+  MPNet (768d) & 0.994 & 19.4 & 0.980 & 28.4 \\
+\bottomrule
+\end{tabular}
+\end{table}

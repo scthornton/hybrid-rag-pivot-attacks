@@ -1,0 +1,31 @@
+\begin{table}[t]
+\centering
+\caption{Latency and context size across pipeline variants. Latency is measured in milliseconds.}
+\label{tab:latency}
+\small
+\begin{tabular}{l|ccc|c|c}
+\toprule
+\textbf{Variant} & \textbf{p50} & \textbf{p95} & \textbf{Mean} & \textbf{Ctx Size} & \textbf{RPR} \\
+\midrule
+\multicolumn{6}{c}{\textit{Benign Queries}} \\
+\midrule
+  P1 (Vector-only) & 12.6 & 19.9 & 16.2 & 10 & 0.000 \\
+  P3 (Hybrid) & 26.7 & 38.1 & 32.4 & 110 & 0.954 \\
+  P4 (+D1) & 26.5 & 34.4 & 30.4 & 56 & 0.000 \\
+  P5 (+D1,D2) & 26.0 & 33.6 & 29.8 & 57 & 0.000 \\
+  P6 (+D1-D3) & 23.1 & 29.8 & 26.4 & 29 & 0.000 \\
+  P7 (+D1-D4) & 24.3 & 37.3 & 30.8 & 28 & 0.000 \\
+  P8 (All) & 22.7 & 28.6 & 25.6 & 20 & 0.000 \\
+\midrule
+\multicolumn{6}{c}{\textit{Adversarial Queries}} \\
+\midrule
+  P1 (Vector-only) & 12.3 & 34.6 & 23.5 & 10 & 0.000 \\
+  P3 (Hybrid) & 27.3 & 40.2 & 33.7 & 110 & 0.947 \\
+  P4 (+D1) & 26.3 & 32.2 & 29.3 & 50 & 0.000 \\
+  P5 (+D1,D2) & 25.5 & 38.3 & 31.9 & 51 & 0.000 \\
+  P6 (+D1-D3) & 23.1 & 33.7 & 28.4 & 28 & 0.000 \\
+  P7 (+D1-D4) & 23.2 & 28.7 & 25.9 & 24 & 0.000 \\
+  P8 (All) & 22.9 & 30.1 & 26.5 & 20 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}

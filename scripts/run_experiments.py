@@ -40,8 +40,12 @@ from pivorag.config import (
 from pivorag.eval.benchmark import BenchmarkQuery, BenchmarkRunner
 from pivorag.eval.metrics import (
     amplification_factor,
+    amplification_factor_epsilon,
+    delta_leakage,
     leakage_at_k,
     pivot_depth,
+    pivot_depth_distribution,
+    severity_weighted_leakage,
 )
 from pivorag.pipelines.base import RetrievalContext
 
@@ -222,6 +226,8 @@ def create_pipeline(
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
+    embed_model: str = "all-MiniLM-L6-v2",
+    chroma_collection: str = "pivorag_chunks",
 ):
     """Create a pipeline instance connected to live services."""
     from pivorag.vector.embed import EmbeddingModel
@@ -229,11 +235,11 @@ def create_pipeline(
     from pivorag.vector.retrieve import VectorRetriever
 
     config = build_pipeline_config(variant)
-    model = EmbeddingModel("all-MiniLM-L6-v2")
+    model = EmbeddingModel(embed_model)
     index = VectorIndex(
         host=chroma_host,
         port=chroma_port,
-        collection_name="pivorag_chunks",
+        collection_name=chroma_collection,
     )
     retriever = VectorRetriever(index=index, embedding_model=model)
 
@@ -258,9 +264,14 @@ def create_pipeline(
 
 # ── Query loading ────────────────────────────────────────────────
 
-def load_queries(query_set: str) -> list[BenchmarkQuery]:
-    """Load queries from JSON file and convert to BenchmarkQuery objects."""
-    path = Path(f"data/queries/{query_set}.json")
+def load_queries(query_set: str, queries_file: str | None = None) -> list[BenchmarkQuery]:
+    """Load queries from JSON file and convert to BenchmarkQuery objects.
+
+    Args:
+        query_set: Name of the query set (e.g., "benign", "adversarial").
+        queries_file: Optional explicit file path. Overrides query_set-based lookup.
+    """
+    path = Path(queries_file) if queries_file else Path(f"data/queries/{query_set}.json")
     raw = json.loads(path.read_text())
     queries = []
     for q in raw:
@@ -276,7 +287,10 @@ def load_queries(query_set: str) -> list[BenchmarkQuery]:
 
 # ── Detailed per-query analysis ──────────────────────────────────
 
-def analyze_context(ctx: RetrievalContext) -> dict[str, Any]:
+def analyze_context(
+    ctx: RetrievalContext,
+    query_id: str = "",
+) -> dict[str, Any]:
     """Produce detailed per-query analysis of a retrieval context."""
     all_items = ctx.chunks + ctx.graph_nodes
     cross_tenant = [
@@ -297,6 +311,7 @@ def analyze_context(ctx: RetrievalContext) -> dict[str, Any]:
         sens_counts[s] = sens_counts.get(s, 0) + 1
 
     return {
+        "query_id": query_id,
         "query": ctx.query,
         "user_tenant": ctx.user_tenant,
         "user_clearance": ctx.user_clearance.value,
@@ -307,6 +322,7 @@ def analyze_context(ctx: RetrievalContext) -> dict[str, Any]:
         "cross_tenant_items": len(cross_tenant),
         "over_clearance_items": len(over_clearance),
         "leakage_at_k": leakage_at_k(ctx),
+        "severity_weighted_leakage": severity_weighted_leakage(ctx),
         "pivot_depth": pivot_depth(ctx),
         "latency_ms": round(ctx.latency_ms, 1),
         "tenant_distribution": tenant_counts,
@@ -326,9 +342,13 @@ def run_experiment(
     neo4j_user: str,
     neo4j_pass: str,
     output_dir: str,
+    queries_file: str | None = None,
+    bootstrap: bool = False,
+    embed_model: str = "all-MiniLM-L6-v2",
+    chroma_collection: str = "pivorag_chunks",
 ) -> dict[str, Any]:
     """Run all specified pipeline variants against a query set."""
-    queries = load_queries(query_set)
+    queries = load_queries(query_set, queries_file=queries_file)
     click.echo(f"Loaded {len(queries)} {query_set} queries")
 
     results: dict[str, Any] = {}
@@ -343,17 +363,26 @@ def run_experiment(
         pipeline = create_pipeline(
             variant, chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            embed_model=embed_model,
+            chroma_collection=chroma_collection,
         )
 
         runner = BenchmarkRunner(output_dir=output_dir)
         p1_contexts = all_contexts.get("P1")
-        result = runner.run(pipeline, queries, vector_baseline_contexts=p1_contexts)
+        result = runner.run(
+            pipeline, queries,
+            vector_baseline_contexts=p1_contexts,
+            compute_bootstrap=bootstrap,
+        )
 
         # Store contexts for AF computation
         all_contexts[variant] = result.raw_contexts
 
-        # Detailed per-query analysis
-        per_query = [analyze_context(ctx) for ctx in result.raw_contexts]
+        # Detailed per-query analysis with query IDs
+        per_query = [
+            analyze_context(ctx, query_id=queries[i].user_id)
+            for i, ctx in enumerate(result.raw_contexts)
+        ]
 
         results[variant] = {
             "security": result.security.to_dict(),
@@ -361,21 +390,42 @@ def run_experiment(
             "per_query": per_query,
         }
 
-        # Recompute AF if we have P1 baseline
+        # Recompute AF variants if we have P1 baseline
         if variant != "P1" and p1_contexts:
             af = amplification_factor(result.raw_contexts, p1_contexts)
+            af_eps = amplification_factor_epsilon(result.raw_contexts, p1_contexts)
+            d_leak = delta_leakage(result.raw_contexts, p1_contexts)
             results[variant]["security"]["amplification_factor"] = af
+            results[variant]["security"]["af_epsilon"] = af_eps
+            results[variant]["security"]["delta_leakage"] = d_leak
+
+        # PD distribution
+        pd_dist = pivot_depth_distribution(result.raw_contexts)
+        results[variant]["security"]["pd_distribution"] = pd_dist
 
         # Print summary
         sec = result.security
         click.echo(f"  RPR:          {sec.rpr:.3f}")
         click.echo(f"  Mean Leak:    {sec.mean_leakage:.2f}")
+        click.echo(f"  Sev-W Leak:   {sec.mean_severity_weighted_leakage:.2f}")
         click.echo(f"  AF:           {sec.amplification_factor:.2f}")
+        af_eps_val = results[variant]["security"].get("af_epsilon", 0)
+        click.echo(f"  AF(eps):      {af_eps_val:.2f}")
         click.echo(f"  Mean PD:      {sec.mean_pivot_depth:.2f}")
+        click.echo(f"  PD dist:      {pd_dist}")
         click.echo(f"  Leak Queries: {sec.queries_with_leakage}/{sec.total_queries}")
         click.echo(f"  p50 latency:  {result.utility.p50_latency_ms:.1f}ms")
         click.echo(f"  p95 latency:  {result.utility.p95_latency_ms:.1f}ms")
         click.echo(f"  Ctx size:     {result.utility.mean_context_size:.1f}")
+
+        if bootstrap and sec.rpr_ci:
+            click.echo(
+                f"  RPR 95% CI:   [{sec.rpr_ci[1]:.3f}, {sec.rpr_ci[2]:.3f}]"
+            )
+        if bootstrap and sec.leakage_ci:
+            click.echo(
+                f"  Leak 95% CI:  [{sec.leakage_ci[1]:.2f}, {sec.leakage_ci[2]:.2f}]"
+            )
 
         # Save individual result
         runner.save_results(result, label=query_set)
@@ -450,23 +500,31 @@ def save_full_results(results: dict[str, Any], query_set: str, output_dir: str) 
     type=click.Choice(["benign", "adversarial", "both"]),
     help="Query set to use",
 )
+@click.option("--queries-file", default=None, help="Explicit path to queries JSON file")
+@click.option("--bootstrap", is_flag=True, help="Compute bootstrap 95%% CIs")
 @click.option("--chroma-host", default="localhost")
 @click.option("--chroma-port", default=8000, type=int)
 @click.option("--neo4j-uri", default="bolt://localhost:7687")
 @click.option("--neo4j-user", default="neo4j")
 @click.option("--neo4j-pass", default="pivorag_dev_2025")
 @click.option("--output", "-o", default="results")
+@click.option("--embed-model", default="all-MiniLM-L6-v2", help="Embedding model name")
+@click.option("--chroma-collection", default="pivorag_chunks", help="ChromaDB collection")
 def main(
     baseline: bool,
     full: bool,
     variants: tuple[str, ...],
     queries: str,
+    queries_file: str | None,
+    bootstrap: bool,
     chroma_host: str,
     chroma_port: int,
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
     output: str,
+    embed_model: str,
+    chroma_collection: str,
 ) -> None:
     """Run PivoRAG experiments and measure retrieval pivot risk."""
     start = time.perf_counter()
@@ -492,6 +550,10 @@ def main(
     click.echo("PivoRAG Experiment Runner")
     click.echo(f"Variants: {', '.join(variant_list)}")
     click.echo(f"Queries:  {', '.join(query_sets)}")
+    if queries_file:
+        click.echo(f"File:     {queries_file}")
+    if bootstrap:
+        click.echo("Bootstrap: enabled (10,000 resamples)")
     click.echo(f"Output:   {output}/")
 
     for qset in query_sets:
@@ -500,6 +562,10 @@ def main(
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
             output,
+            queries_file=queries_file,
+            bootstrap=bootstrap,
+            embed_model=embed_model,
+            chroma_collection=chroma_collection,
         )
         print_comparison_table(results, qset)
         save_full_results(results, qset, output)

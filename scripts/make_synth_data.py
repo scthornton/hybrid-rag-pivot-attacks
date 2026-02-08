@@ -148,6 +148,106 @@ for bridge_type, entities in BRIDGE_ENTITIES.items():
     for entity in entities:
         ALL_BRIDGE_ENTITIES.append({**entity, "type": bridge_type})
 
+
+# Extra bridge entity pools for counts > 15
+EXTRA_VENDOR_NAMES = [
+    "TechVault", "InfraPrime", "NetScale", "CloudBridge",
+    "DataForge", "CyberShield", "QuantumOps", "NexaFlow",
+    "CoreSync", "VaultEdge", "StreamLine", "PlatformX",
+    "OmniStack", "GridLock", "ByteForce",
+]
+
+EXTRA_INFRA_NAMES = [
+    "monitoring-hub", "backup-controller", "dns-resolver",
+    "vpn-gateway", "load-balancer-v2", "secrets-vault",
+    "artifact-registry", "feature-flag-service", "rate-limiter",
+    "identity-provider", "config-server", "audit-logger",
+]
+
+EXTRA_PERSONNEL_NAMES = [
+    "Daniel Park", "Nadia Petrova", "Raj Kapoor",
+    "Samantha Lee", "Omar Hassan", "Priya Sharma",
+    "Thomas Müller", "Yuki Tanaka", "Liam O'Connor",
+    "Sofia Reyes", "Chen Wei", "Anna Kowalski",
+]
+
+EXTRA_COMPLIANCE_NAMES = [
+    "HIPAA-audit", "FedRAMP-cert", "GDPR-program",
+    "CCPA-compliance", "NIST-800-53", "SOX-certification",
+]
+
+EXTRA_PROJECT_NAMES = [
+    "ProjectZenith", "ProjectMercury", "ProjectOdyssey",
+    "ProjectVanguard", "ProjectCatalyst", "ProjectEclipse",
+]
+
+
+def _generate_extra_bridges(count: int) -> list[dict]:
+    """Generate additional bridge entities beyond the base 15.
+
+    Cycles through extra pools (vendor, infra, personnel, compliance, project)
+    to produce cross-tenant bridge entities programmatically.
+    """
+    tenant_pairs = [
+        ("acme_engineering", "globex_finance"),
+        ("acme_engineering", "umbrella_security"),
+        ("initech_hr", "acme_engineering"),
+        ("globex_finance", "umbrella_security"),
+        ("acme_engineering", "globex_finance", "initech_hr"),
+    ]
+
+    extra_pools = [
+        ("shared_vendor", EXTRA_VENDOR_NAMES),
+        ("shared_infrastructure", EXTRA_INFRA_NAMES),
+        ("shared_personnel", EXTRA_PERSONNEL_NAMES),
+        ("shared_compliance", EXTRA_COMPLIANCE_NAMES),
+        ("shared_project", EXTRA_PROJECT_NAMES),
+    ]
+
+    extras = []
+    pool_idx = 0
+    name_idx_per_pool = {bt: 0 for bt, _ in extra_pools}
+
+    for i in range(count):
+        bridge_type, pool = extra_pools[pool_idx % len(extra_pools)]
+        name_idx = name_idx_per_pool[bridge_type]
+        if name_idx >= len(pool):
+            pool_idx += 1
+            continue
+        name = pool[name_idx]
+        name_idx_per_pool[bridge_type] = name_idx + 1
+
+        connects = list(tenant_pairs[i % len(tenant_pairs)])
+        mention_variants = [name, name.replace("-", " "), name.replace("-", "_")]
+
+        extras.append({
+            "name": name,
+            "type": bridge_type,
+            "connects": connects,
+            "mention_as": mention_variants,
+        })
+        pool_idx += 1
+
+    return extras
+
+
+def get_bridge_entities(bridge_count: int | None = None) -> list[dict]:
+    """Get the bridge entity list, optionally limited or extended.
+
+    - None or 15: use the default 15 bridge entities
+    - 0-14: take first N from the default list
+    - 16-40+: default 15 + programmatically generated extras
+    """
+    if bridge_count is None:
+        return list(ALL_BRIDGE_ENTITIES)
+
+    if bridge_count <= len(ALL_BRIDGE_ENTITIES):
+        return ALL_BRIDGE_ENTITIES[:bridge_count]
+
+    extra_needed = bridge_count - len(ALL_BRIDGE_ENTITIES)
+    extras = _generate_extra_bridges(extra_needed)
+    return list(ALL_BRIDGE_ENTITIES) + extras
+
 # ---------------------------------------------------------------------------
 # Named employees — consistent across documents for graph connectivity
 # ---------------------------------------------------------------------------
@@ -805,8 +905,17 @@ def assign_sensitivity(tiers: list[dict]) -> str:
     return "PUBLIC"
 
 
-def generate_dataset(cfg: dict) -> list[dict]:
-    """Generate the full synthetic dataset from config."""
+def generate_dataset(
+    cfg: dict,
+    bridge_count: int | None = None,
+) -> list[dict]:
+    """Generate the full synthetic dataset from config.
+
+    Args:
+        cfg: Dataset configuration dictionary.
+        bridge_count: Number of bridge entities to include.
+            None = use all 15 default. 0 = no bridges. >15 = generate extras.
+    """
     dataset_cfg = cfg.get("dataset", cfg)
     scale_cfg = dataset_cfg.get("scale", {})
     preset = scale_cfg.get("preset", "small")
@@ -821,11 +930,14 @@ def generate_dataset(cfg: dict) -> list[dict]:
         {"name": "RESTRICTED", "fraction": 0.10},
     ])
 
+    # Get the bridge entity list (may be truncated or extended)
+    active_bridges = get_bridge_entities(bridge_count)
+
     domains = list(GENERATORS.keys())
     documents: list[GeneratedDoc] = []
 
     # Reserve ~10% of documents for bridge entity docs
-    bridge_doc_count = max(total_docs // 10, len(ALL_BRIDGE_ENTITIES) * 2)
+    bridge_doc_count = max(total_docs // 10, len(active_bridges) * 2) if active_bridges else 0
     regular_doc_count = total_docs - bridge_doc_count
 
     # Generate regular domain documents
@@ -842,7 +954,7 @@ def generate_dataset(cfg: dict) -> list[dict]:
     # Generate bridge entity documents
     # Each bridge entity gets at least 2 documents (one per connected tenant)
     bridge_docs_generated = 0
-    for bridge in ALL_BRIDGE_ENTITIES:
+    for bridge in active_bridges:
         for tenant in bridge["connects"]:
             if bridge_docs_generated >= bridge_doc_count:
                 break
@@ -853,8 +965,8 @@ def generate_dataset(cfg: dict) -> list[dict]:
             bridge_docs_generated += 1
 
     # Fill remaining bridge slots with random bridge docs
-    while bridge_docs_generated < bridge_doc_count:
-        bridge = random.choice(ALL_BRIDGE_ENTITIES)
+    while bridge_docs_generated < bridge_doc_count and active_bridges:
+        bridge = random.choice(active_bridges)
         tenant = random.choice(bridge["connects"])
         sensitivity = random.choice(["PUBLIC", "INTERNAL"])
         doc = gen_bridge_document(bridge, tenant, sensitivity)
@@ -922,7 +1034,16 @@ def compute_stats(documents: list[dict]) -> dict:
               help="Override scale preset (small, medium, large)")
 @click.option("--seed", default=42, type=int, help="Random seed for reproducibility")
 @click.option("--stats/--no-stats", default=True, help="Print statistics after generation")
-def main(config: str, output: str, scale: str | None, seed: int, stats: bool) -> None:
+@click.option("--bridge-count", default=None, type=int,
+              help="Number of bridge entities (0=none, 15=default, >15=generate extras)")
+def main(
+    config: str,
+    output: str,
+    scale: str | None,
+    seed: int,
+    stats: bool,
+    bridge_count: int | None,
+) -> None:
     """Generate synthetic enterprise dataset for PivoRAG experiments."""
     # Set seeds for reproducibility
     random.seed(seed)
@@ -940,10 +1061,11 @@ def main(config: str, output: str, scale: str | None, seed: int, stats: bool) ->
     presets = dataset_cfg.get("scale", {}).get("presets", {})
     total_docs = presets.get(preset, {}).get("total_documents", 1000)
 
-    click.echo(f"Generating {total_docs} documents (preset: {preset}, seed: {seed})")
+    bc_label = f", bridge_count={bridge_count}" if bridge_count is not None else ""
+    click.echo(f"Generating {total_docs} documents (preset: {preset}, seed: {seed}{bc_label})")
 
     # Generate documents
-    documents = generate_dataset(cfg)
+    documents = generate_dataset(cfg, bridge_count=bridge_count)
 
     # Save output
     output_dir = Path(output)
