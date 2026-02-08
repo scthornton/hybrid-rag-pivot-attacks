@@ -593,13 +593,17 @@ references that any multi-tenant organization would exhibit.
 \subsection{Knowledge Graph Construction}
 
 Documents undergo chunking (300-token windows, 50-token overlap),
+producing ${\sim}$2{,}000 chunks from 1{,}000 source documents
+(average ${\sim}$2 chunks per document). Chunks are processed through
 spaCy NER extraction (\texttt{en\_core\_web\_sm}), two-pass
 relation extraction (ground-truth relation resolution followed by
 pattern-based extraction across 5 typed relations: DEPENDS\_ON,
 OWNED\_BY, BELONGS\_TO, CONTAINS, DERIVED\_FROM, plus RELATED\_TO
 fallback), and embedding via all-MiniLM-L6-v2 (384 dimensions). The
-resulting graph contains 2{,}785 nodes (785 entity nodes + 2{,}000
-chunk nodes) and 15{,}514 edges.
+resulting knowledge graph contains 2{,}785 nodes (785 entity nodes +
+2{,}000 chunk nodes) and 15{,}514 edges (7{,}386 extracted relations
+plus MENTIONS, CONTAINS, and BELONGS\_TO structural edges added during
+graph construction).
 
 \subsection{Pipeline Variants}
 
