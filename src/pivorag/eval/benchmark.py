@@ -22,7 +22,12 @@ from pivorag.eval.metrics import (
     retrieval_pivot_risk,
     severity_weighted_leakage,
 )
-from pivorag.eval.utility import UtilityMetrics, latency_percentiles
+from pivorag.eval.utility import (
+    UtilityMetrics,
+    context_precision_at_k,
+    context_recall_at_k,
+    latency_percentiles,
+)
 from pivorag.pipelines.base import BasePipeline, RetrievalContext
 
 
@@ -31,6 +36,7 @@ class BenchmarkQuery:
     query: str
     query_type: str  # benign | adversarial | attack_assisted
     expected_answer: str | None = None
+    ground_truth_doc_ids: list[str] = field(default_factory=list)
     user_id: str = "eval_user"
     user_tenant: str = "acme_engineering"
     user_clearance: str = "INTERNAL"
@@ -86,8 +92,16 @@ class BenchmarkRunner:
         queries: list[BenchmarkQuery],
         vector_baseline_contexts: list[RetrievalContext] | None = None,
         compute_bootstrap: bool = False,
+        seed: int = 42,
     ) -> BenchmarkResult:
-        """Execute all queries through a pipeline and compute metrics."""
+        """Execute all queries through a pipeline and compute metrics.
+
+        Parameters
+        ----------
+        seed : int
+            Random seed for reproducibility. Passed through to bootstrap CI
+            computation and any other stochastic operations.
+        """
         contexts = []
         for q in queries:
             ctx = pipeline.retrieve(
@@ -126,8 +140,8 @@ class BenchmarkRunner:
         leakage_ci = None
         if compute_bootstrap:
             rpr_indicators = [1.0 if leak > 0 else 0.0 for leak in leakages]
-            rpr_ci = bootstrap_ci(rpr_indicators)
-            leakage_ci = bootstrap_ci([float(x) for x in leakages])
+            rpr_ci = bootstrap_ci(rpr_indicators, seed=seed)
+            leakage_ci = bootstrap_ci([float(x) for x in leakages], seed=seed)
 
         security = SecurityMetrics(
             rpr=rpr,
@@ -151,6 +165,24 @@ class BenchmarkRunner:
             len(ctx.chunks) + len(ctx.graph_nodes) for ctx in contexts
         ) / max(len(contexts), 1)
 
+        # Context recall/precision (when ground truth is available)
+        recall_values = []
+        precision_values = []
+        for q, ctx in zip(queries, contexts, strict=True):
+            if q.ground_truth_doc_ids:
+                retrieved_ids = ctx.all_item_ids
+                r = context_recall_at_k(retrieved_ids, q.ground_truth_doc_ids)
+                p = context_precision_at_k(retrieved_ids, q.ground_truth_doc_ids)
+                recall_values.append(r)
+                precision_values.append(p)
+
+        mean_recall = (
+            sum(recall_values) / len(recall_values) if recall_values else 0.0
+        )
+        mean_precision = (
+            sum(precision_values) / len(precision_values) if precision_values else 0.0
+        )
+
         utility = UtilityMetrics(
             accuracy=0.0,  # Requires ground truth answers
             citation_support_rate=0.0,  # Requires answer generation
@@ -158,6 +190,9 @@ class BenchmarkRunner:
             p95_latency_ms=p95,
             mean_context_size=mean_ctx_size,
             total_queries=len(contexts),
+            mean_context_recall=mean_recall,
+            mean_context_precision=mean_precision,
+            recall_per_query=recall_values,
         )
 
         return BenchmarkResult(

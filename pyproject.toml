@@ -24,33 +24,33 @@ classifiers = [
 
 dependencies = [
     # Vector store
-    "chromadb>=0.5.0",
+    "chromadb~=0.5.0",
     # Graph database
-    "neo4j>=5.20.0",
+    "neo4j~=5.20.0",
     # Embeddings
-    "sentence-transformers>=3.0.0",
+    "sentence-transformers~=3.0.0",
     # NER and NLP
-    "spacy>=3.7.0",
+    "spacy~=3.7.0",
     # Config and data models
-    "pydantic>=2.7.0",
-    "pydantic-settings>=2.3.0",
-    "pyyaml>=6.0",
-    "python-dotenv>=1.0.0",
+    "pydantic~=2.7.0",
+    "pydantic-settings~=2.3.0",
+    "pyyaml~=6.0",
+    "python-dotenv~=1.0.0",
     # Data processing
-    "numpy>=1.26.0",
-    "pandas>=2.2.0",
-    "scikit-learn>=1.5.0",
+    "numpy~=1.26.0",
+    "pandas~=2.2.0",
+    "scikit-learn~=1.5.0",
     # Graph algorithms (offline analysis)
-    "networkx>=3.3",
+    "networkx~=3.3",
     # Synthetic data generation
-    "faker>=28.0.0",
+    "faker~=28.0.0",
     # Visualization
-    "matplotlib>=3.9.0",
-    "seaborn>=0.13.0",
+    "matplotlib~=3.9.0",
+    "seaborn~=0.13.0",
     # CLI
-    "click>=8.1.0",
+    "click~=8.1.0",
     # Tokenization (for chunk sizing)
-    "tiktoken>=0.7.0",
+    "tiktoken~=0.7.0",
 ]
 
 [project.optional-dependencies]

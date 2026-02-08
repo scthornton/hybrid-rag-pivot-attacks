@@ -11,7 +11,7 @@ services:
       - "7474:7474"  # HTTP browser
       - "7687:7687"  # Bolt protocol
     environment:
-      NEO4J_AUTH: neo4j/pivorag_dev_2025
+      NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/pivorag_dev_2025}
       NEO4J_PLUGINS: '["apoc"]'
     volumes:
       - neo4j_data:/data
@@ -22,7 +22,7 @@ services:
       retries: 5
 
   chromadb:
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:0.5.23
     container_name: pivorag-chromadb
     ports:
       - "8000:8000"
