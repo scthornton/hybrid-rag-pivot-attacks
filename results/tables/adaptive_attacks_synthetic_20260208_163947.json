@@ -1,0 +1,70 @@
+[
+  {
+    "attack": "A5",
+    "dataset": "synthetic",
+    "forgery_rate": 0.01,
+    "payloads": 10,
+    "forged_count": 1,
+    "honest_count": 9,
+    "P3_rpr": 1.0,
+    "P3_leak": 7.8,
+    "P4_rpr": 0.0,
+    "P4_leak": 0.0,
+    "P7_rpr": 0.0,
+    "P7_leak": 0.0,
+    "P8_rpr": 0.0,
+    "P8_leak": 0.0
+  },
+  {
+    "attack": "A5",
+    "dataset": "synthetic",
+    "forgery_rate": 0.05,
+    "payloads": 10,
+    "forged_count": 1,
+    "honest_count": 9,
+    "P3_rpr": 1.0,
+    "P3_leak": 7.8,
+    "P4_rpr": 0.0,
+    "P4_leak": 0.0,
+    "P7_rpr": 0.0,
+    "P7_leak": 0.0,
+    "P8_rpr": 0.0,
+    "P8_leak": 0.0
+  },
+  {
+    "attack": "A5",
+    "dataset": "synthetic",
+    "forgery_rate": 0.1,
+    "payloads": 10,
+    "forged_count": 1,
+    "honest_count": 9,
+    "P3_rpr": 1.0,
+    "P3_leak": 7.8,
+    "P4_rpr": 0.0,
+    "P4_leak": 0.0,
+    "P7_rpr": 0.0,
+    "P7_leak": 0.0,
+    "P8_rpr": 0.0,
+    "P8_leak": 0.0
+  },
+  {
+    "attack": "A6",
+    "dataset": "synthetic",
+    "payloads": 10,
+    "is_query_attack": false,
+    "P3_rpr": 1.0,
+    "P3_leak": 7.8,
+    "P4_rpr": 0.0,
+    "P4_leak": 0.0,
+    "P7_rpr": 0.0,
+    "P7_leak": 0.0,
+    "P8_rpr": 0.0,
+    "P8_leak": 0.0
+  },
+  {
+    "attack": "A7",
+    "dataset": "synthetic",
+    "payloads": 10,
+    "is_query_attack": true
+  }
+]

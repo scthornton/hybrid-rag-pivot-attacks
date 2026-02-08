@@ -1,0 +1,4841 @@
+{
+  "experiment": "baseline_synthetic_benign",
+  "dataset": "synthetic",
+  "timestamp": "20260208_163838",
+  "variants": {
+    "P1": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0,
+        "mean_severity_weighted_leakage": 0.0,
+        "af_epsilon": 0.0,
+        "delta_leakage": 0.0,
+        "pd_distribution": {
+          "min": Infinity,
+          "median": Infinity,
+          "max": Infinity
+        },
+        "rpr_ci": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leakage_ci": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 39.66297950682929,
+        "p95_latency_ms": 3879.457675006408,
+        "mean_context_size": 10.0,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 6988.1,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 80.0,
+          "tenant_distribution": {
+            "globex_finance": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 8,
+            "PUBLIC": 2
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 67.1,
+          "tenant_distribution": {
+            "initech_hr": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 69.1,
+          "tenant_distribution": {
+            "umbrella_security": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 8,
+            "INTERNAL": 2
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 42.4,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 27.4,
+          "tenant_distribution": {
+            "initech_hr": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 36.9,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 8,
+            "PUBLIC": 2
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 27.4,
+          "tenant_distribution": {
+            "acme_engineering": 10
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 2,
+            "PUBLIC": 1,
+            "CONFIDENTIAL": 7
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 24.9,
+          "tenant_distribution": {
+            "globex_finance": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P1",
+          "vector_chunks": 10,
+          "graph_nodes": 0,
+          "total_items": 10,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 24.4,
+          "tenant_distribution": {
+            "umbrella_security": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 10
+          },
+          "traversal_log": []
+        }
+      ]
+    },
+    "P3": {
+      "security": {
+        "rpr": 0.8,
+        "mean_leakage": 4.6,
+        "amplification_factor": Infinity,
+        "mean_pivot_depth": 2.0,
+        "total_queries": 10,
+        "queries_with_leakage": 8,
+        "mean_severity_weighted_leakage": 7.2,
+        "af_epsilon": 45.99999999999999,
+        "delta_leakage": 4.6,
+        "pd_distribution": {
+          "min": 2,
+          "median": 2.0,
+          "max": 2
+        },
+        "rpr_ci": [
+          0.8,
+          0.5,
+          1.0
+        ],
+        "leakage_ci": [
+          4.6,
+          2.2,
+          7.2
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 80.94108299701475,
+        "p95_latency_ms": 750.3042333024483,
+        "mean_context_size": 50.0,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 3,
+          "leakage_at_k": 3,
+          "severity_weighted_leakage": 3.0,
+          "pivot_depth": 2,
+          "latency_ms": 1279.4,
+          "tenant_distribution": {
+            "acme_engineering": 40,
+            "": 10
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 42,
+            "INTERNAL": 5,
+            "CONFIDENTIAL": 3
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_b2682a24003a_chunk_0000": 0,
+                "doc_b6881237fcf9_chunk_0000": 0,
+                "doc_3da55a171245_chunk_0000": 0,
+                "doc_6bcd68009c0d_chunk_0000": 0,
+                "doc_0fb1ff24df12_chunk_0000": 0,
+                "doc_0607a7f34047_chunk_0000": 0,
+                "doc_fc9e869f7cf0_chunk_0000": 0,
+                "doc_6f3ebe31429d_chunk_0000": 0,
+                "doc_a2264eef626b_chunk_0000": 0,
+                "doc_8c99bb572a75_chunk_0000": 0,
+                "doc_b2682a24003a": 1,
+                "ent_redis_PERSON": 1,
+                "doc_0607a7f34047": 1,
+                "doc_a2264eef626b": 1,
+                "doc_8c99bb572a75": 1,
+                "ent_ci-cd-runner_PERSON": 1,
+                "doc_b6881237fcf9": 1,
+                "doc_fc9e869f7cf0": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_kubernetes_ORG": 1,
+                "doc_3da55a171245": 1,
+                "ent_observability_initiative_ORG": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_6bcd68009c0d": 1,
+                "doc_6f3ebe31429d": 1,
+                "doc_85c75e1169e3_chunk_0000": 2,
+                "doc_211147c87b18_chunk_0000": 2,
+                "ent_terraform_PERSON": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_e8c6bf840b5e_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_terraform_ORG": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "ent_nginx_ORG": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_6a98e2802a4c_chunk_0000": 2,
+                "doc_f208906ab38c_chunk_0000": 2,
+                "doc_3539f9e0d22c_chunk_0000": 2,
+                "ent_consul_GPE": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 98.6,
+          "tenant_distribution": {
+            "globex_finance": 27,
+            "": 23
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 22,
+            "PUBLIC": 28
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_9ee39cea4f60_chunk_0000": 0,
+                "doc_630d1df6772f_chunk_0000": 0,
+                "doc_f3b9eaa18332_chunk_0000": 0,
+                "doc_c02fb921e5af_chunk_0000": 0,
+                "doc_8fbb1a66f0dd_chunk_0000": 0,
+                "doc_dc82e681b1c1_chunk_0000": 0,
+                "doc_a3b985ed5aef_chunk_0000": 0,
+                "doc_e49d71331451_chunk_0000": 0,
+                "doc_4bfa754ab68f_chunk_0000": 0,
+                "doc_a1cee6872bd9_chunk_0000": 0,
+                "doc_a1cee6872bd9": 1,
+                "doc_a3b985ed5aef": 1,
+                "ent_2,976,587_MONEY": 1,
+                "ent_8,929,762_MONEY": 1,
+                "ent_1,488,293_MONEY": 1,
+                "doc_630d1df6772f": 1,
+                "ent_david_kim_PERSON": 1,
+                "doc_dc82e681b1c1": 1,
+                "ent_6,534,909_MONEY": 1,
+                "ent_1,089,151_MONEY": 1,
+                "doc_e49d71331451": 1,
+                "doc_8fbb1a66f0dd": 1,
+                "ent_12%_PERCENT": 1,
+                "ent_1,633,727_MONEY": 1,
+                "doc_9ee39cea4f60": 1,
+                "ent_950,526_MONEY": 2,
+                "ent_1,346,819_MONEY": 2,
+                "ent_633,684_MONEY": 2,
+                "ent_2,082,447_MONEY": 2,
+                "ent_1,601,727_MONEY": 2,
+                "ent_2,752,757_MONEY": 2,
+                "ent_1,561,835_MONEY": 2,
+                "ent_1,041,223_MONEY": 2,
+                "ent_2,262,597_MONEY": 2,
+                "ent_658,129_MONEY": 2,
+                "ent_493,596_MONEY": 2,
+                "ent_658,464_MONEY": 2,
+                "ent_438,976_MONEY": 2,
+                "ent_1,021,233_MONEY": 2,
+                "ent_329,064_MONEY": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 9,
+          "leakage_at_k": 9,
+          "severity_weighted_leakage": 18.0,
+          "pivot_depth": 2,
+          "latency_ms": 103.6,
+          "tenant_distribution": {
+            "initech_hr": 45,
+            "": 5
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 41,
+            "INTERNAL": 3,
+            "RESTRICTED": 3,
+            "CONFIDENTIAL": 3
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_6c05f9554a6f_chunk_0000": 0,
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_8d2a99fece28_chunk_0000": 0,
+                "doc_bcc2ba9b7648": 1,
+                "ent_operations_ORG": 1,
+                "doc_79d442aea46f": 1,
+                "doc_386584d851e4": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "ent_2025-01-01_DATE": 1,
+                "doc_7ff2d38aa30c": 1,
+                "ent_annual_DATE": 1,
+                "doc_6c05f9554a6f": 1,
+                "doc_8d2a99fece28": 1,
+                "doc_4cc7e0c58c24": 1,
+                "doc_3f2004111001": 1,
+                "ent_quarterly_DATE": 1,
+                "doc_3cd1fd66ba79": 1,
+                "doc_b7de03e59b40": 1,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_ceb1b8ddab1a_chunk_0000": 2,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2,
+                "doc_ba53603b5a94_chunk_0000": 2,
+                "doc_fe5ceb99c1af_chunk_0000": 2,
+                "doc_cccf343dd629_chunk_0000": 2,
+                "doc_4e8394500594_chunk_0000": 2,
+                "doc_b599873b2c88_chunk_0000": 2,
+                "doc_d595a147e8fd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 1,
+          "leakage_at_k": 1,
+          "severity_weighted_leakage": 1.0,
+          "pivot_depth": 2,
+          "latency_ms": 79.5,
+          "tenant_distribution": {
+            "umbrella_security": 42,
+            "": 8
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 34,
+            "INTERNAL": 10,
+            "CONFIDENTIAL": 5,
+            "RESTRICTED": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_c01320017219_chunk_0000": 0,
+                "doc_5157203935ad_chunk_0000": 0,
+                "doc_d74434d91e75_chunk_0000": 0,
+                "doc_e34143c90666_chunk_0000": 0,
+                "doc_a1c9eebcde12_chunk_0000": 0,
+                "doc_32244a5858fa_chunk_0000": 0,
+                "doc_3682ed517028_chunk_0000": 0,
+                "doc_267cf78c25c6_chunk_0000": 0,
+                "doc_dc65a6008761_chunk_0000": 0,
+                "doc_e56fe7767f6c_chunk_0000": 0,
+                "doc_e56fe7767f6c": 1,
+                "ent_security_event\n\ndate_ORG": 1,
+                "doc_32244a5858fa": 1,
+                "doc_d74434d91e75": 1,
+                "ent_cis_controls_ORG": 1,
+                "ent_michael_o'brien_PERSON": 1,
+                "doc_c01320017219": 1,
+                "doc_e34143c90666": 1,
+                "ent_next_week_DATE": 1,
+                "doc_dc65a6008761": 1,
+                "ent_2025-06-27_DATE": 1,
+                "ent_burp_suite_PERSON": 1,
+                "doc_267cf78c25c6": 1,
+                "ent_4_hours_TIME": 1,
+                "ent_2025-06-17_DATE": 1,
+                "doc_c197217a2292_chunk_0000": 2,
+                "doc_23ee0dd30bbe_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_d6c8e1671062_chunk_0000": 2,
+                "doc_4279779f5c0b_chunk_0000": 2,
+                "doc_d7297b619566_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2,
+                "doc_838dae67774e_chunk_0000": 2,
+                "doc_8a9d6134e60f_chunk_0000": 2,
+                "doc_f80fc0052fe9_chunk_0000": 2,
+                "doc_65f8ec9126a3_chunk_0000": 2,
+                "doc_9703a09e591b_chunk_0000": 2,
+                "doc_3b8e8771c4c1_chunk_0000": 2,
+                "doc_8143d889bf55_chunk_0000": 2,
+                "doc_beff3475221e_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 6,
+          "leakage_at_k": 6,
+          "severity_weighted_leakage": 9.0,
+          "pivot_depth": 2,
+          "latency_ms": 81.0,
+          "tenant_distribution": {
+            "acme_engineering": 38,
+            "": 12
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 31,
+            "PUBLIC": 13,
+            "RESTRICTED": 3,
+            "CONFIDENTIAL": 3
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_f527a46da559_chunk_0000": 0,
+                "doc_34e386fa85f7_chunk_0000": 0,
+                "doc_8ed6e22d2129_chunk_0000": 0,
+                "doc_c9ca18808f6f_chunk_0000": 0,
+                "doc_ddb89a31bc4a_chunk_0000": 0,
+                "doc_133652ff6642_chunk_0000": 0,
+                "doc_2d8327cdf862_chunk_0000": 0,
+                "doc_026f845879c1_chunk_0000": 0,
+                "doc_478573db3893_chunk_0000": 0,
+                "doc_06e7ccc6c938_chunk_0000": 0,
+                "doc_478573db3893": 1,
+                "ent_1000_CARDINAL": 1,
+                "doc_2d8327cdf862": 1,
+                "doc_06e7ccc6c938": 1,
+                "doc_c9ca18808f6f": 1,
+                "ent_api_ORG": 1,
+                "ent_kafka_PERSON": 1,
+                "doc_34e386fa85f7": 1,
+                "ent_docker_PERSON": 1,
+                "ent_api_documentation_ORG": 1,
+                "doc_026f845879c1": 1,
+                "ent_jwt_ORG": 1,
+                "doc_8ed6e22d2129": 1,
+                "ent_nginx_ORG": 1,
+                "ent_aisha_patel_PERSON": 1,
+                "doc_bf52e3408e1d_chunk_0000": 2,
+                "doc_cdaf08ce077c_chunk_0000": 2,
+                "ent_project_bravo_NORP": 2,
+                "doc_41c2201748b2_chunk_0000": 2,
+                "doc_5cb97caf6637_chunk_0000": 2,
+                "doc_f1c851a87fe8_chunk_0000": 2,
+                "ent_james_rodriguez\ncomponents_PERSON": 2,
+                "doc_3aaa9ecf514f_chunk_0000": 2,
+                "doc_353253a8ba0c_chunk_0000": 2,
+                "ent_the_microservices_refactor_WORK_OF_ART": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_cccf9cbccafb_chunk_0000": 2,
+                "doc_81c722b689e9_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_platform_migration_PERSON": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 9,
+          "leakage_at_k": 9,
+          "severity_weighted_leakage": 18.0,
+          "pivot_depth": 2,
+          "latency_ms": 79.3,
+          "tenant_distribution": {
+            "initech_hr": 44,
+            "": 6
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 41,
+            "INTERNAL": 3,
+            "RESTRICTED": 3,
+            "CONFIDENTIAL": 3
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_cdc1debf2e6d_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_2047beb69b5a_chunk_0000": 0,
+                "doc_bcc2ba9b7648": 1,
+                "ent_annual_DATE": 1,
+                "doc_386584d851e4": 1,
+                "ent_emily_davis_PERSON": 1,
+                "doc_79d442aea46f": 1,
+                "ent_2025-01-01_DATE": 1,
+                "doc_7ff2d38aa30c": 1,
+                "doc_cdc1debf2e6d": 1,
+                "ent_operations_ORG": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "doc_2047beb69b5a": 1,
+                "doc_4cc7e0c58c24": 1,
+                "doc_3f2004111001": 1,
+                "ent_quarterly_DATE": 1,
+                "doc_3cd1fd66ba79": 1,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_ceb1b8ddab1a_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2,
+                "doc_ba53603b5a94_chunk_0000": 2,
+                "doc_fe5ceb99c1af_chunk_0000": 2,
+                "doc_cccf343dd629_chunk_0000": 2,
+                "doc_4e8394500594_chunk_0000": 2,
+                "doc_b599873b2c88_chunk_0000": 2,
+                "doc_d595a147e8fd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 5,
+          "over_clearance_items": 0,
+          "leakage_at_k": 5,
+          "severity_weighted_leakage": 5.0,
+          "pivot_depth": 2,
+          "latency_ms": 78.5,
+          "tenant_distribution": {
+            "acme_engineering": 39,
+            "": 6,
+            "globex_finance": 5
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 30,
+            "PUBLIC": 20
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_5578c662d77e_chunk_0000": 0,
+                "doc_08c1b9f195cb_chunk_0000": 0,
+                "doc_9c3acc4271dd_chunk_0000": 0,
+                "doc_c2d42a6c20c9_chunk_0000": 0,
+                "doc_dbfcba5560b3_chunk_0000": 0,
+                "doc_85d16b6edf1b_chunk_0000": 0,
+                "doc_44cdd8f53a9c_chunk_0000": 0,
+                "doc_2b17e167cfe9_chunk_0000": 0,
+                "doc_9e6d8e2bcc21_chunk_0000": 0,
+                "doc_0647762a9eeb_chunk_0000": 0,
+                "doc_9c3acc4271dd": 1,
+                "ent_cloudcorp_solutions_ORG": 1,
+                "doc_5578c662d77e": 1,
+                "ent_december_2025_DATE": 1,
+                "doc_44cdd8f53a9c": 1,
+                "doc_9e6d8e2bcc21": 1,
+                "ent_cloudcorp_inc_ORG": 1,
+                "ent_cloudcorp_ORG": 1,
+                "doc_08c1b9f195cb": 1,
+                "ent_maria_chen_PERSON": 1,
+                "doc_c2d42a6c20c9": 1,
+                "ent_cloudcorp_inc._ORG": 1,
+                "doc_0647762a9eeb": 1,
+                "doc_dbfcba5560b3": 1,
+                "doc_2b17e167cfe9": 1,
+                "doc_0ba78accbc73_chunk_0000": 2,
+                "doc_754f205865a7_chunk_0000": 2,
+                "doc_0ddfbec86fbe_chunk_0000": 2,
+                "doc_1216a56cd4a6_chunk_0000": 2,
+                "doc_bbe5175d931e_chunk_0000": 2,
+                "doc_9f65848a0948_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_bc5bbcaa140f_chunk_0000": 2,
+                "doc_3da6c119f3cd_chunk_0000": 2,
+                "doc_1c5b71dec9f3_chunk_0000": 2,
+                "doc_b0b1e852ca6d_chunk_0000": 2,
+                "doc_d6a2d01ea1f0_chunk_0000": 2,
+                "doc_894463151b02_chunk_0000": 2,
+                "doc_ae87ec681800_chunk_0000": 2,
+                "doc_5549361ebfce_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 1,
+          "over_clearance_items": 0,
+          "leakage_at_k": 1,
+          "severity_weighted_leakage": 1.0,
+          "pivot_depth": 2,
+          "latency_ms": 83.4,
+          "tenant_distribution": {
+            "acme_engineering": 37,
+            "": 12,
+            "initech_hr": 1
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 9,
+            "PUBLIC": 19,
+            "CONFIDENTIAL": 22
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_2bbaead044fb_chunk_0000": 0,
+                "doc_db7bc7c21a67_chunk_0000": 0,
+                "doc_6e537646fd3a_chunk_0000": 0,
+                "doc_0475df52267e_chunk_0000": 0,
+                "doc_203d3f66f5dd_chunk_0000": 0,
+                "doc_be0c0f184bfc_chunk_0000": 0,
+                "injected_a4_59768586": 0,
+                "doc_b0d4df0b5615_chunk_0000": 0,
+                "doc_eeb2d4b736fe_chunk_0000": 0,
+                "doc_0f5e3e652953_chunk_0000": 0,
+                "doc_db7bc7c21a67": 1,
+                "ent_nginx_ORG": 1,
+                "ent_platform_migration_PERSON": 1,
+                "doc_eeb2d4b736fe": 1,
+                "ent_snort_ids\n\nassessment_of_cve-2025-41923_ORG": 1,
+                "ent_james_rodriguez\ncomponents_PERSON": 1,
+                "doc_203d3f66f5dd": 1,
+                "doc_be0c0f184bfc": 1,
+                "ent_postgresql_GPE": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_0f5e3e652953": 1,
+                "ent_maria_chen\ncomponents_PERSON": 1,
+                "ent_grafana_PERSON": 1,
+                "ent_maria_chen_PERSON": 1,
+                "ent_the_platform_migration_WORK_OF_ART": 1,
+                "doc_211147c87b18_chunk_0000": 2,
+                "doc_d0c69b3a5fad_chunk_0000": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "doc_0826235a64c9_chunk_0000": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "ent_consul_GPE": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "ent_3_years_DATE": 2,
+                "doc_3539f9e0d22c_chunk_0000": 2,
+                "doc_f208906ab38c_chunk_0000": 2,
+                "doc_6a98e2802a4c_chunk_0000": 2,
+                "doc_27234ab8ec77_chunk_0000": 2,
+                "doc_dd70384319dd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 80.0,
+          "tenant_distribution": {
+            "globex_finance": 37,
+            "": 13
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 45,
+            "INTERNAL": 3,
+            "CONFIDENTIAL": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_d0d59d7225ad_chunk_0000": 0,
+                "doc_1f8f4a69e589_chunk_0000": 0,
+                "doc_5ee5b7fc08ca_chunk_0000": 0,
+                "doc_0aaf85e489c7_chunk_0000": 0,
+                "doc_9adacf8793be_chunk_0000": 0,
+                "doc_077730d984f1_chunk_0000": 0,
+                "doc_42bed7951e46_chunk_0000": 0,
+                "doc_4f9050e4ac2f_chunk_0000": 0,
+                "doc_9936d79ee7a9_chunk_0000": 0,
+                "doc_158ebb8c4c72_chunk_0000": 0,
+                "doc_5ee5b7fc08ca": 1,
+                "ent_basel_iii_ORG": 1,
+                "ent_1,182,363_MONEY": 1,
+                "doc_9936d79ee7a9": 1,
+                "doc_42bed7951e46": 1,
+                "doc_0aaf85e489c7": 1,
+                "ent_1,576,484_MONEY": 1,
+                "ent_185,749_MONEY": 1,
+                "ent_12%_PERCENT": 1,
+                "doc_1f8f4a69e589": 1,
+                "ent_4,729,452_MONEY": 1,
+                "ent_q4_2025_DATE": 1,
+                "ent_371,499_MONEY": 1,
+                "doc_d0d59d7225ad": 1,
+                "ent_sarah_thompson_PERSON": 1,
+                "doc_cb943c621f3d_chunk_0000": 2,
+                "doc_30c854c634d2_chunk_0000": 2,
+                "ent_662,209_MONEY": 2,
+                "doc_1103b6ba71e8_chunk_0000": 2,
+                "doc_b0c74e95db8b_chunk_0000": 2,
+                "doc_092bfef3e746_chunk_0000": 2,
+                "ent_q2_2025_DATE": 2,
+                "doc_098603ac3156_chunk_0000": 2,
+                "doc_13ee5e8a309c_chunk_0000": 2,
+                "ent_6,127,401_MONEY": 2,
+                "doc_514a22d4fe4c_chunk_0000": 2,
+                "doc_1d8136909adf_chunk_0000": 2,
+                "doc_959cbfc7ed46_chunk_0000": 2,
+                "doc_9b12b50580b0_chunk_0000": 2,
+                "ent_contingency_reserve_PERSON": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P3",
+          "vector_chunks": 10,
+          "graph_nodes": 40,
+          "total_items": 50,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 12,
+          "leakage_at_k": 12,
+          "severity_weighted_leakage": 17.0,
+          "pivot_depth": 2,
+          "latency_ms": 80.9,
+          "tenant_distribution": {
+            "umbrella_security": 43,
+            "": 7
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 38,
+            "CONFIDENTIAL": 3,
+            "INTERNAL": 8,
+            "RESTRICTED": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 40,
+              "node_depths": {
+                "doc_f16327140cd9_chunk_0000": 0,
+                "doc_d1ad074dc046_chunk_0000": 0,
+                "doc_5ed146dace87_chunk_0000": 0,
+                "doc_df7a79174d08_chunk_0000": 0,
+                "doc_666706678d08_chunk_0000": 0,
+                "doc_a33498601d74_chunk_0000": 0,
+                "doc_0b56ed6e8b53_chunk_0000": 0,
+                "doc_c9125d4de9b6_chunk_0000": 0,
+                "doc_04dcbdeeeb77_chunk_0000": 0,
+                "doc_d02810d17945_chunk_0000": 0,
+                "doc_666706678d08": 1,
+                "doc_04dcbdeeeb77": 1,
+                "ent_27001_CARDINAL": 1,
+                "doc_d02810d17945": 1,
+                "doc_c9125d4de9b6": 1,
+                "doc_a33498601d74": 1,
+                "ent_iso_ORG": 1,
+                "ent_2025-01-15_DATE": 1,
+                "doc_df7a79174d08": 1,
+                "ent_27001_DATE": 1,
+                "ent_lisa_zhang_PERSON": 1,
+                "ent_2026-01-15_DATE": 1,
+                "doc_d1ad074dc046": 1,
+                "ent_iso_27001_ORG": 1,
+                "doc_f16327140cd9": 1,
+                "doc_77ed5bafcfb9_chunk_0000": 2,
+                "doc_fb5dc759b868_chunk_0000": 2,
+                "doc_b4bdfae530ce_chunk_0000": 2,
+                "doc_ac330cba2426_chunk_0000": 2,
+                "doc_baa77199985f_chunk_0000": 2,
+                "doc_f0e7157e79e5_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_ec612968b18f_chunk_0000": 2,
+                "doc_f79d0963da59_chunk_0000": 2,
+                "doc_b9747943dd0c_chunk_0000": 2,
+                "doc_0f8b3198996d_chunk_0000": 2,
+                "doc_11a482b5b43b_chunk_0000": 2,
+                "doc_5e2c1243dc0e_chunk_0000": 2,
+                "doc_68493f5f87bb_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "P4": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0,
+        "mean_severity_weighted_leakage": 0.0,
+        "af_epsilon": 0.0,
+        "delta_leakage": 0.0,
+        "pd_distribution": {
+          "min": Infinity,
+          "median": Infinity,
+          "max": Infinity
+        },
+        "rpr_ci": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leakage_ci": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 84.29389600496506,
+        "p95_latency_ms": 670.9743847488414,
+        "mean_context_size": 35.2,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 27,
+          "total_items": 37,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 1143.9,
+          "tenant_distribution": {
+            "acme_engineering": 37
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 32,
+            "INTERNAL": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 27,
+              "node_depths": {
+                "doc_b2682a24003a_chunk_0000": 0,
+                "doc_b6881237fcf9_chunk_0000": 0,
+                "doc_3da55a171245_chunk_0000": 0,
+                "doc_6bcd68009c0d_chunk_0000": 0,
+                "doc_0fb1ff24df12_chunk_0000": 0,
+                "doc_0607a7f34047_chunk_0000": 0,
+                "doc_fc9e869f7cf0_chunk_0000": 0,
+                "doc_6f3ebe31429d_chunk_0000": 0,
+                "doc_a2264eef626b_chunk_0000": 0,
+                "doc_8c99bb572a75_chunk_0000": 0,
+                "doc_b2682a24003a": 1,
+                "ent_redis_PERSON": 1,
+                "doc_0607a7f34047": 1,
+                "doc_a2264eef626b": 1,
+                "doc_8c99bb572a75": 1,
+                "ent_ci-cd-runner_PERSON": 1,
+                "doc_b6881237fcf9": 1,
+                "doc_fc9e869f7cf0": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_kubernetes_ORG": 1,
+                "doc_3da55a171245": 1,
+                "ent_observability_initiative_ORG": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_6bcd68009c0d": 1,
+                "doc_6f3ebe31429d": 1,
+                "doc_85c75e1169e3_chunk_0000": 2,
+                "doc_211147c87b18_chunk_0000": 2,
+                "ent_terraform_PERSON": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_e8c6bf840b5e_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_terraform_ORG": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "ent_nginx_ORG": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_6a98e2802a4c_chunk_0000": 2,
+                "doc_f208906ab38c_chunk_0000": 2,
+                "doc_3539f9e0d22c_chunk_0000": 2,
+                "ent_consul_GPE": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 88.1,
+          "tenant_distribution": {
+            "globex_finance": 27
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 22,
+            "PUBLIC": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_9ee39cea4f60_chunk_0000": 0,
+                "doc_630d1df6772f_chunk_0000": 0,
+                "doc_f3b9eaa18332_chunk_0000": 0,
+                "doc_c02fb921e5af_chunk_0000": 0,
+                "doc_8fbb1a66f0dd_chunk_0000": 0,
+                "doc_dc82e681b1c1_chunk_0000": 0,
+                "doc_a3b985ed5aef_chunk_0000": 0,
+                "doc_e49d71331451_chunk_0000": 0,
+                "doc_4bfa754ab68f_chunk_0000": 0,
+                "doc_a1cee6872bd9_chunk_0000": 0,
+                "doc_a1cee6872bd9": 1,
+                "doc_a3b985ed5aef": 1,
+                "ent_2,976,587_MONEY": 1,
+                "ent_8,929,762_MONEY": 1,
+                "ent_1,488,293_MONEY": 1,
+                "doc_630d1df6772f": 1,
+                "ent_david_kim_PERSON": 1,
+                "doc_dc82e681b1c1": 1,
+                "ent_6,534,909_MONEY": 1,
+                "ent_1,089,151_MONEY": 1,
+                "doc_e49d71331451": 1,
+                "doc_8fbb1a66f0dd": 1,
+                "ent_12%_PERCENT": 1,
+                "ent_1,633,727_MONEY": 1,
+                "doc_9ee39cea4f60": 1,
+                "ent_950,526_MONEY": 2,
+                "ent_1,346,819_MONEY": 2,
+                "ent_633,684_MONEY": 2,
+                "ent_2,082,447_MONEY": 2,
+                "ent_1,601,727_MONEY": 2,
+                "ent_2,752,757_MONEY": 2,
+                "ent_1,561,835_MONEY": 2,
+                "ent_1,041,223_MONEY": 2,
+                "ent_2,262,597_MONEY": 2,
+                "ent_658,129_MONEY": 2,
+                "ent_493,596_MONEY": 2,
+                "ent_658,464_MONEY": 2,
+                "ent_438,976_MONEY": 2,
+                "ent_1,021,233_MONEY": 2,
+                "ent_329,064_MONEY": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 26,
+          "total_items": 36,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 83.2,
+          "tenant_distribution": {
+            "initech_hr": 36
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 36
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 26,
+              "node_depths": {
+                "doc_6c05f9554a6f_chunk_0000": 0,
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_8d2a99fece28_chunk_0000": 0,
+                "doc_bcc2ba9b7648": 1,
+                "ent_operations_ORG": 1,
+                "doc_79d442aea46f": 1,
+                "doc_386584d851e4": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "ent_2025-01-01_DATE": 1,
+                "doc_7ff2d38aa30c": 1,
+                "ent_annual_DATE": 1,
+                "doc_6c05f9554a6f": 1,
+                "doc_8d2a99fece28": 1,
+                "doc_4cc7e0c58c24": 1,
+                "doc_3f2004111001": 1,
+                "ent_quarterly_DATE": 1,
+                "doc_3cd1fd66ba79": 1,
+                "doc_b7de03e59b40": 1,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_ceb1b8ddab1a_chunk_0000": 2,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2,
+                "doc_ba53603b5a94_chunk_0000": 2,
+                "doc_fe5ceb99c1af_chunk_0000": 2,
+                "doc_cccf343dd629_chunk_0000": 2,
+                "doc_4e8394500594_chunk_0000": 2,
+                "doc_b599873b2c88_chunk_0000": 2,
+                "doc_d595a147e8fd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 31,
+          "total_items": 41,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 93.0,
+          "tenant_distribution": {
+            "umbrella_security": 41
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26,
+            "INTERNAL": 10,
+            "CONFIDENTIAL": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 31,
+              "node_depths": {
+                "doc_c01320017219_chunk_0000": 0,
+                "doc_5157203935ad_chunk_0000": 0,
+                "doc_d74434d91e75_chunk_0000": 0,
+                "doc_e34143c90666_chunk_0000": 0,
+                "doc_a1c9eebcde12_chunk_0000": 0,
+                "doc_32244a5858fa_chunk_0000": 0,
+                "doc_3682ed517028_chunk_0000": 0,
+                "doc_267cf78c25c6_chunk_0000": 0,
+                "doc_dc65a6008761_chunk_0000": 0,
+                "doc_e56fe7767f6c_chunk_0000": 0,
+                "doc_e56fe7767f6c": 1,
+                "ent_security_event\n\ndate_ORG": 1,
+                "doc_32244a5858fa": 1,
+                "doc_d74434d91e75": 1,
+                "ent_cis_controls_ORG": 1,
+                "ent_michael_o'brien_PERSON": 1,
+                "doc_c01320017219": 1,
+                "doc_e34143c90666": 1,
+                "ent_next_week_DATE": 1,
+                "doc_dc65a6008761": 1,
+                "ent_2025-06-27_DATE": 1,
+                "ent_burp_suite_PERSON": 1,
+                "doc_267cf78c25c6": 1,
+                "ent_4_hours_TIME": 1,
+                "ent_2025-06-17_DATE": 1,
+                "doc_c197217a2292_chunk_0000": 2,
+                "doc_23ee0dd30bbe_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_d6c8e1671062_chunk_0000": 2,
+                "doc_4279779f5c0b_chunk_0000": 2,
+                "doc_d7297b619566_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2,
+                "doc_838dae67774e_chunk_0000": 2,
+                "doc_8a9d6134e60f_chunk_0000": 2,
+                "doc_f80fc0052fe9_chunk_0000": 2,
+                "doc_65f8ec9126a3_chunk_0000": 2,
+                "doc_9703a09e591b_chunk_0000": 2,
+                "doc_3b8e8771c4c1_chunk_0000": 2,
+                "doc_8143d889bf55_chunk_0000": 2,
+                "doc_beff3475221e_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 22,
+          "total_items": 32,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 81.4,
+          "tenant_distribution": {
+            "acme_engineering": 32
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 31,
+            "PUBLIC": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 22,
+              "node_depths": {
+                "doc_f527a46da559_chunk_0000": 0,
+                "doc_34e386fa85f7_chunk_0000": 0,
+                "doc_8ed6e22d2129_chunk_0000": 0,
+                "doc_c9ca18808f6f_chunk_0000": 0,
+                "doc_ddb89a31bc4a_chunk_0000": 0,
+                "doc_133652ff6642_chunk_0000": 0,
+                "doc_2d8327cdf862_chunk_0000": 0,
+                "doc_026f845879c1_chunk_0000": 0,
+                "doc_478573db3893_chunk_0000": 0,
+                "doc_06e7ccc6c938_chunk_0000": 0,
+                "doc_478573db3893": 1,
+                "ent_1000_CARDINAL": 1,
+                "doc_2d8327cdf862": 1,
+                "doc_06e7ccc6c938": 1,
+                "doc_c9ca18808f6f": 1,
+                "ent_api_ORG": 1,
+                "ent_kafka_PERSON": 1,
+                "doc_34e386fa85f7": 1,
+                "ent_docker_PERSON": 1,
+                "ent_api_documentation_ORG": 1,
+                "doc_026f845879c1": 1,
+                "ent_jwt_ORG": 1,
+                "doc_8ed6e22d2129": 1,
+                "ent_nginx_ORG": 1,
+                "ent_aisha_patel_PERSON": 1,
+                "doc_bf52e3408e1d_chunk_0000": 2,
+                "doc_cdaf08ce077c_chunk_0000": 2,
+                "ent_project_bravo_NORP": 2,
+                "doc_41c2201748b2_chunk_0000": 2,
+                "doc_5cb97caf6637_chunk_0000": 2,
+                "doc_f1c851a87fe8_chunk_0000": 2,
+                "ent_james_rodriguez\ncomponents_PERSON": 2,
+                "doc_3aaa9ecf514f_chunk_0000": 2,
+                "doc_353253a8ba0c_chunk_0000": 2,
+                "ent_the_microservices_refactor_WORK_OF_ART": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_cccf9cbccafb_chunk_0000": 2,
+                "doc_81c722b689e9_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_platform_migration_PERSON": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 25,
+          "total_items": 35,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 83.0,
+          "tenant_distribution": {
+            "initech_hr": 35
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 35
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 25,
+              "node_depths": {
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_cdc1debf2e6d_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_2047beb69b5a_chunk_0000": 0,
+                "doc_bcc2ba9b7648": 1,
+                "ent_annual_DATE": 1,
+                "doc_386584d851e4": 1,
+                "ent_emily_davis_PERSON": 1,
+                "doc_79d442aea46f": 1,
+                "ent_2025-01-01_DATE": 1,
+                "doc_7ff2d38aa30c": 1,
+                "doc_cdc1debf2e6d": 1,
+                "ent_operations_ORG": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "doc_2047beb69b5a": 1,
+                "doc_4cc7e0c58c24": 1,
+                "doc_3f2004111001": 1,
+                "ent_quarterly_DATE": 1,
+                "doc_3cd1fd66ba79": 1,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_ceb1b8ddab1a_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2,
+                "doc_ba53603b5a94_chunk_0000": 2,
+                "doc_fe5ceb99c1af_chunk_0000": 2,
+                "doc_cccf343dd629_chunk_0000": 2,
+                "doc_4e8394500594_chunk_0000": 2,
+                "doc_b599873b2c88_chunk_0000": 2,
+                "doc_d595a147e8fd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 29,
+          "total_items": 39,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 84.0,
+          "tenant_distribution": {
+            "acme_engineering": 39
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 27,
+            "PUBLIC": 12
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 29,
+              "node_depths": {
+                "doc_5578c662d77e_chunk_0000": 0,
+                "doc_08c1b9f195cb_chunk_0000": 0,
+                "doc_9c3acc4271dd_chunk_0000": 0,
+                "doc_c2d42a6c20c9_chunk_0000": 0,
+                "doc_dbfcba5560b3_chunk_0000": 0,
+                "doc_85d16b6edf1b_chunk_0000": 0,
+                "doc_44cdd8f53a9c_chunk_0000": 0,
+                "doc_2b17e167cfe9_chunk_0000": 0,
+                "doc_9e6d8e2bcc21_chunk_0000": 0,
+                "doc_0647762a9eeb_chunk_0000": 0,
+                "doc_9c3acc4271dd": 1,
+                "ent_cloudcorp_solutions_ORG": 1,
+                "doc_5578c662d77e": 1,
+                "ent_december_2025_DATE": 1,
+                "doc_44cdd8f53a9c": 1,
+                "doc_9e6d8e2bcc21": 1,
+                "ent_cloudcorp_inc_ORG": 1,
+                "ent_cloudcorp_ORG": 1,
+                "doc_08c1b9f195cb": 1,
+                "ent_maria_chen_PERSON": 1,
+                "doc_c2d42a6c20c9": 1,
+                "ent_cloudcorp_inc._ORG": 1,
+                "doc_0647762a9eeb": 1,
+                "doc_dbfcba5560b3": 1,
+                "doc_2b17e167cfe9": 1,
+                "doc_0ba78accbc73_chunk_0000": 2,
+                "doc_754f205865a7_chunk_0000": 2,
+                "doc_0ddfbec86fbe_chunk_0000": 2,
+                "doc_1216a56cd4a6_chunk_0000": 2,
+                "doc_bbe5175d931e_chunk_0000": 2,
+                "doc_9f65848a0948_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_bc5bbcaa140f_chunk_0000": 2,
+                "doc_3da6c119f3cd_chunk_0000": 2,
+                "doc_1c5b71dec9f3_chunk_0000": 2,
+                "doc_b0b1e852ca6d_chunk_0000": 2,
+                "doc_d6a2d01ea1f0_chunk_0000": 2,
+                "doc_894463151b02_chunk_0000": 2,
+                "doc_ae87ec681800_chunk_0000": 2,
+                "doc_5549361ebfce_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 27,
+          "total_items": 37,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 88.4,
+          "tenant_distribution": {
+            "acme_engineering": 37
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 9,
+            "PUBLIC": 6,
+            "CONFIDENTIAL": 22
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 27,
+              "node_depths": {
+                "doc_2bbaead044fb_chunk_0000": 0,
+                "doc_db7bc7c21a67_chunk_0000": 0,
+                "doc_6e537646fd3a_chunk_0000": 0,
+                "doc_0475df52267e_chunk_0000": 0,
+                "doc_203d3f66f5dd_chunk_0000": 0,
+                "doc_be0c0f184bfc_chunk_0000": 0,
+                "injected_a4_59768586": 0,
+                "doc_b0d4df0b5615_chunk_0000": 0,
+                "doc_eeb2d4b736fe_chunk_0000": 0,
+                "doc_0f5e3e652953_chunk_0000": 0,
+                "doc_db7bc7c21a67": 1,
+                "ent_nginx_ORG": 1,
+                "ent_platform_migration_PERSON": 1,
+                "doc_eeb2d4b736fe": 1,
+                "ent_snort_ids\n\nassessment_of_cve-2025-41923_ORG": 1,
+                "ent_james_rodriguez\ncomponents_PERSON": 1,
+                "doc_203d3f66f5dd": 1,
+                "doc_be0c0f184bfc": 1,
+                "ent_postgresql_GPE": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_0f5e3e652953": 1,
+                "ent_maria_chen\ncomponents_PERSON": 1,
+                "ent_grafana_PERSON": 1,
+                "ent_maria_chen_PERSON": 1,
+                "ent_the_platform_migration_WORK_OF_ART": 1,
+                "doc_211147c87b18_chunk_0000": 2,
+                "doc_d0c69b3a5fad_chunk_0000": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "doc_0826235a64c9_chunk_0000": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "ent_consul_GPE": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "ent_3_years_DATE": 2,
+                "doc_3539f9e0d22c_chunk_0000": 2,
+                "doc_f208906ab38c_chunk_0000": 2,
+                "doc_6a98e2802a4c_chunk_0000": 2,
+                "doc_27234ab8ec77_chunk_0000": 2,
+                "doc_dd70384319dd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 27,
+          "total_items": 37,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 84.6,
+          "tenant_distribution": {
+            "globex_finance": 37
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 32,
+            "INTERNAL": 3,
+            "CONFIDENTIAL": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 27,
+              "node_depths": {
+                "doc_d0d59d7225ad_chunk_0000": 0,
+                "doc_1f8f4a69e589_chunk_0000": 0,
+                "doc_5ee5b7fc08ca_chunk_0000": 0,
+                "doc_0aaf85e489c7_chunk_0000": 0,
+                "doc_9adacf8793be_chunk_0000": 0,
+                "doc_077730d984f1_chunk_0000": 0,
+                "doc_42bed7951e46_chunk_0000": 0,
+                "doc_4f9050e4ac2f_chunk_0000": 0,
+                "doc_9936d79ee7a9_chunk_0000": 0,
+                "doc_158ebb8c4c72_chunk_0000": 0,
+                "doc_5ee5b7fc08ca": 1,
+                "ent_basel_iii_ORG": 1,
+                "ent_1,182,363_MONEY": 1,
+                "doc_9936d79ee7a9": 1,
+                "doc_42bed7951e46": 1,
+                "doc_0aaf85e489c7": 1,
+                "ent_1,576,484_MONEY": 1,
+                "ent_185,749_MONEY": 1,
+                "ent_12%_PERCENT": 1,
+                "doc_1f8f4a69e589": 1,
+                "ent_4,729,452_MONEY": 1,
+                "ent_q4_2025_DATE": 1,
+                "ent_371,499_MONEY": 1,
+                "doc_d0d59d7225ad": 1,
+                "ent_sarah_thompson_PERSON": 1,
+                "doc_cb943c621f3d_chunk_0000": 2,
+                "doc_30c854c634d2_chunk_0000": 2,
+                "ent_662,209_MONEY": 2,
+                "doc_1103b6ba71e8_chunk_0000": 2,
+                "doc_b0c74e95db8b_chunk_0000": 2,
+                "doc_092bfef3e746_chunk_0000": 2,
+                "ent_q2_2025_DATE": 2,
+                "doc_098603ac3156_chunk_0000": 2,
+                "doc_13ee5e8a309c_chunk_0000": 2,
+                "ent_6,127,401_MONEY": 2,
+                "doc_514a22d4fe4c_chunk_0000": 2,
+                "doc_1d8136909adf_chunk_0000": 2,
+                "doc_959cbfc7ed46_chunk_0000": 2,
+                "doc_9b12b50580b0_chunk_0000": 2,
+                "ent_contingency_reserve_PERSON": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P4",
+          "vector_chunks": 10,
+          "graph_nodes": 21,
+          "total_items": 31,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 83.3,
+          "tenant_distribution": {
+            "umbrella_security": 31
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 31
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 21,
+              "node_depths": {
+                "doc_f16327140cd9_chunk_0000": 0,
+                "doc_d1ad074dc046_chunk_0000": 0,
+                "doc_5ed146dace87_chunk_0000": 0,
+                "doc_df7a79174d08_chunk_0000": 0,
+                "doc_666706678d08_chunk_0000": 0,
+                "doc_a33498601d74_chunk_0000": 0,
+                "doc_0b56ed6e8b53_chunk_0000": 0,
+                "doc_c9125d4de9b6_chunk_0000": 0,
+                "doc_04dcbdeeeb77_chunk_0000": 0,
+                "doc_d02810d17945_chunk_0000": 0,
+                "doc_666706678d08": 1,
+                "doc_04dcbdeeeb77": 1,
+                "ent_27001_CARDINAL": 1,
+                "doc_d02810d17945": 1,
+                "doc_c9125d4de9b6": 1,
+                "doc_a33498601d74": 1,
+                "ent_iso_ORG": 1,
+                "ent_2025-01-15_DATE": 1,
+                "doc_df7a79174d08": 1,
+                "ent_27001_DATE": 1,
+                "ent_lisa_zhang_PERSON": 1,
+                "ent_2026-01-15_DATE": 1,
+                "doc_d1ad074dc046": 1,
+                "ent_iso_27001_ORG": 1,
+                "doc_f16327140cd9": 1,
+                "doc_77ed5bafcfb9_chunk_0000": 2,
+                "doc_fb5dc759b868_chunk_0000": 2,
+                "doc_b4bdfae530ce_chunk_0000": 2,
+                "doc_ac330cba2426_chunk_0000": 2,
+                "doc_baa77199985f_chunk_0000": 2,
+                "doc_f0e7157e79e5_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_ec612968b18f_chunk_0000": 2,
+                "doc_f79d0963da59_chunk_0000": 2,
+                "doc_b9747943dd0c_chunk_0000": 2,
+                "doc_0f8b3198996d_chunk_0000": 2,
+                "doc_11a482b5b43b_chunk_0000": 2,
+                "doc_5e2c1243dc0e_chunk_0000": 2,
+                "doc_68493f5f87bb_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "P5": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0,
+        "mean_severity_weighted_leakage": 0.0,
+        "af_epsilon": 0.0,
+        "delta_leakage": 0.0,
+        "pd_distribution": {
+          "min": Infinity,
+          "median": Infinity,
+          "max": Infinity
+        },
+        "rpr_ci": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leakage_ci": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 84.1464580007596,
+        "p95_latency_ms": 664.5862207915332,
+        "mean_context_size": 35.2,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 27,
+          "total_items": 37,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 1135.8,
+          "tenant_distribution": {
+            "acme_engineering": 37
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 32,
+            "INTERNAL": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 27,
+              "node_depths": {
+                "doc_b2682a24003a_chunk_0000": 0,
+                "doc_b6881237fcf9_chunk_0000": 0,
+                "doc_3da55a171245_chunk_0000": 0,
+                "doc_6bcd68009c0d_chunk_0000": 0,
+                "doc_0fb1ff24df12_chunk_0000": 0,
+                "doc_0607a7f34047_chunk_0000": 0,
+                "doc_fc9e869f7cf0_chunk_0000": 0,
+                "doc_6f3ebe31429d_chunk_0000": 0,
+                "doc_a2264eef626b_chunk_0000": 0,
+                "doc_8c99bb572a75_chunk_0000": 0,
+                "doc_b2682a24003a": 1,
+                "ent_redis_PERSON": 1,
+                "doc_0607a7f34047": 1,
+                "doc_a2264eef626b": 1,
+                "doc_8c99bb572a75": 1,
+                "ent_ci-cd-runner_PERSON": 1,
+                "doc_b6881237fcf9": 1,
+                "doc_fc9e869f7cf0": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_kubernetes_ORG": 1,
+                "doc_3da55a171245": 1,
+                "ent_observability_initiative_ORG": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_6bcd68009c0d": 1,
+                "doc_6f3ebe31429d": 1,
+                "doc_85c75e1169e3_chunk_0000": 2,
+                "doc_211147c87b18_chunk_0000": 2,
+                "ent_terraform_PERSON": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_e8c6bf840b5e_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_terraform_ORG": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "ent_nginx_ORG": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_6a98e2802a4c_chunk_0000": 2,
+                "doc_f208906ab38c_chunk_0000": 2,
+                "doc_3539f9e0d22c_chunk_0000": 2,
+                "ent_consul_GPE": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 83.5,
+          "tenant_distribution": {
+            "globex_finance": 27
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 22,
+            "PUBLIC": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_9ee39cea4f60_chunk_0000": 0,
+                "doc_630d1df6772f_chunk_0000": 0,
+                "doc_f3b9eaa18332_chunk_0000": 0,
+                "doc_c02fb921e5af_chunk_0000": 0,
+                "doc_8fbb1a66f0dd_chunk_0000": 0,
+                "doc_dc82e681b1c1_chunk_0000": 0,
+                "doc_a3b985ed5aef_chunk_0000": 0,
+                "doc_e49d71331451_chunk_0000": 0,
+                "doc_4bfa754ab68f_chunk_0000": 0,
+                "doc_a1cee6872bd9_chunk_0000": 0,
+                "doc_a1cee6872bd9": 1,
+                "doc_a3b985ed5aef": 1,
+                "ent_2,976,587_MONEY": 1,
+                "ent_8,929,762_MONEY": 1,
+                "ent_1,488,293_MONEY": 1,
+                "doc_630d1df6772f": 1,
+                "ent_david_kim_PERSON": 1,
+                "doc_dc82e681b1c1": 1,
+                "ent_6,534,909_MONEY": 1,
+                "ent_1,089,151_MONEY": 1,
+                "doc_e49d71331451": 1,
+                "doc_8fbb1a66f0dd": 1,
+                "ent_12%_PERCENT": 1,
+                "ent_1,633,727_MONEY": 1,
+                "doc_9ee39cea4f60": 1,
+                "ent_950,526_MONEY": 2,
+                "ent_1,346,819_MONEY": 2,
+                "ent_633,684_MONEY": 2,
+                "ent_2,082,447_MONEY": 2,
+                "ent_1,601,727_MONEY": 2,
+                "ent_2,752,757_MONEY": 2,
+                "ent_1,561,835_MONEY": 2,
+                "ent_1,041,223_MONEY": 2,
+                "ent_2,262,597_MONEY": 2,
+                "ent_658,129_MONEY": 2,
+                "ent_493,596_MONEY": 2,
+                "ent_658,464_MONEY": 2,
+                "ent_438,976_MONEY": 2,
+                "ent_1,021,233_MONEY": 2,
+                "ent_329,064_MONEY": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 26,
+          "total_items": 36,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 83.7,
+          "tenant_distribution": {
+            "initech_hr": 36
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 36
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 26,
+              "node_depths": {
+                "doc_6c05f9554a6f_chunk_0000": 0,
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_8d2a99fece28_chunk_0000": 0,
+                "doc_bcc2ba9b7648": 1,
+                "ent_operations_ORG": 1,
+                "doc_79d442aea46f": 1,
+                "doc_386584d851e4": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "ent_2025-01-01_DATE": 1,
+                "doc_7ff2d38aa30c": 1,
+                "ent_annual_DATE": 1,
+                "doc_6c05f9554a6f": 1,
+                "doc_8d2a99fece28": 1,
+                "doc_4cc7e0c58c24": 1,
+                "doc_3f2004111001": 1,
+                "ent_quarterly_DATE": 1,
+                "doc_3cd1fd66ba79": 1,
+                "doc_b7de03e59b40": 1,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_ceb1b8ddab1a_chunk_0000": 2,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2,
+                "doc_ba53603b5a94_chunk_0000": 2,
+                "doc_fe5ceb99c1af_chunk_0000": 2,
+                "doc_cccf343dd629_chunk_0000": 2,
+                "doc_4e8394500594_chunk_0000": 2,
+                "doc_b599873b2c88_chunk_0000": 2,
+                "doc_d595a147e8fd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 31,
+          "total_items": 41,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 83.7,
+          "tenant_distribution": {
+            "umbrella_security": 41
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26,
+            "INTERNAL": 10,
+            "CONFIDENTIAL": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 31,
+              "node_depths": {
+                "doc_c01320017219_chunk_0000": 0,
+                "doc_5157203935ad_chunk_0000": 0,
+                "doc_d74434d91e75_chunk_0000": 0,
+                "doc_e34143c90666_chunk_0000": 0,
+                "doc_a1c9eebcde12_chunk_0000": 0,
+                "doc_32244a5858fa_chunk_0000": 0,
+                "doc_3682ed517028_chunk_0000": 0,
+                "doc_267cf78c25c6_chunk_0000": 0,
+                "doc_dc65a6008761_chunk_0000": 0,
+                "doc_e56fe7767f6c_chunk_0000": 0,
+                "doc_e56fe7767f6c": 1,
+                "ent_security_event\n\ndate_ORG": 1,
+                "doc_32244a5858fa": 1,
+                "doc_d74434d91e75": 1,
+                "ent_cis_controls_ORG": 1,
+                "ent_michael_o'brien_PERSON": 1,
+                "doc_c01320017219": 1,
+                "doc_e34143c90666": 1,
+                "ent_next_week_DATE": 1,
+                "doc_dc65a6008761": 1,
+                "ent_2025-06-27_DATE": 1,
+                "ent_burp_suite_PERSON": 1,
+                "doc_267cf78c25c6": 1,
+                "ent_4_hours_TIME": 1,
+                "ent_2025-06-17_DATE": 1,
+                "doc_c197217a2292_chunk_0000": 2,
+                "doc_23ee0dd30bbe_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_d6c8e1671062_chunk_0000": 2,
+                "doc_4279779f5c0b_chunk_0000": 2,
+                "doc_d7297b619566_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2,
+                "doc_838dae67774e_chunk_0000": 2,
+                "doc_8a9d6134e60f_chunk_0000": 2,
+                "doc_f80fc0052fe9_chunk_0000": 2,
+                "doc_65f8ec9126a3_chunk_0000": 2,
+                "doc_9703a09e591b_chunk_0000": 2,
+                "doc_3b8e8771c4c1_chunk_0000": 2,
+                "doc_8143d889bf55_chunk_0000": 2,
+                "doc_beff3475221e_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 22,
+          "total_items": 32,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 86.8,
+          "tenant_distribution": {
+            "acme_engineering": 32
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 31,
+            "PUBLIC": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 22,
+              "node_depths": {
+                "doc_f527a46da559_chunk_0000": 0,
+                "doc_34e386fa85f7_chunk_0000": 0,
+                "doc_8ed6e22d2129_chunk_0000": 0,
+                "doc_c9ca18808f6f_chunk_0000": 0,
+                "doc_ddb89a31bc4a_chunk_0000": 0,
+                "doc_133652ff6642_chunk_0000": 0,
+                "doc_2d8327cdf862_chunk_0000": 0,
+                "doc_026f845879c1_chunk_0000": 0,
+                "doc_478573db3893_chunk_0000": 0,
+                "doc_06e7ccc6c938_chunk_0000": 0,
+                "doc_478573db3893": 1,
+                "ent_1000_CARDINAL": 1,
+                "doc_2d8327cdf862": 1,
+                "doc_06e7ccc6c938": 1,
+                "doc_c9ca18808f6f": 1,
+                "ent_api_ORG": 1,
+                "ent_kafka_PERSON": 1,
+                "doc_34e386fa85f7": 1,
+                "ent_docker_PERSON": 1,
+                "ent_api_documentation_ORG": 1,
+                "doc_026f845879c1": 1,
+                "ent_jwt_ORG": 1,
+                "doc_8ed6e22d2129": 1,
+                "ent_nginx_ORG": 1,
+                "ent_aisha_patel_PERSON": 1,
+                "doc_bf52e3408e1d_chunk_0000": 2,
+                "doc_cdaf08ce077c_chunk_0000": 2,
+                "ent_project_bravo_NORP": 2,
+                "doc_41c2201748b2_chunk_0000": 2,
+                "doc_5cb97caf6637_chunk_0000": 2,
+                "doc_f1c851a87fe8_chunk_0000": 2,
+                "ent_james_rodriguez\ncomponents_PERSON": 2,
+                "doc_3aaa9ecf514f_chunk_0000": 2,
+                "doc_353253a8ba0c_chunk_0000": 2,
+                "ent_the_microservices_refactor_WORK_OF_ART": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_cccf9cbccafb_chunk_0000": 2,
+                "doc_81c722b689e9_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_platform_migration_PERSON": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 25,
+          "total_items": 35,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 84.6,
+          "tenant_distribution": {
+            "initech_hr": 35
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 35
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 25,
+              "node_depths": {
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_cdc1debf2e6d_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_2047beb69b5a_chunk_0000": 0,
+                "doc_bcc2ba9b7648": 1,
+                "ent_annual_DATE": 1,
+                "doc_386584d851e4": 1,
+                "ent_emily_davis_PERSON": 1,
+                "doc_79d442aea46f": 1,
+                "ent_2025-01-01_DATE": 1,
+                "doc_7ff2d38aa30c": 1,
+                "doc_cdc1debf2e6d": 1,
+                "ent_operations_ORG": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "doc_2047beb69b5a": 1,
+                "doc_4cc7e0c58c24": 1,
+                "doc_3f2004111001": 1,
+                "ent_quarterly_DATE": 1,
+                "doc_3cd1fd66ba79": 1,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_ceb1b8ddab1a_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2,
+                "doc_ba53603b5a94_chunk_0000": 2,
+                "doc_fe5ceb99c1af_chunk_0000": 2,
+                "doc_cccf343dd629_chunk_0000": 2,
+                "doc_4e8394500594_chunk_0000": 2,
+                "doc_b599873b2c88_chunk_0000": 2,
+                "doc_d595a147e8fd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 29,
+          "total_items": 39,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 88.6,
+          "tenant_distribution": {
+            "acme_engineering": 39
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 27,
+            "PUBLIC": 12
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 29,
+              "node_depths": {
+                "doc_5578c662d77e_chunk_0000": 0,
+                "doc_08c1b9f195cb_chunk_0000": 0,
+                "doc_9c3acc4271dd_chunk_0000": 0,
+                "doc_c2d42a6c20c9_chunk_0000": 0,
+                "doc_dbfcba5560b3_chunk_0000": 0,
+                "doc_85d16b6edf1b_chunk_0000": 0,
+                "doc_44cdd8f53a9c_chunk_0000": 0,
+                "doc_2b17e167cfe9_chunk_0000": 0,
+                "doc_9e6d8e2bcc21_chunk_0000": 0,
+                "doc_0647762a9eeb_chunk_0000": 0,
+                "doc_9c3acc4271dd": 1,
+                "ent_cloudcorp_solutions_ORG": 1,
+                "doc_5578c662d77e": 1,
+                "ent_december_2025_DATE": 1,
+                "doc_44cdd8f53a9c": 1,
+                "doc_9e6d8e2bcc21": 1,
+                "ent_cloudcorp_inc_ORG": 1,
+                "ent_cloudcorp_ORG": 1,
+                "doc_08c1b9f195cb": 1,
+                "ent_maria_chen_PERSON": 1,
+                "doc_c2d42a6c20c9": 1,
+                "ent_cloudcorp_inc._ORG": 1,
+                "doc_0647762a9eeb": 1,
+                "doc_dbfcba5560b3": 1,
+                "doc_2b17e167cfe9": 1,
+                "doc_0ba78accbc73_chunk_0000": 2,
+                "doc_754f205865a7_chunk_0000": 2,
+                "doc_0ddfbec86fbe_chunk_0000": 2,
+                "doc_1216a56cd4a6_chunk_0000": 2,
+                "doc_bbe5175d931e_chunk_0000": 2,
+                "doc_9f65848a0948_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_bc5bbcaa140f_chunk_0000": 2,
+                "doc_3da6c119f3cd_chunk_0000": 2,
+                "doc_1c5b71dec9f3_chunk_0000": 2,
+                "doc_b0b1e852ca6d_chunk_0000": 2,
+                "doc_d6a2d01ea1f0_chunk_0000": 2,
+                "doc_894463151b02_chunk_0000": 2,
+                "doc_ae87ec681800_chunk_0000": 2,
+                "doc_5549361ebfce_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 27,
+          "total_items": 37,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 84.9,
+          "tenant_distribution": {
+            "acme_engineering": 37
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 9,
+            "PUBLIC": 6,
+            "CONFIDENTIAL": 22
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 27,
+              "node_depths": {
+                "doc_2bbaead044fb_chunk_0000": 0,
+                "doc_db7bc7c21a67_chunk_0000": 0,
+                "doc_6e537646fd3a_chunk_0000": 0,
+                "doc_0475df52267e_chunk_0000": 0,
+                "doc_203d3f66f5dd_chunk_0000": 0,
+                "doc_be0c0f184bfc_chunk_0000": 0,
+                "injected_a4_59768586": 0,
+                "doc_b0d4df0b5615_chunk_0000": 0,
+                "doc_eeb2d4b736fe_chunk_0000": 0,
+                "doc_0f5e3e652953_chunk_0000": 0,
+                "doc_db7bc7c21a67": 1,
+                "ent_nginx_ORG": 1,
+                "ent_platform_migration_PERSON": 1,
+                "doc_eeb2d4b736fe": 1,
+                "ent_snort_ids\n\nassessment_of_cve-2025-41923_ORG": 1,
+                "ent_james_rodriguez\ncomponents_PERSON": 1,
+                "doc_203d3f66f5dd": 1,
+                "doc_be0c0f184bfc": 1,
+                "ent_postgresql_GPE": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_0f5e3e652953": 1,
+                "ent_maria_chen\ncomponents_PERSON": 1,
+                "ent_grafana_PERSON": 1,
+                "ent_maria_chen_PERSON": 1,
+                "ent_the_platform_migration_WORK_OF_ART": 1,
+                "doc_211147c87b18_chunk_0000": 2,
+                "doc_d0c69b3a5fad_chunk_0000": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "doc_0826235a64c9_chunk_0000": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "ent_consul_GPE": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "ent_3_years_DATE": 2,
+                "doc_3539f9e0d22c_chunk_0000": 2,
+                "doc_f208906ab38c_chunk_0000": 2,
+                "doc_6a98e2802a4c_chunk_0000": 2,
+                "doc_27234ab8ec77_chunk_0000": 2,
+                "doc_dd70384319dd_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 27,
+          "total_items": 37,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 82.6,
+          "tenant_distribution": {
+            "globex_finance": 37
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 32,
+            "INTERNAL": 3,
+            "CONFIDENTIAL": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 27,
+              "node_depths": {
+                "doc_d0d59d7225ad_chunk_0000": 0,
+                "doc_1f8f4a69e589_chunk_0000": 0,
+                "doc_5ee5b7fc08ca_chunk_0000": 0,
+                "doc_0aaf85e489c7_chunk_0000": 0,
+                "doc_9adacf8793be_chunk_0000": 0,
+                "doc_077730d984f1_chunk_0000": 0,
+                "doc_42bed7951e46_chunk_0000": 0,
+                "doc_4f9050e4ac2f_chunk_0000": 0,
+                "doc_9936d79ee7a9_chunk_0000": 0,
+                "doc_158ebb8c4c72_chunk_0000": 0,
+                "doc_5ee5b7fc08ca": 1,
+                "ent_basel_iii_ORG": 1,
+                "ent_1,182,363_MONEY": 1,
+                "doc_9936d79ee7a9": 1,
+                "doc_42bed7951e46": 1,
+                "doc_0aaf85e489c7": 1,
+                "ent_1,576,484_MONEY": 1,
+                "ent_185,749_MONEY": 1,
+                "ent_12%_PERCENT": 1,
+                "doc_1f8f4a69e589": 1,
+                "ent_4,729,452_MONEY": 1,
+                "ent_q4_2025_DATE": 1,
+                "ent_371,499_MONEY": 1,
+                "doc_d0d59d7225ad": 1,
+                "ent_sarah_thompson_PERSON": 1,
+                "doc_cb943c621f3d_chunk_0000": 2,
+                "doc_30c854c634d2_chunk_0000": 2,
+                "ent_662,209_MONEY": 2,
+                "doc_1103b6ba71e8_chunk_0000": 2,
+                "doc_b0c74e95db8b_chunk_0000": 2,
+                "doc_092bfef3e746_chunk_0000": 2,
+                "ent_q2_2025_DATE": 2,
+                "doc_098603ac3156_chunk_0000": 2,
+                "doc_13ee5e8a309c_chunk_0000": 2,
+                "ent_6,127,401_MONEY": 2,
+                "doc_514a22d4fe4c_chunk_0000": 2,
+                "doc_1d8136909adf_chunk_0000": 2,
+                "doc_959cbfc7ed46_chunk_0000": 2,
+                "doc_9b12b50580b0_chunk_0000": 2,
+                "ent_contingency_reserve_PERSON": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P5",
+          "vector_chunks": 10,
+          "graph_nodes": 21,
+          "total_items": 31,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 80.6,
+          "tenant_distribution": {
+            "umbrella_security": 31
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 31
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 21,
+              "node_depths": {
+                "doc_f16327140cd9_chunk_0000": 0,
+                "doc_d1ad074dc046_chunk_0000": 0,
+                "doc_5ed146dace87_chunk_0000": 0,
+                "doc_df7a79174d08_chunk_0000": 0,
+                "doc_666706678d08_chunk_0000": 0,
+                "doc_a33498601d74_chunk_0000": 0,
+                "doc_0b56ed6e8b53_chunk_0000": 0,
+                "doc_c9125d4de9b6_chunk_0000": 0,
+                "doc_04dcbdeeeb77_chunk_0000": 0,
+                "doc_d02810d17945_chunk_0000": 0,
+                "doc_666706678d08": 1,
+                "doc_04dcbdeeeb77": 1,
+                "ent_27001_CARDINAL": 1,
+                "doc_d02810d17945": 1,
+                "doc_c9125d4de9b6": 1,
+                "doc_a33498601d74": 1,
+                "ent_iso_ORG": 1,
+                "ent_2025-01-15_DATE": 1,
+                "doc_df7a79174d08": 1,
+                "ent_27001_DATE": 1,
+                "ent_lisa_zhang_PERSON": 1,
+                "ent_2026-01-15_DATE": 1,
+                "doc_d1ad074dc046": 1,
+                "ent_iso_27001_ORG": 1,
+                "doc_f16327140cd9": 1,
+                "doc_77ed5bafcfb9_chunk_0000": 2,
+                "doc_fb5dc759b868_chunk_0000": 2,
+                "doc_b4bdfae530ce_chunk_0000": 2,
+                "doc_ac330cba2426_chunk_0000": 2,
+                "doc_baa77199985f_chunk_0000": 2,
+                "doc_f0e7157e79e5_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_ec612968b18f_chunk_0000": 2,
+                "doc_f79d0963da59_chunk_0000": 2,
+                "doc_b9747943dd0c_chunk_0000": 2,
+                "doc_0f8b3198996d_chunk_0000": 2,
+                "doc_11a482b5b43b_chunk_0000": 2,
+                "doc_5e2c1243dc0e_chunk_0000": 2,
+                "doc_68493f5f87bb_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "P6": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0,
+        "mean_severity_weighted_leakage": 0.0,
+        "af_epsilon": 0.0,
+        "delta_leakage": 0.0,
+        "pd_distribution": {
+          "min": Infinity,
+          "median": Infinity,
+          "max": Infinity
+        },
+        "rpr_ci": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leakage_ci": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 82.64125049754512,
+        "p95_latency_ms": 640.1772771423556,
+        "mean_context_size": 25.7,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 15,
+          "total_items": 25,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 1083.8,
+          "tenant_distribution": {
+            "acme_engineering": 25
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 24,
+            "INTERNAL": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 15,
+              "node_depths": {
+                "doc_b6881237fcf9_chunk_0000": 0,
+                "doc_6bcd68009c0d_chunk_0000": 0,
+                "doc_0607a7f34047_chunk_0000": 0,
+                "doc_a2264eef626b_chunk_0000": 0,
+                "doc_3da55a171245_chunk_0000": 0,
+                "doc_6f3ebe31429d_chunk_0000": 0,
+                "doc_8c99bb572a75_chunk_0000": 0,
+                "doc_0fb1ff24df12_chunk_0000": 0,
+                "ent_ci-cd-runner_PERSON": 1,
+                "doc_0607a7f34047": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_grafana_PERSON": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_8c99bb572a75": 1,
+                "doc_fc9e869f7cf0": 1,
+                "doc_b6881237fcf9": 1,
+                "doc_85c75e1169e3_chunk_0000": 2,
+                "doc_211147c87b18_chunk_0000": 2,
+                "ent_terraform_PERSON": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_terraform_ORG": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "doc_730c1a1bea92_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 80.4,
+          "tenant_distribution": {
+            "globex_finance": 23
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 18,
+            "PUBLIC": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_e49d71331451_chunk_0000": 0,
+                "doc_4bfa754ab68f_chunk_0000": 0,
+                "doc_dc82e681b1c1_chunk_0000": 0,
+                "doc_8fbb1a66f0dd_chunk_0000": 0,
+                "doc_9ee39cea4f60_chunk_0000": 0,
+                "doc_f3b9eaa18332_chunk_0000": 0,
+                "doc_c02fb921e5af_chunk_0000": 0,
+                "doc_a3b985ed5aef_chunk_0000": 0,
+                "doc_630d1df6772f": 1,
+                "doc_9ee39cea4f60": 1,
+                "ent_david_kim_PERSON": 1,
+                "doc_a3b985ed5aef": 1,
+                "ent_1,488,293_MONEY": 1,
+                "doc_a1cee6872bd9": 1,
+                "doc_e49d71331451": 1,
+                "ent_2,178,303_MONEY": 1,
+                "ent_950,526_MONEY": 2,
+                "ent_633,684_MONEY": 2,
+                "ent_2,082,447_MONEY": 2,
+                "ent_1,561,835_MONEY": 2,
+                "ent_1,041,223_MONEY": 2,
+                "ent_658,129_MONEY": 2,
+                "ent_493,596_MONEY": 2,
+                "ent_329,064_MONEY": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 16,
+          "total_items": 26,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 80.3,
+          "tenant_distribution": {
+            "initech_hr": 26
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 16,
+              "node_depths": {
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_6c05f9554a6f_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_8d2a99fece28_chunk_0000": 0,
+                "ent_2025-01-01_DATE": 1,
+                "ent_annual_DATE": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "doc_7ff2d38aa30c": 1,
+                "doc_8d2a99fece28": 1,
+                "doc_6c05f9554a6f": 1,
+                "ent_operations_ORG": 1,
+                "doc_79d442aea46f": 1,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 19,
+          "total_items": 29,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 82.7,
+          "tenant_distribution": {
+            "umbrella_security": 29
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 18,
+            "INTERNAL": 7,
+            "CONFIDENTIAL": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 19,
+              "node_depths": {
+                "doc_5157203935ad_chunk_0000": 0,
+                "doc_e56fe7767f6c_chunk_0000": 0,
+                "doc_32244a5858fa_chunk_0000": 0,
+                "doc_3682ed517028_chunk_0000": 0,
+                "doc_a1c9eebcde12_chunk_0000": 0,
+                "doc_d74434d91e75_chunk_0000": 0,
+                "doc_267cf78c25c6_chunk_0000": 0,
+                "doc_e34143c90666_chunk_0000": 0,
+                "ent_security_event\n\ndate_ORG": 1,
+                "doc_32244a5858fa": 1,
+                "ent_michael_o'brien_PERSON": 1,
+                "ent_4_hours_TIME": 1,
+                "ent_next_week_DATE": 1,
+                "ent_burp_suite_PERSON": 1,
+                "doc_c01320017219": 1,
+                "doc_5157203935ad": 1,
+                "doc_c197217a2292_chunk_0000": 2,
+                "doc_23ee0dd30bbe_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_d6c8e1671062_chunk_0000": 2,
+                "doc_d7297b619566_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2,
+                "doc_838dae67774e_chunk_0000": 2,
+                "doc_8a9d6134e60f_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 14,
+          "total_items": 24,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 94.7,
+          "tenant_distribution": {
+            "acme_engineering": 24
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 23,
+            "PUBLIC": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 14,
+              "node_depths": {
+                "doc_133652ff6642_chunk_0000": 0,
+                "doc_8ed6e22d2129_chunk_0000": 0,
+                "doc_2d8327cdf862_chunk_0000": 0,
+                "doc_f527a46da559_chunk_0000": 0,
+                "doc_026f845879c1_chunk_0000": 0,
+                "doc_06e7ccc6c938_chunk_0000": 0,
+                "doc_c9ca18808f6f_chunk_0000": 0,
+                "doc_ddb89a31bc4a_chunk_0000": 0,
+                "ent_api_ORG": 1,
+                "doc_2d8327cdf862": 1,
+                "ent_docker_PERSON": 1,
+                "ent_nginx_ORG": 1,
+                "ent_jwt_ORG": 1,
+                "doc_c9ca18808f6f": 1,
+                "doc_34e386fa85f7": 1,
+                "doc_133652ff6642": 1,
+                "doc_bf52e3408e1d_chunk_0000": 2,
+                "doc_cdaf08ce077c_chunk_0000": 2,
+                "ent_project_bravo_NORP": 2,
+                "doc_41c2201748b2_chunk_0000": 2,
+                "doc_f1c851a87fe8_chunk_0000": 2,
+                "ent_james_rodriguez\ncomponents_PERSON": 2,
+                "doc_3aaa9ecf514f_chunk_0000": 2,
+                "doc_353253a8ba0c_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 16,
+          "total_items": 26,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 82.6,
+          "tenant_distribution": {
+            "initech_hr": 26
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 16,
+              "node_depths": {
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_2047beb69b5a_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_3f2004111001": 1,
+                "doc_7ff2d38aa30c": 1,
+                "ent_2025-01-01_DATE": 1,
+                "ent_annual_DATE": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "ent_emily_davis_PERSON": 1,
+                "doc_b7de03e59b40": 1,
+                "doc_cdc1debf2e6d": 1,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 84.3,
+          "tenant_distribution": {
+            "acme_engineering": 27
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 20,
+            "PUBLIC": 7
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_9c3acc4271dd_chunk_0000": 0,
+                "doc_dbfcba5560b3_chunk_0000": 0,
+                "doc_c2d42a6c20c9_chunk_0000": 0,
+                "doc_5578c662d77e_chunk_0000": 0,
+                "doc_9e6d8e2bcc21_chunk_0000": 0,
+                "doc_2b17e167cfe9_chunk_0000": 0,
+                "doc_85d16b6edf1b_chunk_0000": 0,
+                "doc_44cdd8f53a9c_chunk_0000": 0,
+                "doc_2b17e167cfe9": 1,
+                "doc_5578c662d77e": 1,
+                "ent_december_2025_DATE": 1,
+                "doc_08c1b9f195cb": 1,
+                "ent_cloudcorp_inc_ORG": 1,
+                "doc_85d16b6edf1b": 1,
+                "ent_cloudcorp_solutions_ORG": 1,
+                "ent_maria_chen_PERSON": 1,
+                "doc_0ba78accbc73_chunk_0000": 2,
+                "doc_754f205865a7_chunk_0000": 2,
+                "doc_0ddfbec86fbe_chunk_0000": 2,
+                "doc_1216a56cd4a6_chunk_0000": 2,
+                "doc_bbe5175d931e_chunk_0000": 2,
+                "doc_9f65848a0948_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_bc5bbcaa140f_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 98.0,
+          "tenant_distribution": {
+            "acme_engineering": 27
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 5,
+            "PUBLIC": 4,
+            "CONFIDENTIAL": 18
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_be0c0f184bfc_chunk_0000": 0,
+                "doc_0f5e3e652953_chunk_0000": 0,
+                "doc_0475df52267e_chunk_0000": 0,
+                "doc_2bbaead044fb_chunk_0000": 0,
+                "doc_6e537646fd3a_chunk_0000": 0,
+                "doc_b0d4df0b5615_chunk_0000": 0,
+                "injected_a4_59768586": 0,
+                "doc_203d3f66f5dd_chunk_0000": 0,
+                "ent_james_rodriguez\ncomponents_PERSON": 1,
+                "doc_203d3f66f5dd": 1,
+                "ent_platform_migration_PERSON": 1,
+                "ent_aisha_patel_PERSON": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_be0c0f184bfc": 1,
+                "doc_eeb2d4b736fe": 1,
+                "doc_211147c87b18_chunk_0000": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "ent_consul_GPE": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 79.4,
+          "tenant_distribution": {
+            "globex_finance": 27
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 25,
+            "INTERNAL": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_0aaf85e489c7_chunk_0000": 0,
+                "doc_9936d79ee7a9_chunk_0000": 0,
+                "doc_077730d984f1_chunk_0000": 0,
+                "doc_9adacf8793be_chunk_0000": 0,
+                "doc_4f9050e4ac2f_chunk_0000": 0,
+                "doc_d0d59d7225ad_chunk_0000": 0,
+                "doc_42bed7951e46_chunk_0000": 0,
+                "doc_5ee5b7fc08ca_chunk_0000": 0,
+                "ent_12%_PERCENT": 1,
+                "ent_278,624_MONEY": 1,
+                "ent_1,114,499_MONEY": 1,
+                "ent_q4_2025_DATE": 1,
+                "ent_basel_iii_ORG": 1,
+                "doc_077730d984f1": 1,
+                "doc_9adacf8793be": 1,
+                "doc_d0d59d7225ad": 1,
+                "doc_cb943c621f3d_chunk_0000": 2,
+                "doc_30c854c634d2_chunk_0000": 2,
+                "ent_662,209_MONEY": 2,
+                "doc_1103b6ba71e8_chunk_0000": 2,
+                "doc_092bfef3e746_chunk_0000": 2,
+                "ent_q2_2025_DATE": 2,
+                "doc_098603ac3156_chunk_0000": 2,
+                "doc_13ee5e8a309c_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P6",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 81.4,
+          "tenant_distribution": {
+            "umbrella_security": 23
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 23
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_df7a79174d08_chunk_0000": 0,
+                "doc_d02810d17945_chunk_0000": 0,
+                "doc_c9125d4de9b6_chunk_0000": 0,
+                "doc_a33498601d74_chunk_0000": 0,
+                "doc_04dcbdeeeb77_chunk_0000": 0,
+                "doc_f16327140cd9_chunk_0000": 0,
+                "doc_0b56ed6e8b53_chunk_0000": 0,
+                "doc_5ed146dace87_chunk_0000": 0,
+                "ent_2026-01-15_DATE": 1,
+                "doc_5ed146dace87": 1,
+                "ent_iso_ORG": 1,
+                "doc_c9125d4de9b6": 1,
+                "ent_lisa_zhang_PERSON": 1,
+                "ent_27001_CARDINAL": 1,
+                "ent_iso27001_ORG": 1,
+                "doc_df7a79174d08": 1,
+                "doc_77ed5bafcfb9_chunk_0000": 2,
+                "doc_fb5dc759b868_chunk_0000": 2,
+                "doc_b4bdfae530ce_chunk_0000": 2,
+                "doc_ac330cba2426_chunk_0000": 2,
+                "doc_f0e7157e79e5_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_ec612968b18f_chunk_0000": 2,
+                "doc_f79d0963da59_chunk_0000": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "P7": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0,
+        "mean_severity_weighted_leakage": 0.0,
+        "af_epsilon": 0.0,
+        "delta_leakage": 0.0,
+        "pd_distribution": {
+          "min": Infinity,
+          "median": Infinity,
+          "max": Infinity
+        },
+        "rpr_ci": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leakage_ci": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 76.3673125038622,
+        "p95_latency_ms": 616.8200463565871,
+        "mean_context_size": 22.9,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 1047.7,
+          "tenant_distribution": {
+            "acme_engineering": 23
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 22,
+            "INTERNAL": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_b6881237fcf9_chunk_0000": 0,
+                "doc_6bcd68009c0d_chunk_0000": 0,
+                "doc_0607a7f34047_chunk_0000": 0,
+                "doc_a2264eef626b_chunk_0000": 0,
+                "doc_3da55a171245_chunk_0000": 0,
+                "doc_6f3ebe31429d_chunk_0000": 0,
+                "doc_8c99bb572a75_chunk_0000": 0,
+                "doc_0fb1ff24df12_chunk_0000": 0,
+                "ent_ci-cd-runner_PERSON": 1,
+                "doc_0607a7f34047": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_grafana_PERSON": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_8c99bb572a75": 1,
+                "doc_fc9e869f7cf0": 1,
+                "doc_b6881237fcf9": 1,
+                "doc_85c75e1169e3_chunk_0000": 2,
+                "doc_211147c87b18_chunk_0000": 2,
+                "ent_terraform_PERSON": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_terraform_ORG": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "doc_730c1a1bea92_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 76.4,
+          "tenant_distribution": {
+            "globex_finance": 23
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 18,
+            "PUBLIC": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_e49d71331451_chunk_0000": 0,
+                "doc_4bfa754ab68f_chunk_0000": 0,
+                "doc_dc82e681b1c1_chunk_0000": 0,
+                "doc_8fbb1a66f0dd_chunk_0000": 0,
+                "doc_9ee39cea4f60_chunk_0000": 0,
+                "doc_f3b9eaa18332_chunk_0000": 0,
+                "doc_c02fb921e5af_chunk_0000": 0,
+                "doc_a3b985ed5aef_chunk_0000": 0,
+                "doc_630d1df6772f": 1,
+                "doc_9ee39cea4f60": 1,
+                "ent_david_kim_PERSON": 1,
+                "doc_a3b985ed5aef": 1,
+                "ent_1,488,293_MONEY": 1,
+                "doc_a1cee6872bd9": 1,
+                "doc_e49d71331451": 1,
+                "ent_2,178,303_MONEY": 1,
+                "ent_950,526_MONEY": 2,
+                "ent_633,684_MONEY": 2,
+                "ent_2,082,447_MONEY": 2,
+                "ent_1,561,835_MONEY": 2,
+                "ent_1,041,223_MONEY": 2,
+                "ent_658,129_MONEY": 2,
+                "ent_493,596_MONEY": 2,
+                "ent_329,064_MONEY": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 16,
+          "total_items": 26,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 74.0,
+          "tenant_distribution": {
+            "initech_hr": 26
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 16,
+              "node_depths": {
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_6c05f9554a6f_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_8d2a99fece28_chunk_0000": 0,
+                "ent_2025-01-01_DATE": 1,
+                "ent_annual_DATE": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "doc_7ff2d38aa30c": 1,
+                "doc_8d2a99fece28": 1,
+                "doc_6c05f9554a6f": 1,
+                "ent_operations_ORG": 1,
+                "doc_79d442aea46f": 1,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 19,
+          "total_items": 29,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 76.3,
+          "tenant_distribution": {
+            "umbrella_security": 29
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 18,
+            "INTERNAL": 7,
+            "CONFIDENTIAL": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 19,
+              "node_depths": {
+                "doc_5157203935ad_chunk_0000": 0,
+                "doc_e56fe7767f6c_chunk_0000": 0,
+                "doc_32244a5858fa_chunk_0000": 0,
+                "doc_3682ed517028_chunk_0000": 0,
+                "doc_a1c9eebcde12_chunk_0000": 0,
+                "doc_d74434d91e75_chunk_0000": 0,
+                "doc_267cf78c25c6_chunk_0000": 0,
+                "doc_e34143c90666_chunk_0000": 0,
+                "ent_security_event\n\ndate_ORG": 1,
+                "doc_32244a5858fa": 1,
+                "ent_michael_o'brien_PERSON": 1,
+                "ent_4_hours_TIME": 1,
+                "ent_next_week_DATE": 1,
+                "ent_burp_suite_PERSON": 1,
+                "doc_c01320017219": 1,
+                "doc_5157203935ad": 1,
+                "doc_c197217a2292_chunk_0000": 2,
+                "doc_23ee0dd30bbe_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_d6c8e1671062_chunk_0000": 2,
+                "doc_d7297b619566_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2,
+                "doc_838dae67774e_chunk_0000": 2,
+                "doc_8a9d6134e60f_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 14,
+          "total_items": 24,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 90.2,
+          "tenant_distribution": {
+            "acme_engineering": 24
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 23,
+            "PUBLIC": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 14,
+              "node_depths": {
+                "doc_133652ff6642_chunk_0000": 0,
+                "doc_8ed6e22d2129_chunk_0000": 0,
+                "doc_2d8327cdf862_chunk_0000": 0,
+                "doc_f527a46da559_chunk_0000": 0,
+                "doc_026f845879c1_chunk_0000": 0,
+                "doc_06e7ccc6c938_chunk_0000": 0,
+                "doc_c9ca18808f6f_chunk_0000": 0,
+                "doc_ddb89a31bc4a_chunk_0000": 0,
+                "ent_api_ORG": 1,
+                "doc_2d8327cdf862": 1,
+                "ent_docker_PERSON": 1,
+                "ent_nginx_ORG": 1,
+                "ent_jwt_ORG": 1,
+                "doc_c9ca18808f6f": 1,
+                "doc_34e386fa85f7": 1,
+                "doc_133652ff6642": 1,
+                "doc_bf52e3408e1d_chunk_0000": 2,
+                "doc_cdaf08ce077c_chunk_0000": 2,
+                "ent_project_bravo_NORP": 2,
+                "doc_41c2201748b2_chunk_0000": 2,
+                "doc_f1c851a87fe8_chunk_0000": 2,
+                "ent_james_rodriguez\ncomponents_PERSON": 2,
+                "doc_3aaa9ecf514f_chunk_0000": 2,
+                "doc_353253a8ba0c_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 16,
+          "total_items": 26,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 74.6,
+          "tenant_distribution": {
+            "initech_hr": 26
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 16,
+              "node_depths": {
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_2047beb69b5a_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_3f2004111001": 1,
+                "doc_7ff2d38aa30c": 1,
+                "ent_2025-01-01_DATE": 1,
+                "ent_annual_DATE": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "ent_emily_davis_PERSON": 1,
+                "doc_b7de03e59b40": 1,
+                "doc_cdc1debf2e6d": 1,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 4,
+          "total_items": 14,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 75.9,
+          "tenant_distribution": {
+            "acme_engineering": 14
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 12,
+            "PUBLIC": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 4,
+              "node_depths": {
+                "doc_9c3acc4271dd_chunk_0000": 0,
+                "doc_dbfcba5560b3_chunk_0000": 0,
+                "doc_c2d42a6c20c9_chunk_0000": 0,
+                "doc_5578c662d77e_chunk_0000": 0,
+                "doc_9e6d8e2bcc21_chunk_0000": 0,
+                "doc_2b17e167cfe9_chunk_0000": 0,
+                "doc_85d16b6edf1b_chunk_0000": 0,
+                "doc_44cdd8f53a9c_chunk_0000": 0,
+                "doc_2b17e167cfe9": 1,
+                "doc_5578c662d77e": 1,
+                "ent_december_2025_DATE": 1,
+                "doc_08c1b9f195cb": 1,
+                "ent_cloudcorp_inc_ORG": 1,
+                "doc_85d16b6edf1b": 1,
+                "ent_cloudcorp_solutions_ORG": 1,
+                "ent_maria_chen_PERSON": 1,
+                "doc_0ba78accbc73_chunk_0000": 2,
+                "doc_754f205865a7_chunk_0000": 2,
+                "doc_0ddfbec86fbe_chunk_0000": 2,
+                "doc_1216a56cd4a6_chunk_0000": 2,
+                "doc_bbe5175d931e_chunk_0000": 2,
+                "doc_9f65848a0948_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_bc5bbcaa140f_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 77.8,
+          "tenant_distribution": {
+            "acme_engineering": 23
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 4,
+            "PUBLIC": 1,
+            "CONFIDENTIAL": 18
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_be0c0f184bfc_chunk_0000": 0,
+                "doc_0f5e3e652953_chunk_0000": 0,
+                "doc_0475df52267e_chunk_0000": 0,
+                "doc_2bbaead044fb_chunk_0000": 0,
+                "doc_6e537646fd3a_chunk_0000": 0,
+                "doc_b0d4df0b5615_chunk_0000": 0,
+                "injected_a4_59768586": 0,
+                "doc_203d3f66f5dd_chunk_0000": 0,
+                "ent_james_rodriguez\ncomponents_PERSON": 1,
+                "doc_203d3f66f5dd": 1,
+                "ent_platform_migration_PERSON": 1,
+                "ent_aisha_patel_PERSON": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_be0c0f184bfc": 1,
+                "doc_eeb2d4b736fe": 1,
+                "doc_211147c87b18_chunk_0000": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "ent_consul_GPE": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 77.3,
+          "tenant_distribution": {
+            "globex_finance": 27
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 25,
+            "INTERNAL": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_0aaf85e489c7_chunk_0000": 0,
+                "doc_9936d79ee7a9_chunk_0000": 0,
+                "doc_077730d984f1_chunk_0000": 0,
+                "doc_9adacf8793be_chunk_0000": 0,
+                "doc_4f9050e4ac2f_chunk_0000": 0,
+                "doc_d0d59d7225ad_chunk_0000": 0,
+                "doc_42bed7951e46_chunk_0000": 0,
+                "doc_5ee5b7fc08ca_chunk_0000": 0,
+                "ent_12%_PERCENT": 1,
+                "ent_278,624_MONEY": 1,
+                "ent_1,114,499_MONEY": 1,
+                "ent_q4_2025_DATE": 1,
+                "ent_basel_iii_ORG": 1,
+                "doc_077730d984f1": 1,
+                "doc_9adacf8793be": 1,
+                "doc_d0d59d7225ad": 1,
+                "doc_cb943c621f3d_chunk_0000": 2,
+                "doc_30c854c634d2_chunk_0000": 2,
+                "ent_662,209_MONEY": 2,
+                "doc_1103b6ba71e8_chunk_0000": 2,
+                "doc_092bfef3e746_chunk_0000": 2,
+                "ent_q2_2025_DATE": 2,
+                "doc_098603ac3156_chunk_0000": 2,
+                "doc_13ee5e8a309c_chunk_0000": 2
+              }
+            }
+          ]
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P7",
+          "vector_chunks": 10,
+          "graph_nodes": 4,
+          "total_items": 14,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 72.2,
+          "tenant_distribution": {
+            "umbrella_security": 14
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 14
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 4,
+              "node_depths": {
+                "doc_df7a79174d08_chunk_0000": 0,
+                "doc_d02810d17945_chunk_0000": 0,
+                "doc_c9125d4de9b6_chunk_0000": 0,
+                "doc_a33498601d74_chunk_0000": 0,
+                "doc_04dcbdeeeb77_chunk_0000": 0,
+                "doc_f16327140cd9_chunk_0000": 0,
+                "doc_0b56ed6e8b53_chunk_0000": 0,
+                "doc_5ed146dace87_chunk_0000": 0,
+                "ent_2026-01-15_DATE": 1,
+                "doc_5ed146dace87": 1,
+                "ent_iso_ORG": 1,
+                "doc_c9125d4de9b6": 1,
+                "ent_lisa_zhang_PERSON": 1,
+                "ent_27001_CARDINAL": 1,
+                "ent_iso27001_ORG": 1,
+                "doc_df7a79174d08": 1,
+                "doc_77ed5bafcfb9_chunk_0000": 2,
+                "doc_fb5dc759b868_chunk_0000": 2,
+                "doc_b4bdfae530ce_chunk_0000": 2,
+                "doc_ac330cba2426_chunk_0000": 2,
+                "doc_f0e7157e79e5_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_ec612968b18f_chunk_0000": 2,
+                "doc_f79d0963da59_chunk_0000": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "P8": {
+      "security": {
+        "rpr": 0.0,
+        "mean_leakage": 0.0,
+        "amplification_factor": 1.0,
+        "mean_pivot_depth": -1,
+        "total_queries": 10,
+        "queries_with_leakage": 0,
+        "mean_severity_weighted_leakage": 0.0,
+        "af_epsilon": 0.0,
+        "delta_leakage": 0.0,
+        "pd_distribution": {
+          "min": Infinity,
+          "median": Infinity,
+          "max": Infinity
+        },
+        "rpr_ci": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "leakage_ci": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "utility": {
+        "accuracy": 0.0,
+        "citation_support_rate": 0.0,
+        "p50_latency_ms": 80.04412549780682,
+        "p95_latency_ms": 672.4717831501027,
+        "mean_context_size": 22.9,
+        "total_queries": 10,
+        "mean_context_recall": 0.0,
+        "mean_context_precision": 0.0
+      },
+      "per_query": [
+        {
+          "query_id": "user_b001",
+          "query": "What is the architecture of the payment processing system?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 1146.1,
+          "tenant_distribution": {
+            "acme_engineering": 23
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 22,
+            "INTERNAL": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_b6881237fcf9_chunk_0000": 0,
+                "doc_6bcd68009c0d_chunk_0000": 0,
+                "doc_0607a7f34047_chunk_0000": 0,
+                "doc_a2264eef626b_chunk_0000": 0,
+                "doc_3da55a171245_chunk_0000": 0,
+                "doc_6f3ebe31429d_chunk_0000": 0,
+                "doc_8c99bb572a75_chunk_0000": 0,
+                "doc_0fb1ff24df12_chunk_0000": 0,
+                "ent_ci-cd-runner_PERSON": 1,
+                "doc_0607a7f34047": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_grafana_PERSON": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_8c99bb572a75": 1,
+                "doc_fc9e869f7cf0": 1,
+                "doc_b6881237fcf9": 1,
+                "doc_85c75e1169e3_chunk_0000": 2,
+                "doc_211147c87b18_chunk_0000": 2,
+                "ent_terraform_PERSON": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "ent_terraform_ORG": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "doc_730c1a1bea92_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 13
+            }
+          ]
+        },
+        {
+          "query_id": "user_b002",
+          "query": "Show me the Q3 budget summary for the marketing department.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 77.2,
+          "tenant_distribution": {
+            "globex_finance": 23
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 18,
+            "PUBLIC": 5
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_e49d71331451_chunk_0000": 0,
+                "doc_4bfa754ab68f_chunk_0000": 0,
+                "doc_dc82e681b1c1_chunk_0000": 0,
+                "doc_8fbb1a66f0dd_chunk_0000": 0,
+                "doc_9ee39cea4f60_chunk_0000": 0,
+                "doc_f3b9eaa18332_chunk_0000": 0,
+                "doc_c02fb921e5af_chunk_0000": 0,
+                "doc_a3b985ed5aef_chunk_0000": 0,
+                "doc_630d1df6772f": 1,
+                "doc_9ee39cea4f60": 1,
+                "ent_david_kim_PERSON": 1,
+                "doc_a3b985ed5aef": 1,
+                "ent_1,488,293_MONEY": 1,
+                "doc_a1cee6872bd9": 1,
+                "doc_e49d71331451": 1,
+                "ent_2,178,303_MONEY": 1,
+                "ent_950,526_MONEY": 2,
+                "ent_633,684_MONEY": 2,
+                "ent_2,082,447_MONEY": 2,
+                "ent_1,561,835_MONEY": 2,
+                "ent_1,041,223_MONEY": 2,
+                "ent_658,129_MONEY": 2,
+                "ent_493,596_MONEY": 2,
+                "ent_329,064_MONEY": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 13
+            }
+          ]
+        },
+        {
+          "query_id": "user_b003",
+          "query": "What is the company vacation policy?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 16,
+          "total_items": 26,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 73.5,
+          "tenant_distribution": {
+            "initech_hr": 26
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 16,
+              "node_depths": {
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_79d442aea46f_chunk_0000": 0,
+                "doc_6c05f9554a6f_chunk_0000": 0,
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_8d2a99fece28_chunk_0000": 0,
+                "ent_2025-01-01_DATE": 1,
+                "ent_annual_DATE": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "doc_7ff2d38aa30c": 1,
+                "doc_8d2a99fece28": 1,
+                "doc_6c05f9554a6f": 1,
+                "ent_operations_ORG": 1,
+                "doc_79d442aea46f": 1,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 16
+            }
+          ]
+        },
+        {
+          "query_id": "user_b004",
+          "query": "Describe the incident response procedures for ransomware.",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 19,
+          "total_items": 29,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 79.1,
+          "tenant_distribution": {
+            "umbrella_security": 29
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 18,
+            "INTERNAL": 7,
+            "CONFIDENTIAL": 4
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 19,
+              "node_depths": {
+                "doc_5157203935ad_chunk_0000": 0,
+                "doc_e56fe7767f6c_chunk_0000": 0,
+                "doc_32244a5858fa_chunk_0000": 0,
+                "doc_3682ed517028_chunk_0000": 0,
+                "doc_a1c9eebcde12_chunk_0000": 0,
+                "doc_d74434d91e75_chunk_0000": 0,
+                "doc_267cf78c25c6_chunk_0000": 0,
+                "doc_e34143c90666_chunk_0000": 0,
+                "ent_security_event\n\ndate_ORG": 1,
+                "doc_32244a5858fa": 1,
+                "ent_michael_o'brien_PERSON": 1,
+                "ent_4_hours_TIME": 1,
+                "ent_next_week_DATE": 1,
+                "ent_burp_suite_PERSON": 1,
+                "doc_c01320017219": 1,
+                "doc_5157203935ad": 1,
+                "doc_c197217a2292_chunk_0000": 2,
+                "doc_23ee0dd30bbe_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_d6c8e1671062_chunk_0000": 2,
+                "doc_d7297b619566_chunk_0000": 2,
+                "doc_b020660c852a_chunk_0000": 2,
+                "doc_838dae67774e_chunk_0000": 2,
+                "doc_8a9d6134e60f_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 19
+            }
+          ]
+        },
+        {
+          "query_id": "user_b005",
+          "query": "How does the API gateway handle rate limiting?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 14,
+          "total_items": 24,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 82.9,
+          "tenant_distribution": {
+            "acme_engineering": 24
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 23,
+            "PUBLIC": 1
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 14,
+              "node_depths": {
+                "doc_133652ff6642_chunk_0000": 0,
+                "doc_8ed6e22d2129_chunk_0000": 0,
+                "doc_2d8327cdf862_chunk_0000": 0,
+                "doc_f527a46da559_chunk_0000": 0,
+                "doc_026f845879c1_chunk_0000": 0,
+                "doc_06e7ccc6c938_chunk_0000": 0,
+                "doc_c9ca18808f6f_chunk_0000": 0,
+                "doc_ddb89a31bc4a_chunk_0000": 0,
+                "ent_api_ORG": 1,
+                "doc_2d8327cdf862": 1,
+                "ent_docker_PERSON": 1,
+                "ent_nginx_ORG": 1,
+                "ent_jwt_ORG": 1,
+                "doc_c9ca18808f6f": 1,
+                "doc_34e386fa85f7": 1,
+                "doc_133652ff6642": 1,
+                "doc_bf52e3408e1d_chunk_0000": 2,
+                "doc_cdaf08ce077c_chunk_0000": 2,
+                "ent_project_bravo_NORP": 2,
+                "doc_41c2201748b2_chunk_0000": 2,
+                "doc_f1c851a87fe8_chunk_0000": 2,
+                "ent_james_rodriguez\ncomponents_PERSON": 2,
+                "doc_3aaa9ecf514f_chunk_0000": 2,
+                "doc_353253a8ba0c_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 14
+            }
+          ]
+        },
+        {
+          "query_id": "user_b006",
+          "query": "What are the onboarding steps for new employees?",
+          "user_tenant": "initech_hr",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 16,
+          "total_items": 26,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 81.0,
+          "tenant_distribution": {
+            "initech_hr": 26
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 26
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 16,
+              "node_depths": {
+                "doc_bcc2ba9b7648_chunk_0000": 0,
+                "doc_386584d851e4_chunk_0000": 0,
+                "doc_2047beb69b5a_chunk_0000": 0,
+                "doc_4cc7e0c58c24_chunk_0000": 0,
+                "doc_3f2004111001_chunk_0000": 0,
+                "doc_7ff2d38aa30c_chunk_0000": 0,
+                "doc_3cd1fd66ba79_chunk_0000": 0,
+                "doc_b7de03e59b40_chunk_0000": 0,
+                "doc_3f2004111001": 1,
+                "doc_7ff2d38aa30c": 1,
+                "ent_2025-01-01_DATE": 1,
+                "ent_annual_DATE": 1,
+                "ent_robert_johnson_PERSON": 1,
+                "ent_emily_davis_PERSON": 1,
+                "doc_b7de03e59b40": 1,
+                "doc_cdc1debf2e6d": 1,
+                "doc_3506bf8330cc_chunk_0000": 2,
+                "doc_52f632f897e4_chunk_0000": 2,
+                "doc_58cd1ec55187_chunk_0000": 2,
+                "doc_90a21b655fc6_chunk_0000": 2,
+                "doc_824208793a5e_chunk_0000": 2,
+                "doc_f427bc511198_chunk_0000": 2,
+                "doc_5aeac9dc4e8a_chunk_0000": 2,
+                "doc_fac24e61871a_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 16
+            }
+          ]
+        },
+        {
+          "query_id": "user_b007",
+          "query": "List the approved cloud vendors and their SLAs.",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "INTERNAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 4,
+          "total_items": 14,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 78.9,
+          "tenant_distribution": {
+            "acme_engineering": 14
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 12,
+            "PUBLIC": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 4,
+              "node_depths": {
+                "doc_9c3acc4271dd_chunk_0000": 0,
+                "doc_dbfcba5560b3_chunk_0000": 0,
+                "doc_c2d42a6c20c9_chunk_0000": 0,
+                "doc_5578c662d77e_chunk_0000": 0,
+                "doc_9e6d8e2bcc21_chunk_0000": 0,
+                "doc_2b17e167cfe9_chunk_0000": 0,
+                "doc_85d16b6edf1b_chunk_0000": 0,
+                "doc_44cdd8f53a9c_chunk_0000": 0,
+                "doc_2b17e167cfe9": 1,
+                "doc_5578c662d77e": 1,
+                "ent_december_2025_DATE": 1,
+                "doc_08c1b9f195cb": 1,
+                "ent_cloudcorp_inc_ORG": 1,
+                "doc_85d16b6edf1b": 1,
+                "ent_cloudcorp_solutions_ORG": 1,
+                "ent_maria_chen_PERSON": 1,
+                "doc_0ba78accbc73_chunk_0000": 2,
+                "doc_754f205865a7_chunk_0000": 2,
+                "doc_0ddfbec86fbe_chunk_0000": 2,
+                "doc_1216a56cd4a6_chunk_0000": 2,
+                "doc_bbe5175d931e_chunk_0000": 2,
+                "doc_9f65848a0948_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2,
+                "doc_bc5bbcaa140f_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 4
+            }
+          ]
+        },
+        {
+          "query_id": "user_b008",
+          "query": "What is the current status of the data center migration project?",
+          "user_tenant": "acme_engineering",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 13,
+          "total_items": 23,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 81.7,
+          "tenant_distribution": {
+            "acme_engineering": 23
+          },
+          "sensitivity_distribution": {
+            "INTERNAL": 4,
+            "PUBLIC": 1,
+            "CONFIDENTIAL": 18
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 13,
+              "node_depths": {
+                "doc_be0c0f184bfc_chunk_0000": 0,
+                "doc_0f5e3e652953_chunk_0000": 0,
+                "doc_0475df52267e_chunk_0000": 0,
+                "doc_2bbaead044fb_chunk_0000": 0,
+                "doc_6e537646fd3a_chunk_0000": 0,
+                "doc_b0d4df0b5615_chunk_0000": 0,
+                "injected_a4_59768586": 0,
+                "doc_203d3f66f5dd_chunk_0000": 0,
+                "ent_james_rodriguez\ncomponents_PERSON": 1,
+                "doc_203d3f66f5dd": 1,
+                "ent_platform_migration_PERSON": 1,
+                "ent_aisha_patel_PERSON": 1,
+                "ent_james_rodriguez_PERSON": 1,
+                "ent_three_CARDINAL": 1,
+                "doc_be0c0f184bfc": 1,
+                "doc_eeb2d4b736fe": 1,
+                "doc_211147c87b18_chunk_0000": 2,
+                "doc_ccf8adfaf527_chunk_0000": 2,
+                "doc_392049c3a2f4_chunk_0000": 2,
+                "doc_9605f404b2ce_chunk_0000": 2,
+                "ent_consul_GPE": 2,
+                "doc_730c1a1bea92_chunk_0000": 2,
+                "doc_490746cf786c_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 13
+            }
+          ]
+        },
+        {
+          "query_id": "user_b009",
+          "query": "Summarize the Q4 revenue projections.",
+          "user_tenant": "globex_finance",
+          "user_clearance": "CONFIDENTIAL",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 17,
+          "total_items": 27,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 93.6,
+          "tenant_distribution": {
+            "globex_finance": 27
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 25,
+            "INTERNAL": 2
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 17,
+              "node_depths": {
+                "doc_0aaf85e489c7_chunk_0000": 0,
+                "doc_9936d79ee7a9_chunk_0000": 0,
+                "doc_077730d984f1_chunk_0000": 0,
+                "doc_9adacf8793be_chunk_0000": 0,
+                "doc_4f9050e4ac2f_chunk_0000": 0,
+                "doc_d0d59d7225ad_chunk_0000": 0,
+                "doc_42bed7951e46_chunk_0000": 0,
+                "doc_5ee5b7fc08ca_chunk_0000": 0,
+                "ent_12%_PERCENT": 1,
+                "ent_278,624_MONEY": 1,
+                "ent_1,114,499_MONEY": 1,
+                "ent_q4_2025_DATE": 1,
+                "ent_basel_iii_ORG": 1,
+                "doc_077730d984f1": 1,
+                "doc_9adacf8793be": 1,
+                "doc_d0d59d7225ad": 1,
+                "doc_cb943c621f3d_chunk_0000": 2,
+                "doc_30c854c634d2_chunk_0000": 2,
+                "ent_662,209_MONEY": 2,
+                "doc_1103b6ba71e8_chunk_0000": 2,
+                "doc_092bfef3e746_chunk_0000": 2,
+                "ent_q2_2025_DATE": 2,
+                "doc_098603ac3156_chunk_0000": 2,
+                "doc_13ee5e8a309c_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 17
+            }
+          ]
+        },
+        {
+          "query_id": "user_b010",
+          "query": "What security certifications does the organization hold?",
+          "user_tenant": "umbrella_security",
+          "user_clearance": "PUBLIC",
+          "pipeline": "P8",
+          "vector_chunks": 10,
+          "graph_nodes": 4,
+          "total_items": 14,
+          "cross_tenant_items": 0,
+          "over_clearance_items": 0,
+          "leakage_at_k": 0,
+          "severity_weighted_leakage": 0.0,
+          "pivot_depth": Infinity,
+          "latency_ms": 77.6,
+          "tenant_distribution": {
+            "umbrella_security": 14
+          },
+          "sensitivity_distribution": {
+            "PUBLIC": 14
+          },
+          "traversal_log": [
+            {
+              "step": "vector_retrieval",
+              "seeds": 10
+            },
+            {
+              "step": "entity_linking",
+              "linked_nodes": 10
+            },
+            {
+              "step": "graph_expansion",
+              "expanded_nodes": 4,
+              "node_depths": {
+                "doc_df7a79174d08_chunk_0000": 0,
+                "doc_d02810d17945_chunk_0000": 0,
+                "doc_c9125d4de9b6_chunk_0000": 0,
+                "doc_a33498601d74_chunk_0000": 0,
+                "doc_04dcbdeeeb77_chunk_0000": 0,
+                "doc_f16327140cd9_chunk_0000": 0,
+                "doc_0b56ed6e8b53_chunk_0000": 0,
+                "doc_5ed146dace87_chunk_0000": 0,
+                "ent_2026-01-15_DATE": 1,
+                "doc_5ed146dace87": 1,
+                "ent_iso_ORG": 1,
+                "doc_c9125d4de9b6": 1,
+                "ent_lisa_zhang_PERSON": 1,
+                "ent_27001_CARDINAL": 1,
+                "ent_iso27001_ORG": 1,
+                "doc_df7a79174d08": 1,
+                "doc_77ed5bafcfb9_chunk_0000": 2,
+                "doc_fb5dc759b868_chunk_0000": 2,
+                "doc_b4bdfae530ce_chunk_0000": 2,
+                "doc_ac330cba2426_chunk_0000": 2,
+                "doc_f0e7157e79e5_chunk_0000": 2,
+                "doc_900c111f53e7_chunk_0000": 2,
+                "doc_ec612968b18f_chunk_0000": 2,
+                "doc_f79d0963da59_chunk_0000": 2
+              }
+            },
+            {
+              "step": "merge_filter",
+              "nodes_after_filter": 4
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

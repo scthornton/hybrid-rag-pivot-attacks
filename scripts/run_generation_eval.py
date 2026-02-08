@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import sys
 import time
 from datetime import datetime
@@ -223,6 +224,26 @@ def evaluate_single_query(
     }
 
 
+def _check_provider_key(name: str) -> bool:
+    """Quick check whether a provider's API key is set and non-empty."""
+    env_vars = {
+        "openai": "OPENAI_API_KEY",
+        "anthropic": "ANTHROPIC_API_KEY",
+        "deepseek": "DEEPSEEK_API_KEY",
+    }
+    key = os.environ.get(env_vars.get(name, ""), "")
+    return len(key) > 0
+
+
+def _create_judge(judge_provider: str) -> LLMClient:
+    """Create an LLM client to use as the FCR judge."""
+    if judge_provider == "anthropic":
+        return AnthropicClient(model="claude-sonnet-4-5-20250929")
+    if judge_provider == "deepseek":
+        return DeepSeekClient()
+    return OpenAIClient(model="gpt-4o")
+
+
 @click.command()
 @click.option("--dataset", "-d", default="synthetic",
               type=click.Choice(["synthetic", "enron", "edgar"]),
@@ -230,6 +251,9 @@ def evaluate_single_query(
 @click.option("--llm", "-l", default="openai",
               type=click.Choice(["openai", "anthropic", "deepseek", "all"]),
               help="LLM provider (or 'all' for all three)")
+@click.option("--judge", "-j", default=None,
+              type=click.Choice(["openai", "anthropic", "deepseek"]),
+              help="FCR judge provider (default: openai, falls back to anthropic)")
 @click.option("--queries", "-q", default=200, type=int,
               help="Number of queries to evaluate")
 @click.option("--budget", default=50.0, type=float,
@@ -246,6 +270,7 @@ def evaluate_single_query(
 def main(
     dataset: str,
     llm: str,
+    judge: str | None,
     queries: int,
     budget: float,
     output: str,
@@ -261,7 +286,25 @@ def main(
     logging.basicConfig(level=logging.INFO)
     start = time.perf_counter()
 
-    providers = list(LLM_PROVIDERS.keys()) if llm == "all" else [llm]
+    if llm == "all":
+        providers = [
+            p for p in LLM_PROVIDERS if _check_provider_key(p)
+        ]
+        skipped = [p for p in LLM_PROVIDERS if p not in providers]
+        if skipped:
+            click.echo(f"  Skipping providers with missing keys: {skipped}")
+    else:
+        providers = [llm]
+
+    # Resolve judge provider: explicit flag > openai > anthropic > first available
+    if judge is not None:
+        judge_provider = judge
+    elif _check_provider_key("openai"):
+        judge_provider = "openai"
+    elif _check_provider_key("anthropic"):
+        judge_provider = "anthropic"
+    else:
+        judge_provider = providers[0] if providers else "openai"
 
     # Resolve collection from dataset
     if dataset != "synthetic":
@@ -273,6 +316,7 @@ def main(
     click.echo("PivoRAG Generation Evaluation")
     click.echo(f"  Dataset:    {dataset} (collection: {collection})")
     click.echo(f"  LLMs:       {providers}")
+    click.echo(f"  Judge:      {judge_provider}")
     click.echo(f"  Queries:    {queries}")
     click.echo(f"  Budget:     ${budget:.2f}")
 
@@ -311,7 +355,25 @@ def main(
     for provider in providers:
         client_cls = LLM_PROVIDERS[provider]
         client = client_cls()
-        judge = OpenAIClient(model="gpt-4o") if provider != "openai" else client
+
+        # Verify the provider key works before committing to the full loop
+        try:
+            client.generate("Say OK", system="Reply with exactly one word.")
+        except Exception as e:
+            click.echo(f"\n  Skipping {provider}: API key validation failed ({e!s:.80})")
+            continue
+
+        if provider == judge_provider:
+            judge_client = client
+        else:
+            judge_client = _create_judge(judge_provider)
+            try:
+                judge_client.generate("Say OK", system="Reply with exactly one word.")
+            except Exception as e:
+                click.echo(f"  Judge ({judge_provider}) validation failed: {e!s:.80}")
+                # Fall back to using the generation client as judge
+                judge_client = client
+                click.echo(f"  Falling back to {provider} as judge")
 
         click.echo(f"\n{'='*60}")
         click.echo(f"Evaluating with {provider} ({client.model})")
@@ -332,7 +394,7 @@ def main(
                 p3_pipeline=p3_pipeline,
                 p4_pipeline=p4_pipeline,
                 llm_client=client,
-                judge_client=judge,
+                judge_client=judge_client,
                 embed_model=embed_model,
                 budget_remaining=budget_remaining,
             )
