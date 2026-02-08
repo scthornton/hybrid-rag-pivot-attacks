@@ -2,7 +2,7 @@
 """Build ChromaDB vector index and Neo4j graph from processed data.
 
 Runs the complete ingestion pipeline:
-  1. Load synthetic JSON documents
+  1. Load documents (from JSON or dataset adapter)
   2. Chunk documents (TokenChunker)
   3. Extract entities (EntityExtractor with spaCy)
   4. Extract relations (RelationExtractor)
@@ -14,16 +14,14 @@ Runs the complete ingestion pipeline:
   10. Print statistics and verify
 
 Usage:
-    # Dry run (no external services needed)
-    python scripts/build_indexes.py --data data/raw/synthetic_enterprise.json --dry-run
-
-    # Full run against local services
+    # From synthetic JSON
     python scripts/build_indexes.py --data data/raw/synthetic_enterprise.json
 
-    # Full run with custom connection settings
-    python scripts/build_indexes.py --data data/raw/synthetic_enterprise.json \\
-        --chroma-host localhost --chroma-port 8000 \\
-        --neo4j-uri bolt://localhost:7687 --neo4j-user neo4j --neo4j-pass localpassword
+    # From dataset adapter (Enron)
+    python scripts/build_indexes.py --dataset enron --max-docs 50000
+
+    # Dry run (no external services needed)
+    python scripts/build_indexes.py --dataset enron --max-docs 5000 --dry-run
 """
 
 from __future__ import annotations
@@ -48,6 +46,27 @@ def load_documents(data_path: str) -> list[dict]:
     raw = json.loads(Path(data_path).read_text())
     click.echo(f"Loaded {len(raw)} documents from {data_path}")
     return raw
+
+
+def load_documents_from_adapter(dataset: str, **kwargs: Any) -> list[dict]:
+    """Load documents through a DatasetAdapter and convert to dict format."""
+    from pivorag.datasets import get_adapter
+
+    adapter = get_adapter(dataset, **kwargs)
+    docs = adapter.load_documents()
+    result = []
+    for doc in docs:
+        result.append({
+            "doc_id": doc.doc_id,
+            "title": doc.title,
+            "text": doc.text,
+            "source": doc.source,
+            "tenant": doc.tenant,
+            "sensitivity": doc.sensitivity,
+            "provenance_score": doc.provenance_score,
+        })
+    click.echo(f"Loaded {len(result)} documents via {dataset} adapter")
+    return result
 
 
 def step_chunk(documents: list[dict], target_size: int, overlap: int) -> list[dict]:
@@ -480,11 +499,13 @@ def save_processed_data(
 
 
 @click.command()
-@click.option("--data", "-d", required=True, help="Path to synthetic documents JSON")
+@click.option("--data", "-d", default=None, help="Path to synthetic documents JSON")
+@click.option("--dataset", default=None, help="Dataset adapter name (enron, edgar, synthetic)")
+@click.option("--max-docs", default=0, type=int, help="Max documents to load (0=all)")
 @click.option("--output", "-o", default="data/processed", help="Output dir for processed data")
 @click.option("--chroma-host", default="localhost", help="ChromaDB host")
 @click.option("--chroma-port", default=8000, type=int, help="ChromaDB port")
-@click.option("--chroma-collection", default="pivorag_chunks", help="ChromaDB collection name")
+@click.option("--chroma-collection", default=None, help="ChromaDB collection (auto from dataset)")
 @click.option("--neo4j-uri", default="bolt://localhost:7687", help="Neo4j URI")
 @click.option("--neo4j-user", default="neo4j", help="Neo4j username")
 @click.option("--neo4j-pass", default="localpassword", help="Neo4j password")
@@ -495,11 +516,13 @@ def save_processed_data(
 @click.option("--skip-embed", is_flag=True, help="Skip embedding generation (fast iteration)")
 @click.option("--embed-model", default="all-MiniLM-L6-v2", help="Sentence-transformer model name")
 def main(
-    data: str,
+    data: str | None,
+    dataset: str | None,
+    max_docs: int,
     output: str,
     chroma_host: str,
     chroma_port: int,
-    chroma_collection: str,
+    chroma_collection: str | None,
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
@@ -510,14 +533,28 @@ def main(
     skip_embed: bool,
     embed_model: str,
 ) -> None:
-    """Build vector and graph indexes from synthetic enterprise data."""
+    """Build vector and graph indexes from enterprise data."""
+    if not data and not dataset:
+        raise click.UsageError("Provide either --data (JSON path) or --dataset (adapter name)")
+
     start = time.perf_counter()
 
     if dry_run:
         click.echo("DRY RUN — processing data without database writes")
 
     # Step 0: Load documents
-    documents = load_documents(data)
+    if dataset:
+        adapter_kwargs: dict[str, Any] = {}
+        if max_docs > 0:
+            adapter_kwargs["max_emails"] = max_docs  # Enron-specific
+        documents = load_documents_from_adapter(dataset, **adapter_kwargs)
+        if not chroma_collection:
+            from pivorag.datasets import get_adapter
+            chroma_collection = get_adapter(dataset).get_collection_name()
+    else:
+        documents = load_documents(data)  # type: ignore[arg-type]
+        if not chroma_collection:
+            chroma_collection = "pivorag_chunks"
 
     # Step 1: Chunk documents
     click.echo("\n[1/8] Chunking documents...")
