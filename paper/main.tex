@@ -23,51 +23,47 @@ Vector Seeds to Graph Expansion}
 
 \author{
 \IEEEauthorblockN{Scott Thornton}
-\IEEEauthorblockA{perfecXion.ai \\
-scthornton@gmail.com}
+\IEEEauthorblockA{scott@perfecxion.ai}
 }
 
 \maketitle
 
 % ============================================================
 \begin{abstract}
-Hybrid Retrieval-Augmented Generation (RAG) pipelines that combine
-vector similarity search with knowledge graph expansion are increasingly
-deployed in enterprise settings for their superior multi-hop reasoning
-capabilities. However, this architectural pattern introduces a critical
-security vulnerability we term \textbf{Retrieval Pivot Risk (RPR)}:
-a semantically retrieved ``seed'' chunk can \emph{pivot} through entity
-linking into sensitive graph neighborhoods, yielding data leakage that
-is absent in vector-only retrieval.
-
-We formalize RPR and its associated metrics---Amplification Factor (AF),
-Pivot Depth (PD), and Leakage@k---and present a taxonomy of four
+Hybrid Retrieval-Augmented Generation (RAG) pipelines increasingly
+combine vector similarity search with knowledge graph expansion to
+support multi-hop reasoning. We show this composition introduces a
+distinct security failure mode: a semantically retrieved ``seed'' chunk
+can pivot via entity linking into sensitive graph neighborhoods,
+causing data leakage that does not exist in vector-only retrieval. We
+formalize this risk as \textbf{Retrieval Pivot Risk (RPR)} and define
+companion metrics \textbf{Leakage@k}, \textbf{Amplification Factor
+(AF)}, and \textbf{Pivot Depth (PD)} to quantify leakage probability,
+magnitude, amplification over vector baselines, and structural distance
+to the first unauthorized node. We further present a taxonomy of four
 \textbf{Retrieval Pivot Attacks} that exploit the vector-to-graph
-transition with injection budgets as small as 10 chunks. Our evaluation
-on a synthetic multi-tenant enterprise corpus (1{,}000 documents,
-2{,}785 graph nodes, 15{,}514 edges) with 500 evaluation queries
-demonstrates that undefended hybrid pipelines exhibit
-$\text{RPR} = 0.95 \pm 0.02$ (95\% CI) and
-$\text{AF}(\epsilon) \approx 160\text{--}194\times$ compared to
-vector-only retrieval, with all leakage occurring at $\text{PD} = 2$
-hops---a structural consequence of the bipartite chunk-entity graph
-topology.
-
-This amplification occurs organically---no adversarial injection is
-required. Shared entities (vendors, infrastructure, compliance
-standards) create natural cross-tenant pivot paths in any multi-tenant
-knowledge graph. We propose five layered defenses and show that per-hop
-authorization alone eliminates all measured leakage
-($\text{RPR} \to 0.0$) across all query types and attack variants.
-The defense is deliberately simple: it re-checks existing tenant and
-sensitivity metadata at the graph expansion boundary. That a trivial
-check suffices is not a limitation---it reveals that the vulnerability
-is a boundary placement problem, not a defense complexity problem.
+boundary with injection budgets as small as 10--20 chunks, and we
+demonstrate that adversarial injection is not required: naturally
+shared entities (e.g., vendors, infrastructure, compliance standards)
+create cross-tenant pivot paths organically. In a synthetic
+multi-tenant enterprise corpus (1{,}000 documents; 2{,}785 graph
+nodes; 15{,}514 edges) evaluated with 500 queries, the undefended
+hybrid pipeline exhibits $\text{RPR} \approx 0.95$ and
+$\text{AF}(\epsilon) \approx 160\text{--}194\times$ relative to
+vector-only retrieval, with leakage occurring at $\text{PD} = 2$ hops
+as a structural consequence of the bipartite chunk--entity topology. We
+propose five layered defenses and find that a single placement
+fix---\textbf{per-hop authorization at the graph expansion
+boundary}---eliminates all measured leakage ($\text{RPR} \to 0.0$)
+across all queries and attack variants with negligible latency
+overhead, indicating the vulnerability is primarily a boundary
+enforcement problem rather than a defense complexity problem.
 \end{abstract}
 
 \begin{IEEEkeywords}
-retrieval-augmented generation, knowledge graphs, adversarial machine
-learning, hybrid RAG, graph security, data exfiltration, access control
+hybrid RAG, GraphRAG, multi-tenant RAG, access control, data leakage,
+retrieval security, knowledge graphs, entity linking, composition
+vulnerabilities
 \end{IEEEkeywords}
 
 % ============================================================
@@ -85,31 +81,36 @@ expansion~\cite{hybridrag2024, microsoftgraphrag2024}. These systems
 retrieve an initial set of text chunks via embedding similarity, then
 \emph{pivot} through entity mentions into a knowledge graph to gather
 structurally related context before passing the assembled results to a
-large language model (LLM).
+large language model (LLM). We call the transition between vector
+retrieval and graph expansion the \textbf{pivot boundary}: the
+architectural point where a retrieved seed becomes a graph traversal
+capability.
 
-This pivot mechanism---the vector-to-graph transition---introduces a
-security boundary that has not been systematically measured or
-formalized in prior work. Consider an analyst
-at an engineering firm who queries a hybrid RAG system about Kubernetes
-cluster configurations. Vector retrieval returns authorized
-engineering documents. But those documents mention shared entities
-(``CloudCorp,'' ``auth-service'') that also appear in the knowledge
-graph connected to confidential HR salary records, restricted security
-credentials, and financial audit data belonging to other tenants. A
-2-hop graph expansion from the authorized seed chunks traverses
-through these shared entities into unauthorized neighborhoods,
-silently injecting sensitive cross-tenant data into the analyst's
-context window.
+This boundary is a \emph{boundary placement} bug. The vector store
+enforces tenant policy \emph{before} retrieval. The graph expansion
+must enforce it \emph{again} after entity linking---otherwise an
+authorized seed chunk becomes an uncontrolled entry point into the
+knowledge graph. Consider an analyst at an engineering firm who queries
+about Kubernetes cluster configurations. Vector retrieval returns
+authorized engineering documents. But those documents mention shared
+entities (``CloudCorp,'' ``auth-service'') that also appear in the
+knowledge graph connected to confidential HR salary records, restricted
+security credentials, and financial audit data belonging to other
+tenants. A 2-hop graph expansion traverses through these shared entities
+into unauthorized neighborhoods, silently injecting sensitive
+cross-tenant data into the analyst's context window.
 
-Prior work has studied vector-side poisoning in
-isolation~\cite{zou2025poisonedrag, corruptrag2025, ctrlrag2025} and
-graph-side attacks independently~\cite{gragpoison2026, fewwords2025,
-ragsafety2025}. PoisonedRAG achieves 90\% attack success rate by
-injecting 5 malicious texts into vector stores~\cite{zou2025poisonedrag}.
-GRAGPoison demonstrates 98\% success via relation-centric poisoning
-within GraphRAG~\cite{gragpoison2026}. Yet neither addresses what
-happens at the \emph{boundary} between these stores---the point where
-vector retrieval results become graph traversal seeds. The
+Prior work falls into two separate buckets that do not address this
+boundary. \textbf{(1) Vector-only attacks}: PoisonedRAG achieves
+90\% attack success rate by injecting 5 malicious texts into vector
+stores~\cite{zou2025poisonedrag}; CorruptRAG~\cite{corruptrag2025} and
+CtrlRAG~\cite{ctrlrag2025} extend these results.
+\textbf{(2) Graph-only attacks}: GRAGPoison demonstrates 98\% success
+via relation-centric poisoning within
+GraphRAG~\cite{gragpoison2026}; TKPA~\cite{fewwords2025} and
+RAG-Safety~\cite{ragsafety2025} target graph-side integrity.
+\textbf{(3) The hybrid boundary}---how vector outputs become graph
+seeds---has not been systematically measured or formalized. The
 OWASP LLM Top 10 (2025) introduced LLM08 (Vector and Embedding
 Weaknesses) but does not address graph
 components~\cite{owasptop10llm2025}. MITRE ATLAS treats RAG as a
@@ -120,51 +121,29 @@ problem~\cite{sokprivacy2026}.
 This paper makes three contributions:
 
 \begin{enumerate}
-\item \textbf{Vulnerability characterization.} We identify and
-  formalize a \emph{compound attack surface} that emerges from combining
-  two individually secure retrieval modalities. Vector retrieval with
-  tenant prefiltering is secure. Graph retrieval within a single
-  tenant's subgraph is secure. But connecting them---using vector
-  results as graph traversal seeds---creates $160\text{--}194\times$
-  amplified leakage that neither modality exhibits alone. We define
-  Retrieval Pivot Risk (RPR) and companion metrics (AF, PD,
-  Leakage@k, severity-weighted leakage) that quantify the severity
-  of this composition vulnerability (\S\ref{sec:metrics}).
+\item \textbf{Composition vulnerability + metrics.} We formalize
+  \emph{Retrieval Pivot Risk (RPR)} and companion metrics (AF, PD,
+  Leakage@k, severity-weighted leakage) that quantify a compound
+  attack surface emerging from composing two individually secure
+  retrieval modalities. In our bipartite chunk--entity graph,
+  all leakage occurs at PD\,$=$\,2 hops---a structural signature of
+  the pivot boundary (\S\ref{sec:metrics}).
 
-\item \textbf{Attack taxonomy and organic leakage.} We present four
-  Retrieval Pivot Attacks (A1--A4) that exploit the pivot boundary
-  with injection budgets of 10--20 chunks. Critically, we also
-  demonstrate that \emph{no adversarial injection is required}: organic
-  shared entities (vendors, infrastructure, compliance standards) create
-  natural cross-tenant pivot paths that produce RPR $= 0.95$ on benign
-  queries (\S\ref{sec:attacks}, \S\ref{sec:results}).
+\item \textbf{Attack taxonomy + organic leakage.} We present four
+  Retrieval Pivot Attacks (A1--A4) exploiting the pivot boundary with
+  injection budgets of 10--20 chunks. Critically, we show that
+  \emph{no adversarial injection is required}: organic shared entities
+  produce RPR\,$=$\,0.95 on benign queries alone
+  (\S\ref{sec:attacks}, \S\ref{sec:results}).
 
-\item \textbf{Defense placement analysis.} We design and evaluate five
-  layered defenses (D1--D5) and show that the critical insight is not
-  the defense mechanism itself but its \emph{placement}: authorization
-  must be re-checked at the graph expansion boundary. The deliberate
-  simplicity of D1 (per-hop authorization) is evidence that the
-  vulnerability is a \emph{boundary placement problem}, not a
-  \emph{defense complexity problem}. Existing metadata (tenant labels,
-  sensitivity tiers) is sufficient---the missing element in production
-  systems is checking it at the right architectural layer. The
-  remaining defenses (D2--D5) serve as utility optimizers and
-  defense-in-depth layers. A 27-configuration traversal sweep
-  identifies total node budget as the primary leakage-controlling
-  parameter (\S\ref{sec:mitigations}, \S\ref{sec:results}).
+\item \textbf{Defense placement analysis.} We evaluate five layered
+  defenses (D1--D5) and show that authorization must be re-checked at
+  the graph expansion boundary. D1 (per-hop authorization) alone
+  eliminates all measured leakage ($\text{RPR} \to 0.0$) across 500
+  queries, all four attacks, and metadata mislabel rates up to 5\%.
+  D2--D5 serve as utility optimizers and defense-in-depth layers
+  (\S\ref{sec:mitigations}, \S\ref{sec:results}).
 \end{enumerate}
-
-Our key finding is both surprising and practically significant:
-\emph{a single defense---per-hop authorization that re-checks tenant
-and sensitivity labels at each graph expansion step---completely
-eliminates retrieval pivot leakage across 500 evaluation queries,
-all four attack variants, and metadata mislabel rates up to 5\%.}
-The defense is deliberately simple: it re-uses existing graph metadata
-with negligible latency ($<$1ms). That a trivial check suffices is
-not a weakness of the defense---it is evidence that production hybrid
-RAG systems are missing a critical authorization check at the
-vector-to-graph boundary, and that adding it is both necessary and
-straightforward.
 
 The complete codebase, data generators, attack implementations,
 defense suite, and experimental results are available at
@@ -316,18 +295,28 @@ Same-tenant escalation (b) targets \emph{sensitivity} boundaries
 rather than \emph{tenant} boundaries and requires the attacker to
 already have write access to the target tenant's corpus.
 
+\subsection{Metadata Integrity Assumption}
+
+D1 (per-hop authorization) relies on node metadata---tenant labels and
+sensitivity tiers---being trustworthy. \textbf{We assume metadata is
+system-assigned during document ingestion} (the uploader cannot choose
+tenant or sensitivity labels). If an attacker can forge metadata, D1
+can be bypassed. We evaluate robustness under random metadata
+corruption in \S\ref{sec:mislabel} and discuss additional integrity
+mechanisms in \S\ref{sec:metadata-integrity}.
+
 \subsection{Scope}
 
-We focus exclusively on the \emph{retrieval layer}: measuring what
-unauthorized content enters the LLM's context window. We do not
-evaluate LLM generation quality, jailbreaking, or prompt injection.
-The attacker does not have direct database access, cannot modify model
-weights, and cannot alter the pipeline configuration. We omit a
-graph-only baseline (P2) because graph-only RAG without vector
-seeding is a fundamentally different retrieval paradigm that does not
-involve the pivot boundary we study; its security properties are
-addressed by prior work on GraphRAG
-attacks~\cite{gragpoison2026, fewwords2025}.
+\textbf{We measure unauthorized items in the retrieval context
+window}, not exfiltrated tokens or generated text. We focus exclusively
+on the retrieval layer. We do not evaluate LLM generation quality,
+jailbreaking, or prompt injection. The attacker does not have direct
+database access, cannot modify model weights, and cannot alter the
+pipeline configuration. We omit a graph-only baseline (P2) because
+graph-only RAG without vector seeding is a fundamentally different
+retrieval paradigm---our question is \emph{amplification created by
+composition}, not graph-only security, which is addressed by prior
+work~\cite{gragpoison2026, fewwords2025}.
 
 % ============================================================
 \section{Retrieval Pivot Attacks}
@@ -463,7 +452,31 @@ total number of serialized nodes (chunks + entities) presented to
 the LLM. The default pipeline configuration (depth $d=2$, branching
 $\leq 10$, total $\leq 100$ nodes, top-$k{=}10$ vector results)
 produces ${\sim}$110 items per query in the undefended hybrid
-pipeline (P3).
+pipeline (P3). Table~\ref{tab:notation} summarizes the notation used
+throughout.
+
+\begin{table}[t]
+\centering
+\caption{Notation summary.}
+\label{tab:notation}
+\small
+\begin{tabular}{l|l}
+\toprule
+\textbf{Symbol} & \textbf{Definition} \\
+\midrule
+$q$ & Query \\
+$u$ & User with tenant $t_u$ and clearance $\ell_u$ \\
+$S_k(q)$ & Top-$k$ context set (serialized items) \\
+$\text{Seeds}(q)$ & Entity nodes linked from vector-retrieved chunks \\
+$\text{Sensitive}(x,u)$ & $x$ has $\ell_x > \ell_u$ or $t_x \neq t_u$ \\
+RPR & Prob.\ of any sensitive item in context \\
+Leakage@k & Count of sensitive items in context \\
+SWL & Severity-weighted leakage \\
+AF($\epsilon$) & Leakage ratio: hybrid / max(vector, $\epsilon$) \\
+PD & Min hops from seed to first sensitive node \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Retrieval Pivot Risk (RPR)}
 
@@ -570,6 +583,10 @@ knowledge graph from seed $s$ to node $x$, computed via
 \texttt{apoc.path.spanningTree} which yields paths with explicit hop
 counts. We report PD as a distribution (min, median, max) across
 queries that exhibit leakage, rather than a single summary statistic.
+Operationally, PD identifies the \emph{minimum traversal depth at
+which enforcement must occur}: if all leakage has $\text{PD} = d$,
+limiting expansion to depth $< d$ or inserting an authorization check
+at depth $d$ is sufficient to prevent it.
 
 % ============================================================
 \section{Experimental Setup}
@@ -671,6 +688,15 @@ power $> 0.80$ for detecting 5pp differences (Appendix~\ref{sec:stats-appendix}
 provides sample size justification, multiple comparison corrections,
 and $\epsilon$ sensitivity analysis).
 
+\textbf{Reproducibility.} All experiments use a single fixed random
+seed (42) for corpus generation, query sampling, and bootstrap
+resampling.  Pipeline configurations are built programmatically (not
+from YAML) to ensure parameter consistency across variants.
+Appendix~\ref{sec:artifact} provides the full reproduction sequence;
+Appendix~\ref{sec:corpus-details} details the corpus generator;
+Appendix~\ref{sec:query-templates} lists all query templates.
+The codebase includes 177 passing unit tests.
+
 \subsection{Attack Evaluation}
 
 We evaluate all four attacks (A1--A4) against the undefended hybrid
@@ -738,15 +764,19 @@ P8 (All) & 0.000 & 0.0 & 0.0 & -- & 20 &
 \end{tabular}
 \end{table*}
 
-Because the vector baseline produces zero leakage, the classical
-Amplification Factor is formally infinite: $\text{AF} = \infty$. Using
-the regularized metric, $\text{AF}(\epsilon{=}0.1) = 159.9$ for benign
-queries and $193.8$ for adversarial queries. The absolute difference
-$\Delta\text{Leakage} = 16.0$ (benign) and $19.4$ (adversarial).
-These complementary metrics confirm the same finding: graph expansion
-introduces leakage that is \emph{entirely absent} in vector-only
-retrieval. The hybrid architecture does not merely amplify existing
-risk---it creates risk from nothing.
+Because the vector baseline (P1) produces zero leakage, the absolute
+difference $\Delta\text{Leakage} = 16.0$ (benign) and $19.4$
+(adversarial) is the most direct measure of the hybrid penalty:
+each query exposes 16--19 additional unauthorized items purely
+from graph expansion.  The classical Amplification Factor is formally
+$\text{AF} = \infty$ (division by zero); the regularized variant
+$\text{AF}(\epsilon{=}0.1) = 160$--$194\times$ provides a finite
+proxy.\footnote{$\text{AF}(\epsilon)$ is sensitive to the choice of
+$\epsilon$; see Appendix~\ref{sec:stats-appendix} for a robustness
+check across $\epsilon \in \{0.01, 0.05, 0.1, 0.5\}$.}
+The hybrid architecture does not merely amplify existing risk---it
+creates risk from nothing: P1 achieves $\text{RPR} = 0.0$ while P3
+reaches $\text{RPR} = 0.95$ on identical queries.
 
 Figure~\ref{fig:rpr} shows RPR with bootstrap confidence intervals
 across pipeline variants.
@@ -1241,8 +1271,9 @@ D5: Merge filter & Post-merge & Final backstop \\
 
 \subsection{D1: Per-Hop Authorization}
 
-Per-hop authorization re-checks access control predicates on every
-node reached during graph expansion. For each expanded node $v$, the
+Per-hop authorization is an \textbf{intentionally conservative
+minimum-viable guardrail}: it re-checks access control predicates on
+every node reached during graph expansion. For each expanded node $v$, the
 defense evaluates:
 
 \begin{equation}
@@ -1539,6 +1570,27 @@ We also do not evaluate attackers who target D2--D5 specifically
 (e.g., crafting high-provenance payloads to bypass D4, or adversarial
 query phrasing to manipulate D2's query classifier).
 
+\textbf{NER and entity linker dependence.} The pivot path exists
+because entity linking creates shared nodes across tenant boundaries.
+Our experiments use spaCy's \texttt{en\_core\_web\_sm} NER model,
+which has known recall limitations for domain-specific entities. A
+higher-recall linker would extract more shared entities, potentially
+increasing organic leakage; a lower-recall linker would reduce it.
+We do not evaluate how linker quality affects RPR, nor do we test
+production entity linking systems that perform coreference resolution
+or cross-document entity merging. The quantitative leakage values
+we report are therefore specific to our NER pipeline.
+
+\textbf{Simplified policy model.} Our authorization model uses
+tenant labels and four sensitivity tiers (PUBLIC through RESTRICTED).
+Production enterprises typically employ richer access control:
+role-based (RBAC) and attribute-based (ABAC) policies, group
+memberships, temporary grants, legal holds, and need-to-know
+exceptions. D1's per-hop check generalizes to any predicate that can
+be evaluated on node metadata, but we do not demonstrate this
+generality experimentally. The gap between our flat tenant model and
+real-world RBAC/ABAC hierarchies remains an open integration question.
+
 \textbf{Graph-only baseline (P2).} We omit a graph-only RAG baseline
 because graph-only retrieval without vector seeding does not involve
 the pivot boundary under study. This means our results characterize
@@ -1730,6 +1782,162 @@ require $\sim$10 minutes including graph rebuilds between attacks.
 Sweep experiments (traversal, connectivity, mislabel, embedding) total
 $\sim$45 minutes.  All experiments require $<$16\,GB RAM and run on
 CPU-only hardware.
+
+% ============================================================
+\section{Corpus Generator Details}
+\label{sec:corpus-details}
+
+The synthetic corpus is produced by 12 domain-specific document
+generators (3 per tenant), each instantiating one of three genre
+templates: \emph{architecture description}, \emph{policy/procedure},
+and \emph{status report}. Each generator populates templates from
+curated entity pools:
+
+\begin{itemize}
+\item \textbf{Engineering:} 12 system names, 15 technologies, 6
+  projects (e.g., \texttt{auth-service}, \texttt{Kubernetes},
+  \texttt{Project Alpha}).
+\item \textbf{Finance:} 10 vendors, 6 accounts, 7 regulations
+  (e.g., \texttt{Deloitte}, \texttt{SOX}, \texttt{Capital Expenditure
+  2025}).
+\item \textbf{HR:} 12 departments, 7 benefits, 10 named employees
+  (e.g., \texttt{Engineering}, \texttt{401k matching}, \texttt{Maria
+  Chen}).
+\item \textbf{Security:} 6 CVEs, 8 tools, 6 frameworks
+  (e.g., \texttt{CVE-2025-41923}, \texttt{Splunk SIEM}, \texttt{NIST
+  CSF}).
+\end{itemize}
+
+\noindent Bridge entities span 5 categories: shared vendors
+(\texttt{CloudCorp}, \texttt{DataSyncInc}, \texttt{SecureNetLLC}),
+shared infrastructure (\texttt{k8s-prod-cluster}, \texttt{splunk-siem},
+\texttt{auth-service}), shared personnel (\texttt{Maria Chen},
+\texttt{James Rodriguez}, \texttt{Aisha Patel}), shared compliance
+(\texttt{SOC2-audit}, \texttt{PCI-DSS-cert}, \texttt{ISO27001}),
+and shared projects (\texttt{ProjectNexus}, \texttt{ProjectHorizon},
+\texttt{ProjectArcade}). Sensitivity tiers are assigned per-document:
+PUBLIC 40\%, INTERNAL 30\%, CONFIDENTIAL 20\%, RESTRICTED 10\%.
+All generation uses seed 42 for reproducibility.
+
+% ============================================================
+\section{Query Templates}
+\label{sec:query-templates}
+
+\textbf{Benign queries} (350 total, 5 templates $\times$ 4 domains
+$\times$ variable entity fills). Example templates:
+
+\begin{small}
+\begin{verbatim}
+Engineering: "What is the architecture of {system}?"
+Finance:     "Summarize the contract with {vendor}."
+HR:          "What are the policies for {department}?"
+Security:    "What is the severity of {cve}?"
+\end{verbatim}
+\end{small}
+
+\noindent \textbf{Adversarial queries} (150 total) are stratified
+across 4 attack types:
+
+\begin{small}
+\begin{verbatim}
+A1 (Seed Steering):     "What systems like {system}
+     handle {other_tenant_technology}?"
+A2 (Entity Anchor):     "Tell me about {bridge_entity}
+     and its role in {target_tenant_domain}."
+A3 (Neighborhood Flood): "List everything related to
+     {bridge_entity}."
+A4 (Bridge Node):       "What connections exist between
+     {bridge_entity} across departments?"
+\end{verbatim}
+\end{small}
+
+\noindent Template slots are filled from aligned entity pools
+(identical to those in the corpus generator) to ensure query
+entities appear in the knowledge graph. Each query carries
+metadata: \texttt{user\_tenant} (always
+\texttt{acme\_engineering}), \texttt{user\_clearance} (stratified
+across PUBLIC, INTERNAL, CONFIDENTIAL), and \texttt{query\_type}
+(benign or adversarial with attack subtype).
+
+% ============================================================
+\section{Defense Implementation}
+\label{sec:defense-impl}
+
+\textbf{D1 (Per-hop authorization).} After BFS expansion via
+\texttt{apoc.path.spanningTree}, each returned node is checked:
+
+\begin{small}
+\begin{verbatim}
+def is_node_authorized(node, user):
+    tier = SensitivityTier(node.sensitivity)
+    if tier > user.clearance:
+        return False
+    if node.tenant not in user.allowed_tenants:
+        return False
+    return True
+\end{verbatim}
+\end{small}
+
+\noindent Entity nodes carry \texttt{tenant=""} (empty string),
+so they always fail the tenant check. This is the mechanism that
+severs the chunk$\to$entity$\to$chunk pivot path.
+
+\textbf{D3 (Budgeted traversal).} The Cypher query enforces a global
+node budget via \texttt{LIMIT \$max\_total}. Per-hop branching is
+enforced post-query: expanded nodes are grouped by hop depth, and each
+group is truncated to \texttt{max\_branching} entries.
+
+\textbf{BFS Cypher query} (simplified):
+\begin{small}
+\begin{verbatim}
+UNWIND $seed_ids AS seed_id
+MATCH (start {node_id: seed_id})
+CALL apoc.path.spanningTree(start, {
+    maxLevel: $max_hops,
+    limit: $max_total
+}) YIELD path
+WITH last(nodes(path)) AS node,
+     length(path) AS depth
+RETURN node.node_id, node.tenant,
+       node.sensitivity, min(depth)
+ORDER BY hop_depth LIMIT $max_total
+\end{verbatim}
+\end{small}
+
+\noindent The \texttt{length(path)} return value feeds the Pivot
+Depth metric directly.
+
+% ============================================================
+\section{Entity-Aware Authorization}
+\label{sec:entity-aware-future}
+
+D1 eliminates all entity nodes because they carry empty-string tenant
+labels. This is effective but coarse: it removes potentially useful
+entity context (names, types, relations) from the retrieval result.
+A finer-grained scheme would distinguish \emph{traversal authorization}
+from \emph{inclusion authorization}:
+
+\begin{enumerate}
+\item \textbf{Entity tenant-set labeling.} During graph construction,
+  label each entity with the set of tenants whose documents mention it:
+  \texttt{tenant\_set = \{acme, globex\}}. Shared entities retain
+  multiple tenant labels.
+\item \textbf{Traversal-through permission.} Allow BFS to traverse
+  \emph{through} an entity node if the user's tenant is in the entity's
+  \texttt{tenant\_set}. The entity itself may appear in context.
+\item \textbf{Destination check.} At each chunk node reached via an
+  entity, re-check the chunk's tenant and sensitivity against the
+  user's policy. This preserves D1's security guarantee at the
+  chunk level while recovering entity utility.
+\end{enumerate}
+
+\noindent This scheme would increase context size (recovering the
+entity nodes D1 currently removes) without re-enabling the
+chunk$\to$entity$\to$\emph{unauthorized chunk} pivot, because the
+destination check still blocks cross-tenant chunks.  The key trade-off
+is implementation complexity: entity \texttt{tenant\_set} must be
+maintained as documents are added or removed, and the authorization
+predicate becomes a set-membership check rather than a simple equality.
 
 % ============================================================
 \section{Statistical Methodology}
