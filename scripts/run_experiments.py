@@ -11,6 +11,9 @@ Usage:
     # Full ablation (P1 vs P3 vs P4-P8)
     python scripts/run_experiments.py --full
 
+    # Run against Enron dataset
+    python scripts/run_experiments.py --baseline --dataset enron
+
     # Adversarial queries only
     python scripts/run_experiments.py --baseline --queries adversarial
 
@@ -264,13 +267,34 @@ def create_pipeline(
 
 # ── Query loading ────────────────────────────────────────────────
 
-def load_queries(query_set: str, queries_file: str | None = None) -> list[BenchmarkQuery]:
-    """Load queries from JSON file and convert to BenchmarkQuery objects.
+def load_queries(
+    query_set: str,
+    queries_file: str | None = None,
+    dataset: str | None = None,
+    n_queries: int = 200,
+) -> list[BenchmarkQuery]:
+    """Load queries from JSON file or generate from a dataset adapter.
 
     Args:
         query_set: Name of the query set (e.g., "benign", "adversarial").
         queries_file: Optional explicit file path. Overrides query_set-based lookup.
+        dataset: Dataset name to generate queries from (e.g., "enron", "edgar").
+            When set, ignores query_set file lookup and uses the adapter.
+        n_queries: Number of queries to generate per type when using a dataset adapter.
     """
+    # If a non-synthetic dataset is specified, generate queries via adapter
+    if dataset and dataset != "synthetic" and not queries_file:
+        from pivorag.datasets import get_adapter
+        adapter = get_adapter(dataset)
+        if query_set == "adversarial":
+            return adapter.generate_queries(n_benign=0, n_adversarial=n_queries)
+        elif query_set == "benign":
+            return adapter.generate_queries(n_benign=n_queries, n_adversarial=0)
+        else:
+            return adapter.generate_queries(
+                n_benign=n_queries, n_adversarial=n_queries,
+            )
+
     path = Path(queries_file) if queries_file else Path(f"data/queries/{query_set}.json")
     raw = json.loads(path.read_text())
     queries = []
@@ -283,6 +307,14 @@ def load_queries(query_set: str, queries_file: str | None = None) -> list[Benchm
             user_clearance=q["user_clearance"],
         ))
     return queries
+
+
+def resolve_collection(dataset: str | None, chroma_collection: str) -> str:
+    """Map a dataset name to the correct ChromaDB collection name."""
+    if dataset and dataset != "synthetic":
+        from pivorag.datasets import get_adapter
+        return get_adapter(dataset).get_collection_name()
+    return chroma_collection
 
 
 # ── Detailed per-query analysis ──────────────────────────────────
@@ -346,10 +378,12 @@ def run_experiment(
     bootstrap: bool = False,
     embed_model: str = "all-MiniLM-L6-v2",
     chroma_collection: str = "pivorag_chunks",
+    dataset: str | None = None,
 ) -> dict[str, Any]:
     """Run all specified pipeline variants against a query set."""
-    queries = load_queries(query_set, queries_file=queries_file)
-    click.echo(f"Loaded {len(queries)} {query_set} queries")
+    collection = resolve_collection(dataset, chroma_collection)
+    queries = load_queries(query_set, queries_file=queries_file, dataset=dataset)
+    click.echo(f"Loaded {len(queries)} {query_set} queries (collection: {collection})")
 
     results: dict[str, Any] = {}
     all_contexts: dict[str, list[RetrievalContext]] = {}
@@ -364,7 +398,7 @@ def run_experiment(
             variant, chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
             embed_model=embed_model,
-            chroma_collection=chroma_collection,
+            chroma_collection=collection,
         )
 
         runner = BenchmarkRunner(output_dir=output_dir)
@@ -460,12 +494,17 @@ def print_comparison_table(results: dict[str, Any], query_set: str) -> None:
     click.echo("-" * 80)
 
 
-def save_full_results(results: dict[str, Any], query_set: str, output_dir: str) -> Path:
+def save_full_results(
+    results: dict[str, Any],
+    query_set: str,
+    output_dir: str,
+    dataset: str = "synthetic",
+) -> Path:
     """Save the complete results to a single JSON file."""
     out = Path(output_dir) / "tables"
     out.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    path = out / f"experiment_{query_set}_{timestamp}.json"
+    path = out / f"experiment_{dataset}_{query_set}_{timestamp}.json"
 
     # Strip raw contexts (not JSON-serializable) from per_query
     serializable = {}
@@ -477,7 +516,8 @@ def save_full_results(results: dict[str, Any], query_set: str, output_dir: str) 
         }
 
     output = {
-        "experiment": f"baseline_{query_set}",
+        "experiment": f"baseline_{dataset}_{query_set}",
+        "dataset": dataset,
         "timestamp": timestamp,
         "variants": serializable,
     }
@@ -501,6 +541,11 @@ def save_full_results(results: dict[str, Any], query_set: str, output_dir: str) 
     help="Query set to use",
 )
 @click.option("--queries-file", default=None, help="Explicit path to queries JSON file")
+@click.option(
+    "--dataset", "-d", default="synthetic",
+    type=click.Choice(["synthetic", "enron", "edgar"]),
+    help="Dataset to evaluate (determines collection and query source)",
+)
 @click.option("--bootstrap", is_flag=True, help="Compute bootstrap 95%% CIs")
 @click.option("--chroma-host", default="localhost")
 @click.option("--chroma-port", default=8000, type=int)
@@ -516,6 +561,7 @@ def main(
     variants: tuple[str, ...],
     queries: str,
     queries_file: str | None,
+    dataset: str,
     bootstrap: bool,
     chroma_host: str,
     chroma_port: int,
@@ -548,6 +594,7 @@ def main(
     query_sets = ["benign", "adversarial"] if queries == "both" else [queries]
 
     click.echo("PivoRAG Experiment Runner")
+    click.echo(f"Dataset:  {dataset}")
     click.echo(f"Variants: {', '.join(variant_list)}")
     click.echo(f"Queries:  {', '.join(query_sets)}")
     if queries_file:
@@ -566,9 +613,10 @@ def main(
             bootstrap=bootstrap,
             embed_model=embed_model,
             chroma_collection=chroma_collection,
+            dataset=dataset,
         )
         print_comparison_table(results, qset)
-        save_full_results(results, qset, output)
+        save_full_results(results, qset, output, dataset=dataset)
 
     elapsed = time.perf_counter() - start
     click.echo(f"\nTotal experiment time: {elapsed:.1f}s")

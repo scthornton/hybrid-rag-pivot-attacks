@@ -43,6 +43,7 @@ def run_queries_through_pipeline(
     neo4j_pass: str,
     graph_config_override: GraphConfig | None = None,
     defense_config_override: DefenseConfig | None = None,
+    chroma_collection: str = "pivorag_chunks",
 ):
     """Run queries through a pipeline, optionally with custom graph config."""
     import sys
@@ -64,7 +65,7 @@ def run_queries_through_pipeline(
     model = EmbeddingModel("all-MiniLM-L6-v2")
     index = VectorIndex(
         host=chroma_host, port=chroma_port,
-        collection_name="pivorag_chunks",
+        collection_name=chroma_collection,
     )
     retriever = VectorRetriever(index=index, embedding_model=model)
 
@@ -130,6 +131,7 @@ def run_traversal_sweep(
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
+    chroma_collection: str = "pivorag_chunks",
 ) -> list[dict]:
     """Sweep BFS parameters and measure RPR at each setting."""
     depths = [1, 2, 3]
@@ -162,6 +164,7 @@ def run_traversal_sweep(
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
             graph_config_override=graph_cfg,
+            chroma_collection=chroma_collection,
         )
         metrics = compute_metrics(contexts)
         result = {
@@ -189,6 +192,7 @@ def run_mislabel_sweep(
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
+    chroma_collection: str = "pivorag_chunks",
 ) -> dict[str, dict]:
     """Randomly flip sensitivity labels on N% of nodes, then measure D1 RPR."""
     import random
@@ -238,6 +242,7 @@ def run_mislabel_sweep(
             "P4", queries,
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=chroma_collection,
         )
         metrics = compute_metrics(contexts)
         results[str(rate)] = metrics
@@ -268,6 +273,7 @@ def run_connectivity_sweep(
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
+    chroma_collection: str = "pivorag_chunks",
 ) -> list[dict]:
     """Sweep bridge entity count and measure RPR at each level.
 
@@ -328,6 +334,7 @@ def run_connectivity_sweep(
             "P1", queries,
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=chroma_collection,
         )
         p1_metrics = compute_metrics(p1_contexts)
 
@@ -337,6 +344,7 @@ def run_connectivity_sweep(
             "P3", queries,
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=chroma_collection,
         )
         p3_metrics = compute_metrics(p3_contexts)
 
@@ -369,6 +377,11 @@ def run_connectivity_sweep(
 @click.option("--connectivity-sweep", is_flag=True, help="Run E4: bridge count sweep")
 @click.option("--mislabel-sweep", is_flag=True, help="Run E8: metadata mislabel stress test")
 @click.option(
+    "--dataset", "-d", default="synthetic",
+    type=click.Choice(["synthetic", "enron", "edgar"]),
+    help="Dataset to evaluate (determines collection and query source)",
+)
+@click.option(
     "--queries-file", default="data/queries/adversarial_500.json",
     help="Query file to use",
 )
@@ -383,6 +396,7 @@ def main(
     traversal_sweep: bool,
     connectivity_sweep: bool,
     mislabel_sweep: bool,
+    dataset: str,
     queries_file: str,
     max_queries: int,
     chroma_host: str,
@@ -398,16 +412,25 @@ def main(
     out_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+    # Resolve collection name from dataset
+    if dataset != "synthetic":
+        from pivorag.datasets import get_adapter
+        collection = get_adapter(dataset).get_collection_name()
+    else:
+        collection = "pivorag_chunks"
+
     queries = load_queries(queries_file)[:max_queries]
     click.echo(f"Loaded {len(queries)} queries from {queries_file}")
+    click.echo(f"Dataset: {dataset} (collection: {collection})")
 
     if traversal_sweep:
         click.echo("\n=== E6: Traversal Regime Sweep ===")
         results = run_traversal_sweep(
             queries, chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=collection,
         )
-        path = out_dir / f"traversal_sweep_{timestamp}.json"
+        path = out_dir / f"traversal_sweep_{dataset}_{timestamp}.json"
         path.write_text(json.dumps(results, indent=2, default=str))
         click.echo(f"\nSaved to {path}")
 
@@ -418,8 +441,9 @@ def main(
             bridge_counts, queries,
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=collection,
         )
-        path = out_dir / f"connectivity_sweep_{timestamp}.json"
+        path = out_dir / f"connectivity_sweep_{dataset}_{timestamp}.json"
         path.write_text(json.dumps(results, indent=2, default=str))
         click.echo(f"\nSaved to {path}")
 
@@ -430,8 +454,9 @@ def main(
             queries, rates,
             chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=collection,
         )
-        path = out_dir / f"mislabel_stress_{timestamp}.json"
+        path = out_dir / f"mislabel_stress_{dataset}_{timestamp}.json"
         path.write_text(json.dumps(results, indent=2, default=str))
         click.echo(f"\nSaved to {path}")
 

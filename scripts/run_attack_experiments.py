@@ -238,6 +238,7 @@ def create_pipeline(
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
+    chroma_collection: str = "pivorag_chunks",
 ):
     """Create a pipeline instance connected to live services."""
     import sys
@@ -252,7 +253,7 @@ def create_pipeline(
     model = EmbeddingModel("all-MiniLM-L6-v2")
     index = VectorIndex(
         host=chroma_host, port=chroma_port,
-        collection_name="pivorag_chunks",
+        collection_name=chroma_collection,
     )
     retriever = VectorRetriever(index=index, embedding_model=model)
 
@@ -282,11 +283,13 @@ def run_pipeline_queries(
     neo4j_uri: str,
     neo4j_user: str,
     neo4j_pass: str,
+    chroma_collection: str = "pivorag_chunks",
 ) -> list[RetrievalContext]:
     """Run queries through a pipeline variant and return contexts."""
     pipeline = create_pipeline(
         variant, chroma_host, chroma_port,
         neo4j_uri, neo4j_user, neo4j_pass,
+        chroma_collection=chroma_collection,
     )
 
     contexts = []
@@ -354,6 +357,11 @@ def generate_attack_payloads(
     "--attacks", "-a", multiple=True, default=["A1", "A2", "A3", "A4"],
     help="Attacks to run",
 )
+@click.option(
+    "--dataset", "-d", default="synthetic",
+    type=click.Choice(["synthetic", "enron", "edgar"]),
+    help="Dataset to evaluate (determines collection and query source)",
+)
 @click.option("--chroma-host", default="localhost")
 @click.option("--chroma-port", default=8000, type=int)
 @click.option("--neo4j-uri", default="bolt://localhost:7687")
@@ -363,6 +371,7 @@ def generate_attack_payloads(
 @click.option("--skip-rebuild", is_flag=True, help="Skip initial rebuild (use existing data)")
 def main(
     attacks: tuple[str, ...],
+    dataset: str,
     chroma_host: str,
     chroma_port: int,
     neo4j_uri: str,
@@ -373,10 +382,19 @@ def main(
 ) -> None:
     """Run attack injection experiments and measure leakage amplification."""
     start = time.perf_counter()
+
+    # Resolve collection name from dataset
+    if dataset != "synthetic":
+        from pivorag.datasets import get_adapter
+        collection = get_adapter(dataset).get_collection_name()
+    else:
+        collection = "pivorag_chunks"
+
     queries = load_adversarial_queries()
     target_query_texts = [q["text"] for q in queries]
 
     click.echo("PivoRAG Attack Experiments")
+    click.echo(f"Dataset: {dataset} (collection: {collection})")
     click.echo(f"Attacks: {', '.join(attacks)}")
     click.echo(f"Queries: {len(queries)} adversarial")
 
@@ -395,10 +413,12 @@ def main(
     p1_contexts = run_pipeline_queries(
         "P1", queries, chroma_host, chroma_port,
         neo4j_uri, neo4j_user, neo4j_pass,
+        chroma_collection=collection,
     )
     p3_clean_contexts = run_pipeline_queries(
         "P3", queries, chroma_host, chroma_port,
         neo4j_uri, neo4j_user, neo4j_pass,
+        chroma_collection=collection,
     )
 
     p1_metrics = compute_metrics(p1_contexts)
@@ -437,7 +457,7 @@ def main(
         # Inject with proper graph links
         index = VectorIndex(
             host=chroma_host, port=chroma_port,
-            collection_name="pivorag_chunks",
+            collection_name=collection,
         )
         driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_pass))
         builder = GraphBuilder(uri=neo4j_uri, username=neo4j_user, password=neo4j_pass)
@@ -453,6 +473,7 @@ def main(
         p3_attack_contexts = run_pipeline_queries(
             "P3", queries, chroma_host, chroma_port,
             neo4j_uri, neo4j_user, neo4j_pass,
+            chroma_collection=collection,
         )
         p3_attack_metrics = compute_metrics(p3_attack_contexts)
 
@@ -462,6 +483,7 @@ def main(
             dvar_contexts = run_pipeline_queries(
                 dvar, queries, chroma_host, chroma_port,
                 neo4j_uri, neo4j_user, neo4j_pass,
+                chroma_collection=collection,
             )
             defense_metrics[dvar] = compute_metrics(dvar_contexts)
 
@@ -540,7 +562,7 @@ def main(
     out = Path(output) / "tables"
     out.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    path = out / f"attack_experiments_{timestamp}.json"
+    path = out / f"attack_experiments_{dataset}_{timestamp}.json"
 
     # Remove non-serializable fields
     serializable = {}

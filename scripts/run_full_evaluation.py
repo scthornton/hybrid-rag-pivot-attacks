@@ -20,6 +20,9 @@ from __future__ import annotations
 
 import json
 import logging
+import subprocess
+import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -31,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_CONFIG = Path("configs/experiments/full_evaluation.yaml")
 CHECKPOINT_DIR = Path("results/checkpoints")
+PYTHON = sys.executable
 
 
 def load_config(config_path: Path) -> dict[str, Any]:
@@ -62,11 +66,22 @@ def check_checkpoint(phase: str, dataset: str) -> bool:
     return checkpoint.get("status") == "completed"
 
 
-def run_baseline(config: dict[str, Any], datasets: list[str]) -> None:
+def run_script(args: list[str], label: str) -> bool:
+    """Run a subprocess and report success/failure."""
+    click.echo(f"  $ {' '.join(args)}")
+    result = subprocess.run(args, capture_output=False, text=True, timeout=3600)
+    if result.returncode != 0:
+        click.echo(f"  ERROR: {label} failed (exit code {result.returncode})")
+        return False
+    return True
+
+
+def run_baseline(config: dict[str, Any], datasets: list[str], **conn) -> None:
     """Run cross-dataset baseline experiments."""
     baseline_cfg = config.get("baseline", {})
     pipelines = baseline_cfg.get("pipelines", [])
     n_queries = baseline_cfg.get("queries_per_dataset", 200)
+    query_types = baseline_cfg.get("query_types", ["benign", "adversarial"])
 
     for dataset in datasets:
         if check_checkpoint("baseline", dataset):
@@ -75,16 +90,31 @@ def run_baseline(config: dict[str, Any], datasets: list[str]) -> None:
 
         click.echo(f"  Running baseline on {dataset}: "
                     f"{len(pipelines)} pipelines, {n_queries} queries")
-        click.echo(f"    Pipelines: {pipelines}")
-        click.echo(f"    Metrics: {baseline_cfg.get('metrics', [])}")
 
-        save_checkpoint("baseline", dataset, "completed")
+        queries_flag = "both" if len(query_types) > 1 else query_types[0]
+        variants = " ".join(f"-v {p}" for p in pipelines)
+
+        success = run_script(
+            [
+                PYTHON, "scripts/run_experiments.py",
+                "--dataset", dataset,
+                "--queries", queries_flag,
+                "--bootstrap",
+                "--chroma-host", conn.get("chroma_host", "localhost"),
+                "--chroma-port", str(conn.get("chroma_port", 8000)),
+                "--neo4j-uri", conn.get("neo4j_uri", "bolt://localhost:7687"),
+                "--neo4j-user", conn.get("neo4j_user", "neo4j"),
+                "--neo4j-pass", conn.get("neo4j_pass", "pivorag_dev_2025"),
+            ] + variants.split(),
+            label=f"baseline/{dataset}",
+        )
+        if success:
+            save_checkpoint("baseline", dataset, "completed")
 
 
-def run_generation(config: dict[str, Any], datasets: list[str]) -> None:
+def run_generation(config: dict[str, Any], datasets: list[str], **conn) -> None:
     """Run generation contamination experiments."""
     gen_cfg = config.get("generation", {})
-    providers = gen_cfg.get("llm_providers", [])
     budget = gen_cfg.get("budget_usd", 50.0)
 
     for dataset in datasets:
@@ -92,18 +122,30 @@ def run_generation(config: dict[str, Any], datasets: list[str]) -> None:
             click.echo(f"  [skip] generation/{dataset} already completed")
             continue
 
-        click.echo(f"  Running generation eval on {dataset}: "
-                    f"{len(providers)} LLMs, budget=${budget:.2f}")
-        click.echo(f"    Providers: {providers}")
-        click.echo(f"    Judge: {gen_cfg.get('judge_model', 'gpt-4o')}")
+        click.echo(f"  Running generation eval on {dataset}: budget=${budget:.2f}")
 
-        save_checkpoint("generation", dataset, "completed")
+        success = run_script(
+            [
+                PYTHON, "scripts/run_generation_eval.py",
+                "--dataset", dataset,
+                "--llm", "all",
+                "--budget", str(budget),
+                "--chroma-host", conn.get("chroma_host", "localhost"),
+                "--chroma-port", str(conn.get("chroma_port", 8000)),
+                "--neo4j-uri", conn.get("neo4j_uri", "bolt://localhost:7687"),
+                "--neo4j-user", conn.get("neo4j_user", "neo4j"),
+                "--neo4j-pass", conn.get("neo4j_pass", "pivorag_dev_2025"),
+            ],
+            label=f"generation/{dataset}",
+        )
+        if success:
+            save_checkpoint("generation", dataset, "completed")
 
 
-def run_adaptive(config: dict[str, Any], datasets: list[str]) -> None:
+def run_adaptive(config: dict[str, Any], datasets: list[str], **conn) -> None:
     """Run adaptive attacker experiments."""
     attack_cfg = config.get("adaptive_attacks", {})
-    attacks = attack_cfg.get("attacks", [])
+    attacks = [a["name"] for a in attack_cfg.get("attacks", [])]
     pipelines = attack_cfg.get("target_pipelines", [])
 
     for dataset in datasets:
@@ -113,26 +155,62 @@ def run_adaptive(config: dict[str, Any], datasets: list[str]) -> None:
 
         click.echo(f"  Running adaptive attacks on {dataset}: "
                     f"{len(attacks)} attacks x {len(pipelines)} pipelines")
-        for atk in attacks:
-            click.echo(f"    {atk['name']}: {atk}")
 
-        save_checkpoint("adaptive", dataset, "completed")
+        attack_flags = []
+        for a in attacks:
+            # Map config names to CLI attack names
+            if "A5" in a or "metadata" in a.lower():
+                attack_flags.extend(["-a", "A5"])
+            elif "A6" in a or "entity" in a.lower():
+                attack_flags.extend(["-a", "A6"])
+            elif "A7" in a or "query" in a.lower():
+                attack_flags.extend(["-a", "A7"])
+
+        pipeline_flags = []
+        for p in pipelines:
+            pipeline_flags.extend(["--target-pipelines", p])
+
+        success = run_script(
+            [
+                PYTHON, "scripts/run_adaptive_attacks.py",
+                "--dataset", dataset,
+                "--chroma-host", conn.get("chroma_host", "localhost"),
+                "--chroma-port", str(conn.get("chroma_port", 8000)),
+                "--neo4j-uri", conn.get("neo4j_uri", "bolt://localhost:7687"),
+                "--neo4j-user", conn.get("neo4j_user", "neo4j"),
+                "--neo4j-pass", conn.get("neo4j_pass", "pivorag_dev_2025"),
+            ] + attack_flags + pipeline_flags,
+            label=f"adaptive/{dataset}",
+        )
+        if success:
+            save_checkpoint("adaptive", dataset, "completed")
 
 
-def run_topology(config: dict[str, Any], datasets: list[str]) -> None:
+def run_topology(config: dict[str, Any], datasets: list[str], **conn) -> None:
     """Run graph topology comparison."""
-    topo_cfg = config.get("topology", {})
-
     for dataset in datasets:
         if check_checkpoint("topology", dataset):
             click.echo(f"  [skip] topology/{dataset} already completed")
             continue
 
         click.echo(f"  Running topology analysis on {dataset}")
-        click.echo(f"    Bridge range: {topo_cfg.get('min_bridges', 0)}"
-                    f"-{topo_cfg.get('max_bridges', 40)}")
 
-        save_checkpoint("topology", dataset, "completed")
+        success = run_script(
+            [
+                PYTHON, "scripts/run_sweep_experiments.py",
+                "--traversal-sweep",
+                "--connectivity-sweep",
+                "--dataset", dataset,
+                "--chroma-host", conn.get("chroma_host", "localhost"),
+                "--chroma-port", str(conn.get("chroma_port", 8000)),
+                "--neo4j-uri", conn.get("neo4j_uri", "bolt://localhost:7687"),
+                "--neo4j-user", conn.get("neo4j_user", "neo4j"),
+                "--neo4j-pass", conn.get("neo4j_pass", "pivorag_dev_2025"),
+            ],
+            label=f"topology/{dataset}",
+        )
+        if success:
+            save_checkpoint("topology", dataset, "completed")
 
 
 PHASES = {
@@ -156,15 +234,26 @@ PHASES = {
               help="Resume from checkpoints (default: True)")
 @click.option("--clean", is_flag=True,
               help="Clear all checkpoints before running")
+@click.option("--chroma-host", default="localhost")
+@click.option("--chroma-port", default=8000, type=int)
+@click.option("--neo4j-uri", default="bolt://localhost:7687")
+@click.option("--neo4j-user", default="neo4j")
+@click.option("--neo4j-pass", default="pivorag_dev_2025")
 def main(
     config: str,
     phase: str | None,
     dataset: str | None,
     resume: bool,
     clean: bool,
+    chroma_host: str,
+    chroma_port: int,
+    neo4j_uri: str,
+    neo4j_user: str,
+    neo4j_pass: str,
 ) -> None:
     """Run the full PivoRAG evaluation suite."""
     logging.basicConfig(level=logging.INFO)
+    start = time.perf_counter()
 
     cfg = load_config(Path(config))
     datasets = [dataset] if dataset else cfg.get("datasets", ["synthetic"])
@@ -181,6 +270,14 @@ def main(
         if CHECKPOINT_DIR.exists():
             shutil.rmtree(CHECKPOINT_DIR)
 
+    conn = {
+        "chroma_host": chroma_host,
+        "chroma_port": chroma_port,
+        "neo4j_uri": neo4j_uri,
+        "neo4j_user": neo4j_user,
+        "neo4j_pass": neo4j_pass,
+    }
+
     click.echo("PivoRAG Full Evaluation Suite")
     click.echo(f"  Config: {config}")
     click.echo(f"  Datasets: {datasets}")
@@ -190,12 +287,11 @@ def main(
 
     for p in phases:
         click.echo(f"=== Phase: {p} ===")
-        PHASES[p](cfg, datasets)
+        PHASES[p](cfg, datasets, **conn)
         click.echo()
 
-    click.echo("Evaluation complete.")
-    click.echo("Note: Connect to live Neo4j + ChromaDB to execute "
-               "full benchmarks.")
+    elapsed = time.perf_counter() - start
+    click.echo(f"Evaluation complete in {elapsed:.1f}s.")
 
 
 if __name__ == "__main__":
