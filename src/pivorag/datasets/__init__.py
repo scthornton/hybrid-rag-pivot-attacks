@@ -2,18 +2,14 @@
 
 Provides a unified interface for loading documents, tenants, and queries
 from different data sources (synthetic, Enron email, SEC EDGAR).
+
+Adapters are lazy-imported to avoid pulling in script-level dependencies
+(e.g. SyntheticEnterpriseAdapter depends on scripts/ being on sys.path).
 """
 
-from pivorag.datasets.base import DatasetAdapter, DatasetStats
-from pivorag.datasets.enron import EnronEmailAdapter
-from pivorag.datasets.sec_edgar import SECEdgarAdapter
-from pivorag.datasets.synthetic import SyntheticEnterpriseAdapter
+from __future__ import annotations
 
-ADAPTERS: dict[str, type[DatasetAdapter]] = {
-    "synthetic": SyntheticEnterpriseAdapter,
-    "enron": EnronEmailAdapter,
-    "edgar": SECEdgarAdapter,
-}
+from pivorag.datasets.base import DatasetAdapter, DatasetStats
 
 
 def get_adapter(name: str, **kwargs) -> DatasetAdapter:
@@ -23,20 +19,24 @@ def get_adapter(name: str, **kwargs) -> DatasetAdapter:
         name: One of 'synthetic', 'enron', 'edgar'.
         **kwargs: Forwarded to the adapter constructor.
     """
-    cls = ADAPTERS.get(name)
-    if cls is None:
-        raise ValueError(
-            f"Unknown dataset '{name}'. Choose from: {list(ADAPTERS)}"
-        )
-    return cls(**kwargs)
+    if name == "synthetic":
+        from pivorag.datasets.synthetic import SyntheticEnterpriseAdapter
+
+        return SyntheticEnterpriseAdapter(**kwargs)
+    if name == "enron":
+        from pivorag.datasets.enron import EnronEmailAdapter
+
+        return EnronEmailAdapter(**kwargs)
+    if name == "edgar":
+        from pivorag.datasets.sec_edgar import SECEdgarAdapter
+
+        return SECEdgarAdapter(**kwargs)
+    msg = f"Unknown dataset '{name}'. Choose from: synthetic, enron, edgar"
+    raise ValueError(msg)
 
 
 __all__ = [
-    "ADAPTERS",
     "DatasetAdapter",
     "DatasetStats",
-    "EnronEmailAdapter",
-    "SECEdgarAdapter",
-    "SyntheticEnterpriseAdapter",
     "get_adapter",
 ]

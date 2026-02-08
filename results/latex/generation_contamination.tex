@@ -10,6 +10,7 @@ Refusal Rate) assess factual leakage and model self-censoring.}
 \toprule
 \textbf{LLM} & \textbf{ECR} & \textbf{ILS} & \textbf{FCR} & \textbf{GRR} & \textbf{Cost} \\
 \midrule
+  GPT-4o            & 0.077 & 0.305 & 0.050 & 0.800 & \$0.08 \\
   Claude Sonnet 4.5 & 0.307 & 0.346 & 0.065 & 0.100 & \$0.18 \\
   DeepSeek-V3       & 0.124 & 0.336 & 0.190 & 0.200 & \$0.01 \\
 \bottomrule
@@ -17,8 +18,8 @@ Refusal Rate) assess factual leakage and model self-censoring.}
 \vspace{2pt}
 \begin{minipage}{0.95\linewidth}
 \footnotesize
-\textit{Note:} 10 queries with leakage evaluated per provider. Judge model:
-same provider (Anthropic for Claude, DeepSeek for DeepSeek-V3).
-OpenAI GPT-4o omitted due to API key rotation during evaluation.
+\textit{Note:} 10 queries with leakage evaluated per provider on synthetic dataset.
+Judge model: same provider as generator for each row.
+GPT-4o exhibits high refusal rate (GRR\,=\,0.80), largely ignoring leaked context.
 \end{minipage}
 \end{table}

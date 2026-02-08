@@ -362,6 +362,9 @@ class EnronEmailAdapter(DatasetAdapter):
                 "Run 'python scripts/ingest_enron.py' to download it."
             )
 
+        # Some Enron emails exceed Python's default 131KB CSV field limit
+        csv.field_size_limit(10_000_000)
+
         logger.info("Loading Enron emails from %s", csv_path)
 
         # First pass: count emails per sender for subsampling
