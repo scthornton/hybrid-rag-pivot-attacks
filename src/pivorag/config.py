@@ -36,6 +36,12 @@ class SensitivityTier(StrEnum):
     def __gt__(self, other: SensitivityTier) -> bool:
         return self.level > other.level
 
+    def __le__(self, other: SensitivityTier) -> bool:
+        return self.level <= other.level
+
+    def __lt__(self, other: SensitivityTier) -> bool:
+        return self.level < other.level
+
 
 class VectorConfig(BaseModel):
     enabled: bool = True

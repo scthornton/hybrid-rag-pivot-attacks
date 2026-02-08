@@ -7,10 +7,21 @@ This is where retrieval pivot risk manifests.
 
 from __future__ import annotations
 
+import logging
+from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
 
 from pivorag.graph.schema import GraphNode
+
+logger = logging.getLogger(__name__)
+
+# Valid Neo4j relationship types — used to sanitise edge filters before
+# they are interpolated into Cypher queries, preventing injection.
+VALID_EDGE_TYPES = frozenset({
+    "CONTAINS", "MENTIONS", "BELONGS_TO", "DEPENDS_ON",
+    "OWNED_BY", "DERIVED_FROM", "RELATED_TO",
+})
 
 
 @dataclass
@@ -52,8 +63,13 @@ class GraphExpander:
         """
         edge_filter = ""
         if allowed_edge_types:
-            types_str = "|".join(allowed_edge_types)
-            edge_filter = f":{types_str}"
+            sanitized = [t for t in allowed_edge_types if t in VALID_EDGE_TYPES]
+            invalid = set(allowed_edge_types) - VALID_EDGE_TYPES
+            if invalid:
+                logger.warning("Invalid edge types filtered out: %s", invalid)
+            if sanitized:
+                types_str = "|".join(sanitized)
+                edge_filter = f":{types_str}"
 
         query = f"""
         UNWIND $seed_ids AS seed_id
@@ -95,6 +111,29 @@ class GraphExpander:
                     properties=dict(record["props"]) if record["props"] else {},
                 ))
                 node_depths[node_id] = record["hop_depth"]
+
+        # D3: Enforce per-hop branching factor limit.
+        # The Cypher query enforces max_total_nodes but not per-hop branching.
+        # Post-query pruning ensures no single hop level contributes more than
+        # max_branching nodes, aligning with the D3 defense specification.
+        if max_branching and max_branching > 0:
+            hop_groups: dict[int, list[GraphNode]] = defaultdict(list)
+            for node in expanded:
+                depth = node_depths.get(node.node_id, 0)
+                hop_groups[depth].append(node)
+
+            pruned: list[GraphNode] = []
+            for depth in sorted(hop_groups):
+                pruned.extend(hop_groups[depth][:max_branching])
+
+            if len(pruned) < len(expanded):
+                logger.debug(
+                    "Branching factor pruned %d → %d nodes",
+                    len(expanded), len(pruned),
+                )
+            expanded = pruned
+            # Rebuild node_depths to only include surviving nodes
+            node_depths = {n.node_id: node_depths[n.node_id] for n in expanded}
 
         return ExpansionResult(
             seed_nodes=seed_node_ids,

@@ -15,6 +15,7 @@ Extended metrics for reviewer response:
 
 from __future__ import annotations
 
+import logging
 import statistics
 from dataclasses import dataclass, field
 
@@ -32,6 +33,14 @@ def leakage_at_k(
 
     A sensitive item is anything with sensitivity > user's clearance,
     or anything the user's tenant policy doesn't authorize.
+
+    Entity nodes carry ``tenant=""``, which is falsy in Python.  These
+    nodes are *excluded* from cross-tenant leakage counts by design:
+    entities are tenant-neutral shared concepts (e.g. "Kubernetes").
+    Only chunk nodes with explicit, non-empty tenant labels contribute
+    to the cross-tenant leakage count.  D1 prevents traversal through
+    entity nodes, so the leakage that matters flows to chunk nodes on
+    the other side of the pivot.
     """
     all_items = context.chunks + context.graph_nodes
     if k is not None:
@@ -41,6 +50,7 @@ def leakage_at_k(
     for item in all_items:
         item_tier = SensitivityTier(item.get("sensitivity", "PUBLIC"))
         is_over_clearance = item_tier > context.user_clearance
+        # Empty-string tenant (entity nodes) is falsy → not counted
         is_wrong_tenant = item.get("tenant") and item["tenant"] != context.user_tenant
         if is_over_clearance or is_wrong_tenant:
             count += 1
@@ -86,10 +96,12 @@ def pivot_depth(context: RetrievalContext) -> int | float:
     """Compute PD: minimum graph hop distance from seed to first sensitive node.
 
     PD(q) = min{d(seed, x) : x in S(q) ∧ Sensitive(x)}
-    Returns inf if no sensitive nodes found.
+    Returns inf if no sensitive nodes found (or no valid hop_depth data).
 
     Reads per-node hop_depth from graph_nodes (populated by
     GraphExpander.bfs_expand via apoc.path.spanningTree).
+    Nodes without valid hop_depth (< 0) are skipped — the metric
+    only considers nodes with known graph distances.
     """
     min_depth = float("inf")
     for node in context.graph_nodes:
@@ -98,7 +110,13 @@ def pivot_depth(context: RetrievalContext) -> int | float:
         is_wrong_tenant = node.get("tenant") and node["tenant"] != context.user_tenant
         if is_over_clearance or is_wrong_tenant:
             hop = node.get("hop_depth", -1)
-            min_depth = min(min_depth, hop) if hop >= 0 else min(min_depth, 1)
+            if hop < 0:
+                logging.getLogger(__name__).warning(
+                    "Node %s missing valid hop_depth (got %s), skipping for PD",
+                    node.get("node_id", "unknown"), hop,
+                )
+                continue
+            min_depth = min(min_depth, hop)
     return min_depth
 
 

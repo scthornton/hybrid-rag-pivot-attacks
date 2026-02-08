@@ -12,7 +12,7 @@ from typing import Any
 
 from pivorag.config import PipelineConfig, SensitivityTier
 from pivorag.graph.expand import GraphExpander
-from pivorag.graph.policy import EdgeAllowlist, TraversalPolicy
+from pivorag.graph.policy import TraversalPolicy
 from pivorag.pipelines.base import BasePipeline, RetrievalContext
 from pivorag.vector.retrieve import VectorRetriever
 
@@ -57,7 +57,7 @@ class HybridPipeline(BasePipeline):
         })
 
         # Step 2: Entity linking (map chunks → graph nodes)
-        seed_node_ids = self._link_entities(vector_results)
+        seed_node_ids = self._link_entities(vector_results, user_tenant=user_tenant)
         traversal_log.append({
             "step": "entity_linking",
             "linked_nodes": len(seed_node_ids),
@@ -71,6 +71,7 @@ class HybridPipeline(BasePipeline):
                 seed_node_ids=seed_node_ids,
                 user_tenant=user_tenant,
                 user_clearance=user_clearance,
+                query=query,
             )
             traversal_log.append({
                 "step": "graph_expansion",
@@ -124,8 +125,14 @@ class HybridPipeline(BasePipeline):
             pipeline_variant=self.variant,
         )
 
-    def _link_entities(self, vector_results) -> list[str]:
-        """Map vector-retrieved chunks to graph entity node IDs."""
+    def _link_entities(self, vector_results, user_tenant: str = "") -> list[str]:
+        """Map vector-retrieved chunks to graph entity node IDs.
+
+        When a real entity linker is plugged in, linked entities are
+        filtered to only those the user is authorized to see: same-tenant
+        entities and shared entities (tenant="").  The fallback path uses
+        chunk_ids which are already authorized by the vector prefilter.
+        """
         if self.entity_linker is None:
             # Fallback: use chunk_id as seed (assumes chunk nodes exist in graph)
             return [r.chunk_id for r in vector_results]
@@ -133,7 +140,10 @@ class HybridPipeline(BasePipeline):
         node_ids = []
         for result in vector_results:
             linked = self.entity_linker.link(result.text, result.chunk_id)
-            node_ids.extend([e.entity_id for e in linked])
+            for e in linked:
+                # Only allow same-tenant or shared (empty-tenant) entities
+                if e.tenant in ("", user_tenant):
+                    node_ids.append(e.entity_id)
         return list(set(node_ids))
 
     def _expand_with_defenses(
@@ -141,6 +151,7 @@ class HybridPipeline(BasePipeline):
         seed_node_ids: list[str],
         user_tenant: str,
         user_clearance: SensitivityTier,
+        query: str = "",
     ) -> tuple[list, dict[str, int]]:
         """Run graph expansion with defense stack applied.
 
@@ -161,11 +172,14 @@ class HybridPipeline(BasePipeline):
             max_branching = min(max_branching, budget_branch)
             max_total = min(max_total, budget_cfg.get("max_total_nodes", max_total))
 
-        # D2: Edge allowlist overrides
+        # D2: Edge allowlist overrides — classify query to select edge set
         allowlist_cfg = self.config.defenses.edge_allowlist
         if allowlist_cfg.get("enabled"):
-            allowlist = EdgeAllowlist(allowlist_cfg.get("query_classes", {}))
-            allowed_edges = allowlist.get_allowed_edges("general")
+            from pivorag.defenses.edge_allowlist import EdgeAllowlistDefense
+
+            defense = EdgeAllowlistDefense(allowlist_cfg.get("query_classes", {}))
+            query_class = defense.classify_query(query) if query else "general"
+            allowed_edges = defense.get_allowed_edges(query_class)
 
         # Execute expansion
         result = self.graph_expander.bfs_expand(
@@ -199,10 +213,15 @@ class HybridPipeline(BasePipeline):
         return nodes, node_depths
 
     def _apply_merge_filter(self, graph_nodes, user_clearance: SensitivityTier) -> list:
-        """D5: Post-merge policy filter."""
+        """D5: Post-merge policy filter.
+
+        Uses ``not (node_tier > user_clearance)`` instead of ``<=`` because
+        SensitivityTier inherits StrEnum's alphabetical ``__le__``, which
+        gives wrong results (e.g. PUBLIC > INTERNAL alphabetically).
+        """
         filtered = []
         for node in graph_nodes:
             node_tier = SensitivityTier(node.sensitivity)
-            if node_tier <= user_clearance:
+            if not (node_tier > user_clearance):
                 filtered.append(node)
         return filtered
