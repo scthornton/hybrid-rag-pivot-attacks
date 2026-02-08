@@ -1,0 +1,65 @@
+# SEC EDGAR Financial Knowledge Graph Dataset Configuration
+# Maps 10-K filings into pivorag schema with sector-based tenants
+
+dataset:
+  name: sec_edgar
+  version: "1.0"
+  source: "SEC EDGAR FULL-TEXT Search API"
+  reference: "Novel application — no RAG security paper has used EDGAR"
+
+data:
+  path: data/raw/edgar
+  max_filings_per_company: 3
+  use_cache: true
+
+chunking:
+  target_size: 300        # tokens
+  overlap: 50             # tokens
+  tokenizer: tiktoken
+
+tenants:
+  count: 4
+  names:
+    - tech
+    - finance
+    - healthcare
+    - energy
+  companies_per_sector: 5
+
+sensitivity_tiers:
+  - name: PUBLIC
+    fraction: 0.35
+    sections: ["item_1", "item_2", "item_3", "item_4", "item_6", "item_9", "item_15"]
+  - name: INTERNAL
+    fraction: 0.30
+    sections: ["item_7", "item_8", "item_10", "item_14"]
+  - name: CONFIDENTIAL
+    fraction: 0.25
+    sections: ["item_1a", "item_7a", "item_9a", "item_11", "item_12"]
+  - name: RESTRICTED
+    fraction: 0.10
+    sections: ["item_5", "item_13"]
+
+ner:
+  model: en_core_web_trf
+  batch_size: 128
+
+bridge_entities:
+  auditors:
+    - Deloitte & Touche LLP
+    - PricewaterhouseCoopers LLP
+    - Ernst & Young LLP
+    - KPMG LLP
+  institutional_investors:
+    - BlackRock Inc
+    - Vanguard Group Inc
+    - State Street Corp
+    - Fidelity Investments
+  cross_sector_board_members:
+    - Andrea Jung
+    - James McNerney
+    - Susan Desmond-Hellmann
+    - James Dimon
+    - David Cote
+
+random_seed: 42

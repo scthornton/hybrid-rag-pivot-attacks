@@ -1,0 +1,80 @@
+# Enron Email Corpus Dataset Configuration
+# Maps 500K Enron emails into pivorag schema with department-based tenants
+
+dataset:
+  name: enron_email
+  version: "1.0"
+  source: "Kaggle wcukierski/enron-email-dataset"
+  reference: "Liu et al. 2025, arXiv:2508.17222"
+
+data:
+  path: data/raw/enron
+  csv_file: emails.csv
+  max_emails: 50000
+  subsample_top_n_senders: 150
+
+chunking:
+  target_size: 300        # tokens
+  overlap: 50             # tokens
+  tokenizer: tiktoken
+
+tenants:
+  count: 5
+  names:
+    - trading
+    - legal
+    - finance
+    - energy_services
+    - executive
+  description:
+    trading: "Trading, West/East Power Trading"
+    legal: "Legal, Government Affairs"
+    finance: "Finance, Risk Management, Accounting"
+    energy_services: "Energy Services, Pipeline, ENA"
+    executive: "Executive, Office of the Chairman"
+
+sensitivity_tiers:
+  - name: PUBLIC
+    fraction: 0.45
+    markers: []
+  - name: INTERNAL
+    fraction: 0.30
+    markers: ["internal memo", "do not forward", "team meeting"]
+  - name: CONFIDENTIAL
+    fraction: 0.18
+    markers: ["deal terms", "negotiation", "valuation", "board meeting", "compensation"]
+  - name: RESTRICTED
+    fraction: 0.07
+    markers: ["attorney-client privilege", "password", "social security", "strategic plan"]
+
+ner:
+  model: en_core_web_trf    # Transformer model for better quality on old email text
+  batch_size: 256
+
+bridge_entities:
+  # These emerge naturally from the Enron org chart:
+  cross_department_executives:
+    - Ken Lay
+    - Jeff Skilling
+    - Andrew Fastow
+    - Rebecca Mark
+    - Lou Pai
+    - Greg Whalley
+    - Mark Frevert
+  external_organizations:
+    - Arthur Andersen
+    - Vinson & Elkins
+    - JPMorgan Chase
+    - Citigroup
+    - Merrill Lynch
+  deal_names:
+    - Project Raptor
+    - LJM2
+    - Chewco
+    - JEDI
+  systems:
+    - EnronOnline
+    - RiskRAC
+    - DealBench
+
+random_seed: 42
