@@ -18,6 +18,8 @@ A user authorized to retrieve PUBLIC engineering docs via vector search can unkn
 
 ## Key Metrics
 
+### Retrieval Security Metrics
+
 | Metric | Definition |
 |--------|-----------|
 | **RPR** | Probability that graph expansion reaches unauthorized sensitive nodes |
@@ -25,7 +27,18 @@ A user authorized to retrieve PUBLIC engineering docs via vector search can unkn
 | **PD** | Pivot Depth: min hops from seed to first sensitive node |
 | **Leakage@k** | Count of sensitive items in top-k context |
 
+### Generation Contamination Metrics
+
+| Metric | Definition |
+|--------|-----------|
+| **ECR** | Entity Contamination Rate: fraction of leaked entities surfaced in answer |
+| **ILS** | Information Leakage Score: embedding similarity to leaked chunks |
+| **FCR** | Factual Contamination Rate: LLM-as-judge detects leaked facts |
+| **GRR** | Generation Refusal Rate: whether model ignored leaked context |
+
 ## Attack Taxonomy
+
+### Non-Adaptive Attacks (A1-A4)
 
 | Attack | Mechanism | Entry Point |
 |--------|-----------|-------------|
@@ -33,6 +46,14 @@ A user authorized to retrieve PUBLIC engineering docs via vector search can unkn
 | **A2: Entity Anchor** | Inject chunks mentioning entities near sensitive neighborhoods | Entity linking |
 | **A3: Neighborhood Flood** | Inflate degree around sensitive nodes to attract expansion | Graph topology |
 | **A4: Bridge Node** | Create cross-tenant entity connections for unauthorized traversal | Graph structure |
+
+### Adaptive Attacks (A5-A7)
+
+| Attack | Mechanism | Entry Point |
+|--------|-----------|-------------|
+| **A5: Metadata Forgery** | Forge tenant labels to bypass D1 authorization | Graph metadata |
+| **A6: Entity Manipulation** | OSINT entity names to force NER collision with target subgraph | Entity linker |
+| **A7: Query Manipulation** | Entity-laden queries to steer expansion (no injection needed) | Query processing |
 
 ## Defense Suite
 
@@ -48,22 +69,24 @@ A user authorized to retrieve PUBLIC engineering docs via vector search can unkn
 
 ```
 hybrid-rag/
-├── src/pivorag/          # Core package
+├── src/pivorag/          # Core package (52 .py files)
 │   ├── ingestion/        # Chunking, NER, provenance, sensitivity labeling
+│   ├── datasets/         # DatasetAdapter ABC + Enron, EDGAR, Synthetic adapters
 │   ├── vector/           # Embedding, ChromaDB indexing, auth-aware retrieval
 │   ├── graph/            # Neo4j schema, graph building, expansion, policy
 │   ├── pipelines/        # P1 (vector), P2 (graph), P3-P8 (hybrid + defenses)
-│   ├── attacks/          # A1-A4 implementations
+│   ├── attacks/          # A1-A4 (non-adaptive) + A5-A7 (adaptive) attacks
 │   ├── defenses/         # D1-D5 implementations
-│   └── eval/             # RPR/AF/PD/Leakage@k metrics, benchmarking, CLI
-├── configs/              # Pipeline, dataset, and GCP configuration (YAML)
-├── infra/terraform/      # GCP infrastructure (GCE + Neo4j AuraDB + GCS)
+│   ├── generation/       # LLM client abstraction (OpenAI, Anthropic, DeepSeek)
+│   └── eval/             # Security metrics, generation metrics, benchmarking
+├── configs/              # Pipeline, dataset, experiment, and GCP configs (YAML)
+├── infra/terraform/      # GCP infrastructure (GCE + Neo4j AuraDB + GCS + Secrets)
 ├── data/queries/         # Benign and adversarial query sets
-├── scripts/              # Data generation, index building, experiment runner
-├── tests/                # Unit tests for all components
+├── scripts/              # Data generation, ingestion, experiment runners
+├── tests/                # 255 tests across 11 files
 ├── notebooks/            # Exploration, attack analysis, publication plots
-├── paper/                # LaTeX paper skeleton + references.bib
-└── RESEARCH_COMPILATION.md  # Consolidated research (42 papers, 8 gaps)
+├── paper/                # LaTeX paper + references.bib
+└── docker-compose.yml    # Local Neo4j + ChromaDB
 ```
 
 ## Quick Start
@@ -118,7 +141,7 @@ pytest tests/ -v
 
 The experiment environment runs on Google Cloud Platform:
 
-- **Compute:** GCE e2-standard-4 (Ubuntu 22.04, 100GB SSD)
+- **Compute:** GCE e2-standard-8 (Ubuntu 22.04, 100GB SSD)
 - **Vector Store:** ChromaDB on GCE instance
 - **Graph Store:** Neo4j AuraDB (managed)
 - **Storage:** GCS bucket for data and results
@@ -163,6 +186,14 @@ CHROMA_HOST=localhost
 CHROMA_PORT=8000
 ```
 
+## Datasets
+
+| Dataset | Corpus Size | Tenants | Bridge Entities | Source |
+|---------|-------------|---------|-----------------|--------|
+| **Synthetic** | 1K-100K docs | 4 (eng, fin, hr, sec) | 40 (designed) | Generated |
+| **Enron Email** | 50K emails | 5 (trading, legal, finance, energy, exec) | Natural (cross-dept executives) | Kaggle/FERC |
+| **SEC EDGAR** | 10-K filings | 4 sectors (tech, fin, health, energy) | Natural (board members, auditors) | EDGAR API |
+
 ## Research Context
 
 This project addresses a **completely unfilled gap** in the literature. No published work studies cross-store privilege escalation in hybrid vector+graph RAG systems. The closest work:
@@ -170,8 +201,6 @@ This project addresses a **completely unfilled gap** in the literature. No publi
 - **GRAGPoison** (IEEE S&P 2026) — graph-only poisoning, 98% ASR
 - **PoisonedRAG** (USENIX Security 2025) — vector-only poisoning, 90% ASR
 - **RAGCrawler** (Jan 2026) — KG-guided extraction, 84.4% corpus coverage
-
-See `RESEARCH_COMPILATION.md` for the full literature survey (42 papers, 8 identified gaps).
 
 ## Citation
 

@@ -41,7 +41,7 @@ The core research question is: **when does hybrid RAG amplify retrieval risk?** 
 
 ## Module Map
 
-### `src/pivorag/` — Main Package (39 Python files)
+### `src/pivorag/` — Main Package (52 Python files)
 
 ```
 src/pivorag/
@@ -54,6 +54,12 @@ src/pivorag/
 │   ├── relation_extract.py  # RelationExtractor — co-occurrence-based relation extraction
 │   ├── sensitivity.py       # SensitivityLabeler — assigns sensitivity tiers to documents
 │   └── provenance.py        # ProvenanceScorer — trust scores by source type
+│
+├── datasets/                # Dataset abstraction layer
+│   ├── base.py              # DatasetAdapter ABC — common interface for all corpora
+│   ├── synthetic.py         # SyntheticEnterpriseAdapter — wraps make_synth_data.py
+│   ├── enron.py             # EnronEmailAdapter — 500K emails, 5 department tenants
+│   └── sec_edgar.py         # SECEdgarAdapter — 10-K filings, 4 sector tenants
 │
 ├── vector/                  # Vector store layer
 │   ├── embed.py             # EmbeddingModel — sentence-transformers wrapper
@@ -74,10 +80,13 @@ src/pivorag/
 │
 ├── attacks/                 # Adversarial attack implementations
 │   ├── base.py              # BaseAttack ABC
-│   ├── seed_steering.py     # A1: Seed Steering (NOT YET IMPLEMENTED)
-│   ├── entity_anchor.py     # A2: Entity Anchor (NOT YET IMPLEMENTED)
-│   ├── neighborhood_flood.py# A3: Neighborhood Flood (NOT YET IMPLEMENTED)
-│   └── bridge_node.py       # A4: Bridge Node (NOT YET IMPLEMENTED)
+│   ├── seed_steering.py     # A1: Seed Steering
+│   ├── entity_anchor.py     # A2: Entity Anchor
+│   ├── neighborhood_flood.py# A3: Neighborhood Flood
+│   ├── bridge_node.py       # A4: Bridge Node
+│   ├── metadata_forgery.py  # A5: Targeted Metadata Forgery (adaptive)
+│   ├── entity_manipulation.py # A6: Entity Manipulation (adaptive)
+│   └── query_manipulation.py# A7: Query Manipulation (adaptive, query-only)
 │
 ├── defenses/                # Defense mechanism implementations
 │   ├── per_hop_authz.py     # D1: Per-hop authorization
@@ -86,8 +95,14 @@ src/pivorag/
 │   ├── trust_weighting.py   # D4: Provenance-based trust filtering
 │   └── merge_filter.py      # D5: Post-merge policy filter
 │
+├── generation/              # LLM generation evaluation
+│   ├── llm_client.py        # LLMClient ABC (OpenAI, Anthropic, DeepSeek)
+│   └── context_assembler.py # Formats RetrievalContext into RAG prompts
+│
 └── eval/                    # Evaluation framework
     ├── metrics.py           # Security metrics (RPR, Leakage@k, AF, PD)
+    ├── generation_metrics.py# Generation metrics (ECR, ILS, FCR, GRR)
+    ├── generation_benchmark.py # End-to-end generation benchmark runner
     ├── utility.py           # Utility metrics (accuracy, citation support, latency)
     ├── benchmark.py         # Benchmark orchestration
     └── run_eval.py          # CLI entry point (pivorag command)
@@ -212,9 +227,9 @@ Each variant has a YAML config in `configs/pipelines/`:
 
 ---
 
-## Attack Taxonomy (A1–A4)
+## Attack Taxonomy (A1–A7)
 
-Four novel retrieval pivot attacks, each exploiting a different stage of the hybrid pipeline.
+Seven retrieval pivot attacks: four non-adaptive (A1-A4) that assume honest metadata, and three adaptive (A5-A7) that test stronger threat models.
 
 ### A1: Seed Steering
 
@@ -255,6 +270,36 @@ Four novel retrieval pivot attacks, each exploiting a different stage of the hyb
 **Attack path:** Document mentioning entities from tenant A and tenant B → cross-tenant edges → traversal bridges isolation boundary
 
 **Threat model:** Attacker is an authorized user in one tenant who wants access to another tenant's data
+
+### A5: Targeted Metadata Forgery (Adaptive)
+
+**Target stage:** Graph metadata (tenant labels)
+
+**Mechanism:** Attacker relabels injected nodes with the *target* tenant's name, bypassing D1's per-hop tenant check. D1 alone fails under this attack because `forged_tenant in allowed_tenants` evaluates to true. D4 (trust weighting) catches forgery because injected documents have low provenance scores (0.2).
+
+**Attack path:** Forge tenant label → D1 passes → expansion includes attacker content → D4 catches via low provenance
+
+**Threat model:** Attacker can inject documents with arbitrary metadata (e.g., compromised data pipeline)
+
+### A6: Entity Manipulation (Adaptive)
+
+**Target stage:** Entity linking / deduplication
+
+**Mechanism:** Attacker creates documents mentioning entities from the target tenant's namespace (discovered via OSINT — org charts, press releases, LinkedIn). NER extracts the same canonical names, and the entity linker merges them with existing nodes. This creates shared entity nodes where none should exist, enabling the chunk→entity→chunk pivot. D1 blocks because entity nodes have `tenant=""` (not in any allowed_tenants set).
+
+**Attack path:** Documents mentioning target entities → NER collision → shared entity nodes → D1 blocks (entity tenant="")
+
+**Threat model:** Attacker knows entity names from the target tenant (publicly discoverable information)
+
+### A7: Query Manipulation (Adaptive, Query-Only)
+
+**Target stage:** Query processing / NER on queries
+
+**Mechanism:** Attacker crafts queries that directly mention entity names from the target tenant's namespace, steering entity linking toward sensitive neighborhoods. Unlike A1-A6, this requires NO document injection — the attacker only needs query-level access. D1 blocks for the same reason as A6: entity nodes have empty tenant.
+
+**Attack path:** Entity-laden query → NER on query → entity linking to target subgraph → D1 blocks
+
+**Threat model:** Attacker has query-level access only (no injection capability)
 
 ---
 
@@ -331,15 +376,15 @@ Nodes below `min_trust_score` (default 0.6) are filtered out. This defends again
 
 ### Defense Interaction Matrix
 
-| Defense | Stops A1 | Stops A2 | Stops A3 | Stops A4 |
-|---------|----------|----------|----------|----------|
-| D1 (AuthZ) | partial | partial | no | **yes** |
-| D2 (Edges) | no | **yes** | partial | partial |
-| D3 (Budget) | partial | partial | **yes** | partial |
-| D4 (Trust) | **yes** | partial | **yes** | partial |
-| D5 (Merge) | partial | partial | partial | partial |
+| Defense | A1 | A2 | A3 | A4 | A5 (Forgery) | A6 (Entity) | A7 (Query) |
+|---------|----|----|----|----|-------------|-------------|------------|
+| D1 (AuthZ) | partial | partial | no | **yes** | **FAILS** | **yes** | **yes** |
+| D2 (Edges) | no | **yes** | partial | partial | no | partial | partial |
+| D3 (Budget) | partial | partial | **yes** | partial | partial | partial | **yes** |
+| D4 (Trust) | **yes** | partial | **yes** | partial | **yes** | partial | n/a |
+| D5 (Merge) | partial | partial | partial | partial | partial | partial | partial |
 
-**No single defense stops all attacks.** This is why the full stack (P8) combines all five.
+**No single defense stops all attacks.** A5 (metadata forgery) is the critical case: D1 alone fails because forged tenant labels pass the authorization check. D4 catches forgery via low provenance scores. This is why the full stack (P8) combines all five — and why the defense stack is non-tautological.
 
 ---
 
@@ -371,7 +416,7 @@ Nodes below `min_trust_score` (default 0.6) are filtered out. This defends again
 
 ### Bridge Entities
 
-15 entities that create cross-tenant graph paths (the attack surface):
+40 entities create cross-tenant graph paths in the synthetic dataset (the attack surface). In the Enron and EDGAR datasets, bridge entities emerge naturally from cross-department executives, shared auditors, and multi-sector board members. Key categories:
 
 | Type | Count | Tenants Connected | Examples |
 |------|-------|-------------------|----------|
@@ -448,6 +493,36 @@ PD(q) = min{d(seed, x) : x ∈ S(q) ∧ Sensitive(x)}
 ```
 
 Minimum number of graph hops from a seed node to the first sensitive node. PD = 1 means sensitive nodes are directly adjacent to seeds. PD = ∞ means no sensitive nodes were reached.
+
+---
+
+## Generation Metrics
+
+End-to-end metrics that measure how leaked retrieval context contaminates LLM-generated answers. Computed by comparing answers from the undefended pipeline (P3) against the defended pipeline (P4+).
+
+### ECR — Entity Contamination Rate
+
+```
+ECR = |{e ∈ leaked_entities : e appears in answer}| / |leaked_entities|
+```
+
+Fraction of leaked entity names that appear in the generated answer. Uses exact + fuzzy string matching. ECR = 0 means the LLM didn't mention any leaked entities; ECR = 1 means every leaked entity was surfaced.
+
+### ILS — Information Leakage Score
+
+```
+ILS = max{cos(answer_emb, chunk_emb) : chunk_emb ∈ leaked_chunks}
+```
+
+Maximum cosine similarity between the answer embedding and each leaked chunk embedding. High ILS means the answer is semantically close to unauthorized content.
+
+### FCR — Factual Contamination Rate
+
+LLM-as-judge (GPT-4o) compares a contaminated answer (P3 context) against a clean answer (P4 context) and identifies facts traceable to leaked chunks. Returns a score in [0, 1].
+
+### GRR — Generation Refusal Rate
+
+Whether the model effectively refused to use leaked context. If the contaminated and clean answers are nearly identical (Jaccard similarity >= 0.95), the model ignored the leaked context — GRR = 1.0.
 
 ---
 
@@ -545,3 +620,6 @@ random_seed: 42
 | `CHROMA_HOST` | `localhost` | ChromaDB host |
 | `CHROMA_PORT` | `8000` | ChromaDB port |
 | `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Sentence-transformer model |
+| `OPENAI_API_KEY` | `""` | OpenAI API key (for generation eval) |
+| `ANTHROPIC_API_KEY` | `""` | Anthropic API key (for generation eval) |
+| `DEEPSEEK_API_KEY` | `""` | DeepSeek API key (for generation eval) |

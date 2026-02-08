@@ -27,7 +27,7 @@ Complete instructions for recreating the PivoRAG research environment from scrat
 ### Hardware Recommendations
 
 - **Local development**: Any modern machine with 8GB+ RAM
-- **GCP compute**: e2-standard-4 (4 vCPUs, 16 GB RAM) — configured in Terraform
+- **GCP compute**: e2-standard-8 (8 vCPUs, 32 GB RAM) — configured in Terraform
 - **Storage**: ~10 GB for ChromaDB data at `large` scale preset (100K documents)
 - **GPU** (optional): Only needed if using `torch` for custom embedding models. Not required for default `all-MiniLM-L6-v2` via sentence-transformers
 
@@ -62,6 +62,9 @@ python --version  # Should show 3.11.x or 3.12.x
 ```bash
 # Install pivorag in editable mode with all dependencies
 pip install -e ".[dev]"
+
+# Optional: install LLM generation evaluation dependencies
+pip install -e ".[llm]"
 
 # Download the spaCy NER model
 python -m spacy download en_core_web_sm
@@ -115,6 +118,12 @@ CHROMA_PORT=8000
 # Embedding model
 # Default model works on CPU without GPU
 EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+# LLM API keys (for generation evaluation, Phase 2)
+# Only needed if running generation contamination experiments
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+DEEPSEEK_API_KEY=sk-...
 ```
 
 **Important:** The `.env` file is in `.gitignore` and must never be committed. Sensitive values (Neo4j URI, password) should be stored in GCP Secret Manager for production use.
@@ -128,10 +137,8 @@ python -c "import pivorag; print('pivorag imported successfully')"
 # Run the test suite
 pytest tests/ -v
 
-# Expected output: 28 passed, 3 skipped
-# The 3 skips are integration tests that require live Neo4j/ChromaDB:
-#   - test_vector.py::TestVectorIndex::test_placeholder
-#   - test_pipelines.py::TestVectorOnlyPipeline::test_placeholder
+# Expected output: 255 passed, 1 skipped
+# The 1 skip is a placeholder for full hybrid pipeline integration:
 #   - test_pipelines.py::TestHybridPipeline::test_placeholder
 
 # Run the linter
@@ -166,29 +173,32 @@ curl http://localhost:8000/api/v1/heartbeat
 # Should return: {"nanosecond heartbeat": ...}
 ```
 
-### Neo4j (Local via Docker)
+### Docker Compose (Recommended)
 
-For local development, run Neo4j Community Edition in Docker instead of using AuraDB:
+The easiest way to run both Neo4j and ChromaDB locally:
 
 ```bash
-docker run -d \
-  --name pivorag-neo4j \
-  -p 7474:7474 -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/localpassword \
-  -v pivorag_neo4j_data:/data \
-  neo4j:5-community
+# Start both services
+docker compose up -d
 
-# Verify via browser: http://localhost:7474
-# Or via CLI:
-cypher-shell -u neo4j -p localpassword "RETURN 1 AS test"
+# Verify Neo4j: http://localhost:7474 (auth: neo4j/pivorag_dev_2025)
+# Verify ChromaDB: curl http://localhost:8000/api/v1/heartbeat
+
+# Stop services (preserve data)
+docker compose down
+
+# Reset all data
+docker compose down -v
 ```
 
-Update your `.env` for local Neo4j:
+The compose file allocates 4GB heap for Neo4j to support larger datasets (Enron, EDGAR).
+
+Update your `.env` for local services:
 
 ```dotenv
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=localpassword
+NEO4J_PASSWORD=pivorag_dev_2025
 ```
 
 ---
@@ -205,7 +215,7 @@ The full experiment environment runs on Google Cloud Platform. Infrastructure is
 │                                                  │
 │  ┌──────────────┐    ┌─────────────────────┐     │
 │  │  GCE Instance │    │ Neo4j AuraDB        │     │
-│  │  e2-standard-4│    │ (external, managed) │     │
+│  │  e2-standard-8│    │ (external, managed) │     │
 │  │               │    │                     │     │
 │  │  - ChromaDB   │    │  Graph storage      │     │
 │  │  - Python env │    │  Cypher queries     │     │
@@ -220,9 +230,11 @@ The full experiment environment runs on Google Cloud Platform. Infrastructure is
 │         │                                        │
 │  ┌──────┴───────┐    ┌─────────────────────┐     │
 │  │ VPC Network   │    │ Secret Manager      │     │
-│  │ pivorag-net   │    │  - neo4j-uri        │     │
-│  │               │    │  - neo4j-password   │     │
-│  └──────────────┘    └─────────────────────┘     │
+│  │ pivorag-net   │    │  - neo4j-credentials│     │
+│  │               │    │  - openai-api-key   │     │
+│  └──────────────┘    │  - anthropic-api-key │     │
+│                      │  - deepseek-api-key  │     │
+│                      └─────────────────────┘     │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -276,7 +288,7 @@ project_id         = "your-gcp-project-id"
 region             = "us-central1"
 zone               = "us-central1-a"
 environment        = "dev"
-gce_machine_type   = "e2-standard-4"
+gce_machine_type   = "e2-standard-8"
 gce_disk_size_gb   = 100
 neo4j_aura_uri     = "neo4j+s://xxxxxxxx.databases.neo4j.io"
 neo4j_aura_password = "your-aura-password"
@@ -305,7 +317,7 @@ terraform output
 
 **Resources created by Terraform:**
 - VPC network (`pivorag-net`) with firewall rules
-- GCE instance (e2-standard-4, Ubuntu 22.04) with ChromaDB
+- GCE instance (e2-standard-8, Ubuntu 22.04) with ChromaDB
 - GCS bucket (`pivorag-artifacts-{env}`) for data and results
 - IAM service account with least-privilege permissions
 - Secret Manager references for Neo4j credentials
@@ -419,7 +431,7 @@ python -c "import pivorag; print('OK: pivorag imports')"
 
 # 2. Test suite
 pytest tests/ -v
-# Expected: 28 passed, 3 skipped
+# Expected: 255 passed, 1 skipped
 
 # 3. Linter
 ruff check src/
@@ -499,8 +511,12 @@ This is a known pattern in the codebase. The `TraversalPolicy.is_node_authorized
 hybrid-rag-pivot-attacks/
 ├── configs/
 │   ├── datasets/
-│   │   ├── synthetic_enterprise.yaml    # Dataset generation config
+│   │   ├── synthetic_enterprise.yaml    # Synthetic dataset generation config
+│   │   ├── enron_email.yaml             # Enron email corpus config
+│   │   ├── sec_edgar.yaml               # SEC EDGAR financial KG config
 │   │   └── sensitivity_tiers.yaml       # Tier definitions
+│   ├── experiments/
+│   │   └── full_evaluation.yaml         # Master experiment config (all phases)
 │   ├── gcp/
 │   │   └── project.yaml                 # GCP project settings (no secrets)
 │   └── pipelines/
@@ -515,18 +531,21 @@ hybrid-rag-pivot-attacks/
 │   └── raw/                             # Generated synthetic data (gitignored)
 ├── docs/
 │   ├── SETUP.md                         # This file
-│   ├── ARCHITECTURE.md                  # System architecture reference
-│   └── HANDOFF.md                       # Context window handoff document
+│   └── ARCHITECTURE.md                  # System architecture reference
 ├── infra/
+│   ├── scripts/
+│   │   ├── setup_gce.sh                 # GCE startup script (installs pivorag + LLM deps)
+│   │   └── teardown.sh                  # Cleanup script
 │   └── terraform/
 │       ├── main.tf                      # Provider and backend config
-│       ├── variables.tf                 # Input variables
+│       ├── variables.tf                 # Input variables (inc. API keys)
 │       ├── outputs.tf                   # Output values
 │       ├── network.tf                   # VPC and firewall
-│       ├── gce.tf                       # Compute instance
+│       ├── gce.tf                       # Compute instance (e2-standard-8)
 │       ├── neo4j.tf                     # Neo4j secret references
 │       ├── gcs.tf                       # Storage bucket
-│       └── iam.tf                       # IAM and service accounts
+│       ├── iam.tf                       # IAM and service accounts
+│       └── secrets.tf                   # Secret Manager for LLM API keys
 ├── notebooks/
 │   ├── 01_explore_dataset.ipynb         # Dataset exploration
 │   ├── 02_attack_analysis.ipynb         # Attack analysis
@@ -537,12 +556,18 @@ hybrid-rag-pivot-attacks/
 ├── results/                             # Experiment outputs (gitignored)
 ├── scripts/
 │   ├── make_synth_data.py               # Synthetic data generator
-│   ├── build_indexes.py                 # Index builder (scaffold)
-│   ├── run_all_experiments.sh           # Experiment runner
-│   └── export_results.py               # Results exporter
-├── src/pivorag/                         # Main package (39 .py files)
-├── tests/                               # Test suite (9 files)
+│   ├── generate_queries.py              # Query generation (benign + adversarial)
+│   ├── ingest_enron.py                  # Enron email corpus ingestion
+│   ├── build_indexes.py                 # Index builder
+│   ├── run_experiments.py               # Baseline experiments (P1-P8)
+│   ├── run_attack_experiments.py        # Non-adaptive attacks (A1-A4)
+│   ├── run_adaptive_attacks.py          # Adaptive attacks (A5-A7)
+│   ├── run_sweep_experiments.py         # Traversal and connectivity sweeps
+│   ├── run_generation_eval.py           # LLM generation evaluation
+│   └── run_full_evaluation.py           # Master experiment runner with checkpointing
+├── src/pivorag/                         # Main package (52 .py files)
+├── tests/                               # Test suite (255 tests across 11 files)
+├── docker-compose.yml                   # Local Neo4j + ChromaDB (4GB heap)
 ├── pyproject.toml                       # Package definition
-├── README.md                            # Project overview
-└── RESEARCH_COMPILATION.md              # Literature review (825 lines)
+└── README.md                            # Project overview
 ```
