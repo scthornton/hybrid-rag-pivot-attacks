@@ -1,11 +1,20 @@
 """Utility metrics for measuring answer quality alongside security.
 
 Ensures defenses don't destroy the benefits of hybrid RAG.
+
+Context Recall@k: fraction of ground-truth relevant documents appearing
+in the top-k retrieval context. This is a retrieval-only metric that
+does not require LLM generation, making it appropriate for measuring
+whether defenses degrade retrieval quality.
+
+Context Precision@k: fraction of top-k items that are ground-truth
+relevant. Together with recall, these characterize the security-utility
+tradeoff of each defense configuration.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 
@@ -20,6 +29,9 @@ class UtilityMetrics:
     p95_latency_ms: float
     mean_context_size: float
     total_queries: int
+    mean_context_recall: float = 0.0
+    mean_context_precision: float = 0.0
+    recall_per_query: list[float] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -29,6 +41,8 @@ class UtilityMetrics:
             "p95_latency_ms": self.p95_latency_ms,
             "mean_context_size": self.mean_context_size,
             "total_queries": self.total_queries,
+            "mean_context_recall": self.mean_context_recall,
+            "mean_context_precision": self.mean_context_precision,
         }
 
 
@@ -76,6 +90,44 @@ def citation_support_rate(
                 supported += 1
                 break
     return supported / len(answers)
+
+
+def context_recall_at_k(
+    retrieved_ids: list[str],
+    ground_truth_ids: list[str],
+) -> float:
+    """Compute Recall@k: fraction of ground-truth items in the retrieved set.
+
+    Recall@k = |retrieved ∩ ground_truth| / |ground_truth|
+
+    Measures whether the pipeline retrieves the documents needed to
+    answer the query. A defense that improves security but reduces
+    recall is degrading answer quality.
+    """
+    if not ground_truth_ids:
+        return 0.0
+    retrieved_set = set(retrieved_ids)
+    hits = sum(1 for gt_id in ground_truth_ids if gt_id in retrieved_set)
+    return hits / len(ground_truth_ids)
+
+
+def context_precision_at_k(
+    retrieved_ids: list[str],
+    ground_truth_ids: list[str],
+) -> float:
+    """Compute Precision@k: fraction of retrieved items that are ground-truth relevant.
+
+    Precision@k = |retrieved ∩ ground_truth| / |retrieved|
+
+    Measures context noise. High precision means most retrieved items
+    are relevant; low precision means the context is diluted with
+    irrelevant (but possibly authorized) content.
+    """
+    if not retrieved_ids:
+        return 0.0
+    gt_set = set(ground_truth_ids)
+    hits = sum(1 for r_id in retrieved_ids if r_id in gt_set)
+    return hits / len(retrieved_ids)
 
 
 def latency_percentiles(

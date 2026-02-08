@@ -53,14 +53,16 @@ vector-only retrieval, with all leakage occurring at $\text{PD} = 2$
 hops---a structural consequence of the bipartite chunk-entity graph
 topology.
 
-We propose and evaluate five layered defenses---per-hop authorization,
-edge allowlisting, budgeted traversal, trust-weighted expansion, and
-merge-time policy filtering---showing that per-hop authorization alone
-eliminates all measured leakage ($\text{RPR} \to 0.0$) across both
-benign and adversarial queries, including all four attack variants, while
-retaining 50\% of graph-expanded context. The full defense stack further
-reduces context noise by 82\%, reaching 19--20 items from a baseline
-of 110.
+This amplification occurs organically---no adversarial injection is
+required. Shared entities (vendors, infrastructure, compliance
+standards) create natural cross-tenant pivot paths in any multi-tenant
+knowledge graph. We propose five layered defenses and show that per-hop
+authorization alone eliminates all measured leakage
+($\text{RPR} \to 0.0$) across all query types and attack variants.
+The defense is deliberately simple: it re-checks existing tenant and
+sensitivity metadata at the graph expansion boundary. That a trivial
+check suffices is not a limitation---it reveals that the vulnerability
+is a boundary placement problem, not a defense complexity problem.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -117,31 +119,38 @@ problem~\cite{sokprivacy2026}.
 This paper makes three contributions:
 
 \begin{enumerate}
-\item \textbf{Formalization.} We define Retrieval Pivot Risk (RPR)
-  and companion metrics---Amplification Factor (AF, AF($\epsilon$)),
-  Pivot Depth (PD), Leakage@k, severity-weighted leakage, and
-  $\Delta$Leakage---that quantify the security impact of the
-  vector-to-graph transition (\S\ref{sec:metrics}).
+\item \textbf{Vulnerability characterization.} We identify and
+  formalize a \emph{compound attack surface} that emerges from combining
+  two individually secure retrieval modalities. Vector retrieval with
+  tenant prefiltering is secure. Graph retrieval within a single
+  tenant's subgraph is secure. But connecting them---using vector
+  results as graph traversal seeds---creates $160\text{--}194\times$
+  amplified leakage that neither modality exhibits alone. We define
+  Retrieval Pivot Risk (RPR) and companion metrics (AF, PD,
+  Leakage@k, severity-weighted leakage) that quantify the severity
+  of this composition vulnerability (\S\ref{sec:metrics}).
 
-\item \textbf{Attack taxonomy.} We present four Retrieval Pivot
-  Attacks---Seed Steering (A1), Entity Anchor Injection (A2),
-  Neighborhood Flooding (A3), and Bridge Node Attack
-  (A4)---that exploit the pivot boundary with injection budgets of
-  10--20 chunks. We evaluate all four attacks against multiple
-  defense configurations (\S\ref{sec:attacks}).
+\item \textbf{Attack taxonomy and organic leakage.} We present four
+  Retrieval Pivot Attacks (A1--A4) that exploit the pivot boundary
+  with injection budgets of 10--20 chunks. Critically, we also
+  demonstrate that \emph{no adversarial injection is required}: organic
+  shared entities (vendors, infrastructure, compliance standards) create
+  natural cross-tenant pivot paths that produce RPR $= 0.95$ on benign
+  queries (\S\ref{sec:attacks}, \S\ref{sec:results}).
 
-\item \textbf{Defense suite and analysis.} We design and evaluate
-  five layered defenses (D1--D5) that operate across the
-  vector-to-graph boundary. Our analysis reveals that the critical
-  defense placement is \emph{at the graph expansion boundary}: per-hop
-  authorization (D1) eliminates all measured leakage while the
+\item \textbf{Defense placement analysis.} We design and evaluate five
+  layered defenses (D1--D5) and show that the critical insight is not
+  the defense mechanism itself but its \emph{placement}: authorization
+  must be re-checked at the graph expansion boundary. The deliberate
+  simplicity of D1 (per-hop authorization) is evidence that the
+  vulnerability is a \emph{boundary placement problem}, not a
+  \emph{defense complexity problem}. Existing metadata (tenant labels,
+  sensitivity tiers) is sufficient---the missing element in production
+  systems is checking it at the right architectural layer. The
   remaining defenses (D2--D5) serve as utility optimizers and
-  defense-in-depth layers (\S\ref{sec:mitigations}). We further
-  characterize the \emph{amplification mechanics} of the pivot---why
-  graph expansion transforms authorized vector results into
-  unauthorized graph traversals---and identify the total node budget
-  as the primary leakage-controlling parameter through a 27-configuration
-  traversal sweep (\S\ref{sec:results}).
+  defense-in-depth layers. A 27-configuration traversal sweep
+  identifies total node budget as the primary leakage-controlling
+  parameter (\S\ref{sec:mitigations}, \S\ref{sec:results}).
 \end{enumerate}
 
 Our key finding is both surprising and practically significant:
@@ -149,8 +158,12 @@ Our key finding is both surprising and practically significant:
 and sensitivity labels at each graph expansion step---completely
 eliminates retrieval pivot leakage across 500 evaluation queries,
 all four attack variants, and metadata mislabel rates up to 5\%.}
-This defense is simple to implement, requires no model changes, and
-adds negligible latency ($<$1ms overhead).
+The defense is deliberately simple: it re-uses existing graph metadata
+with negligible latency ($<$1ms). That a trivial check suffices is
+not a weakness of the defense---it is evidence that production hybrid
+RAG systems are missing a critical authorization check at the
+vector-to-graph boundary, and that adding it is both necessary and
+straightforward.
 
 The complete codebase, data generators, attack implementations,
 defense suite, and experimental results are available at
@@ -210,6 +223,17 @@ expansion operates \emph{after} it. If graph expansion does not
 independently enforce access controls, any entity mentioned in an
 authorized seed chunk becomes an uncontrolled entry point into the
 knowledge graph.
+
+\textbf{Running example.} Consider an INTERNAL-clearance engineer at
+Acme Corp who queries ``What infrastructure does auth-service depend
+on?'' The vector store returns authorized Acme engineering documents
+mentioning auth-service. Entity linking maps ``auth-service'' to a
+shared entity node in the knowledge graph. BFS expansion then walks:
+auth-service $\to$ CloudCorp (shared vendor entity, hop 1) $\to$
+Umbrella Security's CONFIDENTIAL incident-response documents (hop 2).
+The engineer's authorized query silently pulls CONFIDENTIAL
+cross-tenant data into the context---a 2-hop pivot through a
+legitimate shared entity.
 
 % ============================================================
 \section{Threat Model}
@@ -422,7 +446,10 @@ We introduce metrics to quantify retrieval pivot risk. Let $q$
 denote a query, $u$ a user with tenant $t_u$ and clearance level
 $\ell_u$, $S_k(q)$ the top-$k$ context set, and
 $\text{Sensitive}(x, u)$ a predicate that is true when item $x$ has
-sensitivity $> \ell_u$ or tenant $\neq t_u$. Let
+sensitivity $> \ell_u$ or tenant $\neq t_u$ (entity nodes with
+empty-string tenants are excluded from cross-tenant counts, as they
+are tenant-neutral shared concepts---not leaked items themselves but
+rather the pivot bridges through which leakage propagates). Let
 $\text{Seeds}(q) \subseteq S_k(q)$ denote the set of entity nodes
 that are linked from vector-retrieved chunks via NER extraction---these
 are the graph entry points that initiate BFS expansion.
@@ -464,17 +491,31 @@ INTERNAL content is a lesser violation than receiving RESTRICTED
 content. We define severity-weighted leakage as:
 
 \begin{equation}
-\text{SWL}(q, u) = \sum_{x \in S_k(q),\; \text{Sensitive}(x,u)}
-  \left(\ell_x - \ell_u\right)
+\text{SWL}(q, u) = \sum_{\substack{x \in S_k(q) \\ \text{Sensitive}(x,u)}}
+  w(x, u)
 \label{eq:swl}
 \end{equation}
 
-\noindent where $\ell_x$ is the sensitivity level of item $x$
-(PUBLIC=0, INTERNAL=1, CONFIDENTIAL=2, RESTRICTED=3) and $\ell_u$ is
-the user's clearance level. Each leaked item contributes weight
-proportional to the sensitivity gap it crosses. In our experiments,
-the INTERNAL-clearance evaluation user observing RESTRICTED items
-produces weight 2 per item, while CONFIDENTIAL items produce weight 1.
+\noindent where the per-item weight $w(x, u)$ captures two distinct
+policy violations:
+
+\begin{equation}
+w(x, u) = \begin{cases}
+  \ell_x - \ell_u & \text{if } \ell_x > \ell_u \\
+  1 & \text{if } t_x \neq t_u \wedge \ell_x \leq \ell_u
+\end{cases}
+\label{eq:swl_weight}
+\end{equation}
+
+\noindent Here $\ell_x$ is the sensitivity level (PUBLIC=0,
+INTERNAL=1, CONFIDENTIAL=2, RESTRICTED=3) and $t_x$ the tenant of
+item $x$. Over-clearance items contribute weight proportional to the
+sensitivity gap. Cross-tenant items that do not exceed the user's
+clearance receive a penalty of 1, reflecting the policy violation of
+accessing another tenant's data regardless of sensitivity. In our
+experiments, the INTERNAL-clearance user observing RESTRICTED items
+produces weight 2 per item, CONFIDENTIAL produces weight 1, and
+cross-tenant PUBLIC items produce weight 1.
 
 \subsection{Amplification Factor}
 
@@ -551,7 +592,7 @@ references that any multi-tenant organization would exhibit.
 
 \subsection{Knowledge Graph Construction}
 
-Documents undergo chunking (512-token windows, 50-token overlap),
+Documents undergo chunking (300-token windows, 50-token overlap),
 spaCy NER extraction (\texttt{en\_core\_web\_sm}), two-pass
 relation extraction (ground-truth relation resolution followed by
 pattern-based extraction across 5 typed relations: DEPENDS\_ON,
@@ -605,6 +646,15 @@ intervals (10{,}000 resamples, seed 42). Graph expansion uses
 \texttt{apoc.path.spanningTree} for BFS with hop-distance tracking:
 each expanded node records its minimum distance from the nearest seed,
 enabling precise PD measurement.
+
+\textbf{Statistical methodology.}
+All metrics are reported with 95\% bootstrap confidence intervals
+(10{,}000 resamples, percentile method, seed 42). We use non-parametric
+bootstrap because RPR values near 0 or 1 violate normal approximations,
+and leakage distributions are highly skewed. Our 500 queries provide
+power $> 0.80$ for detecting 5pp differences (Appendix~\ref{sec:stats-appendix}
+provides sample size justification, multiple comparison corrections,
+and $\epsilon$ sensitivity analysis).
 
 \subsection{Attack Evaluation}
 
@@ -919,13 +969,17 @@ created).
 \end{tabular}
 \end{table}
 
-The uniformity of these results is itself a finding: D1 blocks
-\emph{all} four attack strategies because it operates on node
+Two aspects of this uniformity are themselves findings. First, all
+four attacks produce identical Leakage@k ($\approx$20.5) against P3.
+This is because the bottleneck is the \emph{unguarded graph traversal},
+not the injection strategy---all four attacks simply steer queries into
+the same undefended 2-hop expansion path, and the resulting leakage is
+bounded by the expansion window size, not the attack mechanism. Second,
+D1 blocks \emph{all} four strategies because it operates on node
 \emph{properties} (tenant, sensitivity) rather than graph
-\emph{structure} (paths, edges). The attacks all manipulate the path
-to sensitive nodes---optimizing vector similarity (A1), creating dense
-entity connections (A2), inflating local density (A3), or bridging
-tenant boundaries (A4)---but D1 filters on properties at each hop,
+\emph{structure} (paths, edges). The attacks manipulate paths---optimizing
+similarity (A1), creating dense connections (A2), inflating density (A3),
+or bridging boundaries (A4)---but D1 filters on properties at each hop,
 making the path irrelevant.
 
 \subsection{Traversal Parameter Sweep}
@@ -1023,7 +1077,7 @@ primary protection is the \emph{tenant} filter (not the sensitivity
 filter): cross-tenant leakage requires traversing to a node with a
 different tenant label, and sensitivity mislabeling does not affect
 tenant assignments. We note that context size decreases slightly at
-higher mislabel rates (56$\to$48 items at 5\%) as some authorized
+higher mislabel rates (50$\to$48 items at 5\%) as some authorized
 nodes have their sensitivity erroneously raised above the user's
 clearance.
 
@@ -1074,6 +1128,71 @@ The key insight is that D1 is both \emph{necessary and sufficient}
 for security (eliminating all leakage), while D2--D5 serve as
 \emph{utility optimizers} (reducing context noise and providing
 defense in depth).
+
+\subsection{Utility Impact}
+\label{sec:utility}
+
+A critical question for practitioners is whether defenses degrade
+retrieval quality. Since our evaluation corpus uses synthetic documents
+without human-annotated relevance labels, we measure utility through two
+proxy metrics: (1)~\textbf{authorized context size}---the number of
+items passing authorization checks in the final context, and
+(2)~\textbf{authorization rate}---the fraction of context items that are
+authorized (i.e., not leaked). Together these quantify how much useful
+content each defense preserves and how much noise it eliminates.
+
+Table~\ref{tab:utility} presents the security-utility tradeoff. P3
+(undefended hybrid) returns 110 items per query, but only 85.5\% are
+authorized---the remaining 16 items (14.5\%) are cross-tenant or
+over-clearance leakage. P1 (vector-only) returns 10 fully authorized
+items, establishing the vector-only utility baseline.
+
+\begin{table}[t]
+\centering
+\caption{Security-utility tradeoff across pipeline variants
+  (benign queries, $n{=}350$). Auth.\ Items = mean authorized items in
+  context. Auth.\ Rate = fraction of context that is authorized.
+  Retention = authorized items relative to P3's authorized baseline
+  (94 items). D1 eliminates all leakage while retaining 5.6$\times$
+  more content than vector-only.}
+\label{tab:utility}
+\small
+\begin{tabular}{l|ccccc}
+\toprule
+\textbf{Variant} & \textbf{RPR} & \textbf{Ctx}
+  & \textbf{Auth.} & \textbf{Auth.\ Rate} & \textbf{Retention} \\
+\midrule
+P1 (vector) & 0.000 & 10 & 10.0 & 1.00 & --- \\
+P3 (hybrid) & 0.954 & 110 & 94.0 & 0.85 & 1.00 \\
+P4 (+D1) & 0.000 & 56 & 56.0 & 1.00 & 0.60 \\
+P6 (+D1--3) & 0.000 & 29 & 29.0 & 1.00 & 0.31 \\
+P8 (+D1--5) & 0.000 & 20 & 20.0 & 1.00 & 0.21 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+D1 (P4) retains 56 authorized items per query---a 40\% reduction from
+P3's 94 authorized items, driven entirely by entity node removal
+(\S\ref{sec:mitigations}). However, P4 still provides
+5.6$\times$ more authorized content than P1's vector-only baseline (56
+vs.\ 10), confirming that \emph{graph expansion retains substantial
+utility even after D1 filtering}. The lost items are entity nodes and
+their dependent traversal paths, not authorized chunks from the user's
+own tenant.
+
+D3--D5 progressively reduce context size (56 $\to$ 29 $\to$ 20) by
+capping traversal depth, filtering low-provenance nodes, and removing
+noise at the merge stage. Even the most aggressive configuration (P8)
+retains 2$\times$ more content than vector-only retrieval. Under
+adversarial queries, the pattern is similar: P4 retains 50 authorized
+items (retention 0.55 vs.\ P3's 90.6 authorized baseline).
+
+The practical conclusion: \textbf{D1 eliminates all leakage while
+preserving 5.6$\times$ the content of vector-only retrieval.} The
+additional defenses (D3--D5) are context quality optimizers that reduce
+noise for downstream LLM generation. Organizations prioritizing breadth
+should deploy D1 alone; those prioritizing signal-to-noise ratio should
+add D3 and D4.
 
 % ============================================================
 \section{Mitigations}
@@ -1130,6 +1249,33 @@ processing overhead.
 D1 is the most effective defense: it reduces RPR from 0.95 to 0.0
 across all query types and all attack variants, with $<$1ms latency
 overhead.
+
+\paragraph{Entity tenant semantics.}
+A subtle but critical design decision concerns entity nodes. In our
+knowledge graph, entity nodes (extracted via NER) represent shared
+concepts---people, systems, vendors---that may appear in documents
+across multiple tenants. These nodes carry \texttt{tenant = ""}
+(empty string) rather than any specific tenant label, because they
+are \emph{tenant-neutral}: the concept ``CloudCorp'' belongs to no
+single tenant. Under D1's authorization check, empty-tenant nodes
+fail the tenant-match predicate ($v.\text{tenant} \neq t_u$) and are
+filtered from the expansion result. This means D1 removes
+\emph{all entity nodes} from the context---not just unauthorized ones.
+
+This entity-level filtering is precisely the mechanism by which D1
+eliminates cross-tenant leakage. The 2-hop pivot path (chunk $\to$
+entity $\to$ chunk) requires traversal through a shared entity node.
+By filtering entity nodes, D1 severs this path at hop 1, preventing
+the traversal from reaching the unauthorized chunk at hop 2. The
+trade-off is that entity information (which may be useful for answer
+generation) is excluded from the final context. We quantify this
+impact in Section~\ref{sec:discussion}.
+
+Alternative designs could assign entities to multiple tenants (the set
+of tenants whose documents mention them) or introduce a
+\texttt{SHARED} tenant class with explicit access grants. These
+designs would preserve entity context at the cost of more complex
+authorization logic and a larger attack surface.
 
 The critical insight is that \emph{existing graph databases already
 store the metadata needed for this check} (tenant labels, sensitivity
@@ -1203,6 +1349,23 @@ quality. Adding D3--D5 further reduces context to 19--20
 items---an 82\% reduction from the undefended baseline---but the
 additional defenses trade context volume for noise reduction rather
 than security improvement.
+
+\paragraph{Entity over-filtering.}
+D1's security guarantee comes at a specific cost: entity nodes are
+excluded from the final context. In our bipartite construction, the
+undefended P3 pipeline returns approximately 110 items per query,
+of which roughly 25--35 are entity nodes. After D1 filtering, these
+entity nodes are removed entirely, leaving 50--56 chunk-only
+items. The entity information they carried (names, relationships,
+organizational context) is lost. For queries that benefit from
+entity-level knowledge (e.g., ``Who works on project Alpha?''), this
+may reduce answer quality compared to an oracle that retains only
+authorized entity nodes. We consider this an acceptable trade-off:
+the entity nodes are exactly the pivot vectors that enable
+cross-tenant leakage, and their removal is the mechanism by which
+D1 achieves $\text{RPR} = 0.0$. Future work on multi-tenant entity
+authorization (Section~\ref{sec:limitations}) could recover entity
+utility while preserving security.
 
 The practical recommendation is clear: \textbf{deploy D1 immediately
 as a minimum viable defense.} Add D3 and D4 if context noise is
@@ -1324,6 +1487,15 @@ text-embedding-3-large) which may produce different similarity
 distributions. The pivot vulnerability is structural (entity linking,
 not embedding quality), so we expect model independence to hold broadly.
 
+\textbf{Entity over-filtering.} D1 removes \emph{all} entity nodes
+from the expansion result because entities carry empty-string tenant
+labels. This is the mechanism that eliminates leakage, but it also
+removes potentially useful entity context. A finer-grained approach
+would assign entities to the set of tenants whose documents mention
+them, or introduce a \texttt{SHARED} tenant class with explicit
+cross-tenant grants. Such designs would recover entity utility at the
+cost of more complex authorization logic and a larger attack surface.
+
 \textbf{Non-adaptive attacker.} Our attacks are crafted against the
 baseline pipeline. While we evaluate adaptive strategies against D1
 (metadata corruption, \S\ref{sec:mislabel}) and show robustness up to
@@ -1439,8 +1611,10 @@ production enterprise graphs with richer entity-to-entity topologies
 (where PD $>$ 2 may emerge), adaptive attacker strategies that target
 metadata integrity or craft high-provenance payloads to bypass D4,
 LLM generation-level impact measurement (does the LLM actually
-reproduce leaked content?), and extension to agentic hybrid RAG where
-graph traversal is autonomously controlled.
+reproduce leaked content?), multi-tenant entity authorization
+(recovering entity context without re-enabling the pivot path), and
+extension to agentic hybrid RAG where graph traversal is autonomously
+controlled.
 
 % ============================================================
 \bibliographystyle{IEEEtran}
@@ -1493,8 +1667,49 @@ results are available at:
   scripts/analyze\_organic\_leakage.py}
 \item Export results: \texttt{python scripts/export\_results.py
   --latest}
-\item Run tests: \texttt{pytest tests/ -v} (78 tests passing)
+\item Run tests: \texttt{pytest tests/ -v} (177 tests passing)
 \end{enumerate}
+
+\subsection{Runtime Estimates}
+
+Corpus generation and index building complete in $\sim$5 minutes on a
+single machine.  The full 500-query evaluation across 7 pipeline variants
+takes $\sim$20 minutes.  Attack experiments ($4 \times 4$ configurations)
+require $\sim$10 minutes including graph rebuilds between attacks.
+Sweep experiments (traversal, connectivity, mislabel, embedding) total
+$\sim$45 minutes.  All experiments require $<$16\,GB RAM and run on
+CPU-only hardware.
+
+% ============================================================
+\section{Statistical Methodology}
+\label{sec:stats-appendix}
+
+\textbf{Bootstrap procedure.} All confidence intervals use the
+non-parametric percentile bootstrap (10{,}000 resamples, seed 42).
+For binary RPR indicators, the bootstrap distribution is constructed by
+resampling the $n=500$ per-query binary outcomes $\{0, 1\}$ with
+replacement and computing the mean for each resample.  The 95\% CI is
+the $[2.5\%, 97.5\%]$ percentile interval of the bootstrap
+distribution.
+
+\textbf{Sample size justification.} With $n = 500$ queries, we achieve
+power $> 0.80$ for detecting a 5 percentage-point difference in RPR
+(from 0.0 to 0.05) at $\alpha = 0.05$, computed via the exact binomial
+test.  For leakage means, the standard error of the bootstrap is
+$\text{SE} < 0.5$ items, sufficient to distinguish mean differences of
+$\geq 1$ item.
+
+\textbf{Multiple comparisons.} We test 7 pipeline variants against 2
+query types (14 comparisons per metric).  Applying a Bonferroni
+correction ($\alpha_\text{adj} = 0.05/14 = 0.0036$), the core findings
+(P1/P4--P8: RPR $= 0.0$; P3: RPR $> 0.90$) remain significant at
+$p < 10^{-6}$.
+
+\textbf{$\epsilon$ sensitivity.} The regularized amplification factor
+$\text{AF}(\epsilon)$ uses $\epsilon = 0.1$.  We verify that
+conclusions are robust across $\epsilon \in \{0.01, 0.05, 0.1, 0.5\}$:
+$\text{AF}(\epsilon)$ ranges from 1{,}599 ($\epsilon{=}0.01$) to 32
+($\epsilon{=}0.5$), all confirming $>$$30\times$ amplification.
 
 \balance
 \end{document}

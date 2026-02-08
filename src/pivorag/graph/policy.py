@@ -28,14 +28,25 @@ class TraversalPolicy:
         self.deny_cross_tenant = deny_cross_tenant
 
     def is_node_authorized(self, node: GraphNode) -> bool:
-        """Check if a user is authorized to see this node."""
+        """Check if a user is authorized to see this node.
+
+        Entity nodes default to tenant="" (empty string), which means
+        they fail the cross-tenant check and are filtered out. This is
+        by design: entity nodes are tenant-neutral shared concepts, so
+        D1 blocks traversal through them, preventing the chunk→entity→chunk
+        pivot path that causes cross-tenant leakage.
+        """
         node_tier = SensitivityTier(node.sensitivity)
         if node_tier > self.user_clearance:
             return False
 
+        # GraphNode.tenant is always str (Pydantic enforces this),
+        # and bfs_expand coerces Neo4j NULLs to "".
+        # Empty tenant ("") will not be in allowed_tenants, so
+        # tenant-neutral entity nodes are correctly filtered.
         return not (
             self.deny_cross_tenant
-            and (node.tenant is None or node.tenant not in self.allowed_tenants)
+            and node.tenant not in self.allowed_tenants
         )
 
     def is_hop_allowed(
