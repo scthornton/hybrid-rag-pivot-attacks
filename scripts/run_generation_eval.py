@@ -241,7 +241,7 @@ def _create_judge(judge_provider: str) -> LLMClient:
         return AnthropicClient(model="claude-sonnet-4-5-20250929")
     if judge_provider == "deepseek":
         return DeepSeekClient()
-    return OpenAIClient(model="gpt-4o")
+    return OpenAIClient(model="gpt-5.2")
 
 
 @click.command()

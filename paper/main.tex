@@ -1145,17 +1145,19 @@ largely ignoring leaked context. DeepSeek-V3 falls between
 ($\text{ECR} = 0.12$, $\text{GRR} = 0.20$) but produces the highest
 Factual Contamination Rate ($\text{FCR} = 0.19$).
 
-On the Enron corpus ($n{=}40$ for Claude, $n{=}101$ for DeepSeek),
-ECR drops substantially (Claude $0.31 \to 0.13$; DeepSeek
-$0.12 \to 0.05$) while GRR approaches zero (Claude
-$0.10 \to 0.00$; DeepSeek $0.20 \to 0.05$). Real email content is
+On the Enron corpus ($n{=}181$ for GPT-5.2, $n{=}40$ for Claude,
+$n{=}101$ for DeepSeek), ECR drops substantially across all models
+(GPT-5.2 $0.08$; Claude $0.13$; DeepSeek $0.05$) while GRR
+approaches zero (all models $\leq 0.05$). Real email content is
 contextually relevant enough that LLMs rarely ignore it, but leaked
 entities from adjacent departments are less distinctive than synthetic
-ones, producing lower entity contamination.  These findings confirm
-that retrieval-level leakage translates to generation-level
-contamination across both corpora, that the severity depends on the
-model and the domain, and that the contamination effect is robust
-with $n > 40$ leaking queries per evaluation.
+ones, producing lower entity contamination. GPT-5.2 shows moderate
+ECR ($0.082$) with near-zero FCR ($0.005$), suggesting it surfaces
+entity names but avoids reproducing substantive facts from leaked
+context. These findings confirm that retrieval-level leakage
+translates to generation-level contamination across both corpora, that
+the severity depends on the model and the domain, and that the effect
+is robust across sample sizes ($n = 40$--$181$).
 
 \subsection{Traversal Parameter Sweep}
 \label{sec:traversal-sweep}
@@ -1719,12 +1721,12 @@ enterprise graphs with RBAC/ABAC policies, which may exhibit
 different connectivity patterns.
 
 \textbf{Generation evaluation scope.} Our generation contamination
-experiment (\S\ref{sec:generation-impact}) evaluates two LLMs across
-both corpora ($n{=}40$--101 leaking queries on Enron, $n{=}10$ on
+experiment (\S\ref{sec:generation-impact}) evaluates three LLMs across
+both corpora ($n{=}40$--181 leaking queries on Enron, $n{=}10$ on
 synthetic) and confirms that leaked context contaminates generated
 answers (ECR up to 0.31, FCR up to 0.19). The synthetic sample
-($n{=}10$) is small; the Enron sample is more robust. We could not
-evaluate GPT-4o on Enron due to an expired API key. We also do not
+($n{=}10$) is small; the Enron samples are more robust ($n{=}181$ for
+GPT-5.2, $n{=}101$ for DeepSeek-V3, $n{=}40$ for Claude). We do not
 evaluate chain-of-thought reasoning, which might amplify the impact
 by synthesizing cross-tenant connections.
 

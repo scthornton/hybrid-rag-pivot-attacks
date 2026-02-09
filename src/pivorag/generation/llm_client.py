@@ -76,13 +76,13 @@ class LLMClient(ABC):
 class OpenAIClient(LLMClient):
     """OpenAI API client (GPT-4o and compatible models)."""
 
-    # Pricing per 1M tokens (as of 2025)
-    INPUT_COST_PER_M = 2.50
-    OUTPUT_COST_PER_M = 10.00
+    # Pricing per 1M tokens (GPT-5.2 as of 2025-12)
+    INPUT_COST_PER_M = 1.75
+    OUTPUT_COST_PER_M = 14.00
 
     def __init__(
         self,
-        model: str = "gpt-4o",
+        model: str = "gpt-5.2",
         api_key: str | None = None,
         base_url: str | None = None,
         **kwargs: Any,
@@ -115,6 +115,14 @@ class OpenAIClient(LLMClient):
 
         def _call() -> Any:
             client = self._get_client()
+            # GPT-5.x models require max_completion_tokens instead of max_tokens
+            if self.model.startswith("gpt-5"):
+                return client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=self.temperature,
+                    max_completion_tokens=2048,
+                )
             return client.chat.completions.create(
                 model=self.model,
                 messages=messages,

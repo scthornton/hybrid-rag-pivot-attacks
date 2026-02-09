@@ -217,7 +217,7 @@ class TestLLMClientInterface:
     def test_openai_client_provider(self) -> None:
         client = OpenAIClient(api_key="test")
         assert client.provider == "openai"
-        assert client.model == "gpt-4o"
+        assert client.model == "gpt-5.2"
 
     def test_deepseek_client_provider(self) -> None:
         client = DeepSeekClient(api_key="test")
