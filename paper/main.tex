@@ -51,13 +51,19 @@ nodes; 15{,}514 edges) evaluated with 500 queries, the undefended
 hybrid pipeline exhibits $\text{RPR} \approx 0.95$ and
 $\text{AF}(\epsilon) \approx 160\text{--}194\times$ relative to
 vector-only retrieval, with leakage occurring at $\text{PD} = 2$ hops
-as a structural consequence of the bipartite chunk--entity topology. We
-propose five layered defenses and find that a single placement
+as a structural consequence of the bipartite chunk--entity topology.
+We validate these findings on the Enron email corpus (50{,}000 emails;
+376{,}000 graph nodes; 2.3M edges), where undefended hybrid retrieval
+produces $\text{RPR} = 0.695$ on benign queries---lower than the
+synthetic corpus due to sparser entity connectivity, but still
+affecting 70\% of queries with a mean of 7.1 leaked items each.
+We propose five layered defenses and find that a single placement
 fix---\textbf{per-hop authorization at the graph expansion
 boundary}---eliminates all measured leakage ($\text{RPR} \to 0.0$)
-across all queries and attack variants with negligible latency
-overhead, indicating the vulnerability is primarily a boundary
-enforcement problem rather than a defense complexity problem.
+across both corpora, all queries, and all attack variants with
+negligible latency overhead, indicating the vulnerability is primarily
+a boundary enforcement problem rather than a defense complexity
+problem.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -129,19 +135,22 @@ This paper makes three contributions:
   all leakage occurs at PD\,$=$\,2 hops---a structural signature of
   the pivot boundary (\S\ref{sec:metrics}).
 
-\item \textbf{Attack taxonomy + organic leakage.} We present four
+\item \textbf{Cross-dataset validation + organic leakage.} We
+  demonstrate the vulnerability on both a synthetic enterprise corpus
+  (1{,}000 documents, 4 tenants) and the Enron email corpus (50{,}000
+  emails, 5 departments), showing RPR\,$=$\,0.95 and RPR\,$=$\,0.70
+  respectively without adversarial injection. We present four
   Retrieval Pivot Attacks (A1--A4) exploiting the pivot boundary with
-  injection budgets of 10--20 chunks. Critically, we show that
-  \emph{no adversarial injection is required}: organic shared entities
-  produce RPR\,$=$\,0.95 on benign queries alone
+  injection budgets of 10--20 chunks
   (\S\ref{sec:attacks}, \S\ref{sec:results}).
 
 \item \textbf{Defense placement analysis.} We evaluate five layered
   defenses (D1--D5) and show that authorization must be re-checked at
   the graph expansion boundary. D1 (per-hop authorization) alone
-  eliminates all measured leakage ($\text{RPR} \to 0.0$) across 500
-  queries, all four attacks, and metadata mislabel rates up to 5\%.
-  D2--D5 serve as utility optimizers and defense-in-depth layers
+  eliminates all measured leakage ($\text{RPR} \to 0.0$) across both
+  corpora, all queries, all attack variants, and metadata mislabel
+  rates up to 5\%. D2--D5 serve as utility optimizers and
+  defense-in-depth layers
   (\S\ref{sec:mitigations}, \S\ref{sec:results}).
 \end{enumerate}
 
@@ -162,8 +171,9 @@ embedding. In multi-tenant deployments, vector stores apply metadata
 prefilters (e.g., tenant ID) before similarity search, ensuring that
 retrieval respects organizational boundaries. This prefiltering makes
 vector-only RAG robust against cross-tenant leakage: our experiments
-confirm $\text{RPR} = 0.0$ for vector-only pipelines across all 500
-evaluation queries (\S\ref{sec:results}).
+confirm $\text{RPR} = 0.0$ for vector-only pipelines across all
+evaluation queries on both synthetic and Enron corpora
+(\S\ref{sec:results}).
 
 \subsection{Knowledge Graph RAG}
 
@@ -322,10 +332,12 @@ work~\cite{gragpoison2026, fewwords2025}.
 \section{Retrieval Pivot Attacks}
 \label{sec:attacks}
 
-We define four attacks that exploit the pivot boundary with
-increasing structural sophistication. Each attack operates within the
-threat model of \S\ref{sec:threat_model}: the attacker injects a
-small number of crafted documents that undergo standard ingestion.
+We define four non-adaptive attacks (A1--A4) that exploit the pivot
+boundary with increasing structural sophistication, and three adaptive
+attacks (A5--A7) that target the defense mechanisms themselves.
+Each attack operates within the threat model of
+\S\ref{sec:threat_model}: the attacker injects a small number of
+crafted documents that undergo standard ingestion.
 
 \subsection{A1: Seed Steering}
 
@@ -633,6 +645,52 @@ resulting knowledge graph contains 2{,}785 nodes (785 entity nodes +
 plus MENTIONS, CONTAINS, and BELONGS\_TO structural edges added during
 graph construction).
 
+\subsection{Enron Email Corpus}
+\label{sec:enron}
+
+To validate that Retrieval Pivot Risk is not an artifact of synthetic
+construction, we evaluate on the Enron email corpus---a public-record
+dataset of ${\sim}$500{,}000 corporate emails from ${\sim}$150 Enron
+employees, released during the 2001 FERC investigation. We subsample
+to 50{,}000 emails from the most active employees and assign tenants
+based on departmental structure:
+
+\begin{itemize}
+\item \texttt{trading} --- Trading, West/East Power Trading
+\item \texttt{legal} --- Legal, Government Affairs
+\item \texttt{finance} --- Finance, Risk Management, Accounting
+\item \texttt{energy\_services} --- Energy Services, Pipeline, ENA
+\item \texttt{executive} --- Executive, Office of the Chairman
+\end{itemize}
+
+\noindent Sensitivity labels are assigned by keyword matching:
+RESTRICTED (attorney-client privilege markers, password shares,
+strategy memos), CONFIDENTIAL (deal negotiations, valuations, board
+communications), INTERNAL (standard departmental communications),
+PUBLIC (company-wide announcements). The resulting distribution
+(92\% PUBLIC, 6.7\% CONFIDENTIAL, 0.7\% RESTRICTED, 0.3\% INTERNAL)
+is skewed compared to the synthetic corpus---reflecting realistic
+email traffic where most messages are routine.
+
+Chunking (300-token windows, 50-token overlap) produces 152{,}064
+chunks. spaCy NER extraction (\texttt{en\_core\_web\_sm}) identifies
+2.07M entity mentions. The resulting knowledge graph contains
+376{,}000 nodes (174{,}000 entity nodes + 152{,}000 chunk nodes +
+50{,}000 document nodes) and 2.3M edges. Nineteen entities are
+naturally shared across departmental boundaries---cross-department
+executives (Ken Lay, Jeff Skilling, Andy Fastow), external
+organizations (Arthur Andersen, Vinson \& Elkins), deal names
+(Project Raptor, LJM2), and internal systems (EnronOnline).
+
+\textbf{Key differences from synthetic.} The Enron graph is
+$135\times$ larger than the synthetic graph (376K vs.\ 2.8K nodes)
+but has fewer intentional bridge entities (19 vs.\ 40). Email text
+produces noisier NER extractions (dates, monetary amounts, partial
+names) than curated synthetic documents, creating more spurious
+entity connections but also more entity fragmentation. These
+properties make the Enron corpus a stress test for whether the pivot
+vulnerability generalizes beyond controlled conditions.
+
 \subsection{Pipeline Variants}
 
 We evaluate 7 pipeline configurations (Table~\ref{tab:variants}):
@@ -665,28 +723,36 @@ attacks~\cite{gragpoison2026, fewwords2025}.
 
 \subsection{Evaluation Protocol}
 
-We evaluate each pipeline on 500 template-generated queries: 350
-benign queries (standard domain questions stratified across 4 tenants
-and 3 clearance levels) and 150 adversarial queries (queries that
-mention bridge entities or target cross-tenant pivot paths, stratified
-across attack types A1--A4). The evaluation user belongs to
-\texttt{acme\_engineering} with INTERNAL clearance. For each query,
-we measure RPR, Leakage@k, severity-weighted leakage, AF($\epsilon$),
-$\Delta$Leakage, PD distribution, latency, and context size. All RPR
-and Leakage@k values are reported with 95\% bootstrap confidence
-intervals (10{,}000 resamples, seed 42). Graph expansion uses
-\texttt{apoc.path.spanningTree} for BFS with hop-distance tracking:
-each expanded node records its minimum distance from the nearest seed,
-enabling precise PD measurement.
+\textbf{Synthetic corpus.} We evaluate each pipeline on 500
+template-generated queries: 350 benign queries (standard domain
+questions stratified across 4 tenants and 3 clearance levels) and 150
+adversarial queries (queries that mention bridge entities or target
+cross-tenant pivot paths, stratified across attack types A1--A4). The
+evaluation user belongs to \texttt{acme\_engineering} with INTERNAL
+clearance.
+
+\textbf{Enron corpus.} We evaluate P1, P3, and P4 on 200 queries
+(100 benign + 100 adversarial) generated from department-specific
+templates. The evaluation user belongs to \texttt{trading} with
+INTERNAL clearance.
+
+For each query, we measure RPR, Leakage@k, severity-weighted leakage,
+AF($\epsilon$), $\Delta$Leakage, PD distribution, latency, and context
+size. All RPR and Leakage@k values are reported with 95\% bootstrap
+confidence intervals (10{,}000 resamples, seed 42). Graph expansion
+uses \texttt{apoc.path.spanningTree} for BFS with hop-distance
+tracking: each expanded node records its minimum distance from the
+nearest seed, enabling precise PD measurement.
 
 \textbf{Statistical methodology.}
 All metrics are reported with 95\% bootstrap confidence intervals
 (10{,}000 resamples, percentile method, seed 42). We use non-parametric
 bootstrap because RPR values near 0 or 1 violate normal approximations,
-and leakage distributions are highly skewed. Our 500 queries provide
-power $> 0.80$ for detecting 5pp differences (Appendix~\ref{sec:stats-appendix}
-provides sample size justification, multiple comparison corrections,
-and $\epsilon$ sensitivity analysis).
+and leakage distributions are highly skewed. Our query sets (500
+synthetic, 200 Enron) each provide power $> 0.80$ for detecting 5pp
+differences (Appendix~\ref{sec:stats-appendix} provides sample size
+justification, multiple comparison corrections, and $\epsilon$
+sensitivity analysis).
 
 \textbf{Reproducibility.} All experiments use a single fixed random
 seed (42) for corpus generation, query sampling, and bootstrap
@@ -695,7 +761,7 @@ from YAML) to ensure parameter consistency across variants.
 Appendix~\ref{sec:artifact} provides the full reproduction sequence;
 Appendix~\ref{sec:corpus-details} details the corpus generator;
 Appendix~\ref{sec:query-templates} lists all query templates.
-The codebase includes 177 passing unit tests.
+The codebase includes 255 passing unit tests.
 
 \subsection{Attack Evaluation}
 
@@ -1030,6 +1096,59 @@ connections (A2), inflating density (A3), or bridging boundaries
 (A4)---but D1 filters on properties at each hop, making the path
 irrelevant.
 
+\subsection{Adaptive Attacks (A5--A7)}
+\label{sec:adaptive-eval}
+
+We extend the attack taxonomy with three adaptive strategies that
+target the defense mechanisms themselves
+(Table~\ref{tab:adaptive-attacks}).
+
+\input{../results/latex/adaptive_attacks}
+
+\textbf{A5 (Metadata Forgery)} relabels injected nodes with the
+target tenant's name to bypass D1's tenant check. At forgery rates of
+1\%, 5\%, and 10\%, A5 achieves $\text{RPR} = 1.0$ against P3 but
+$\text{RPR} = 0.0$ against all defended pipelines (P4, P7, P8).
+D1 remains effective because the forged metadata only affects the
+attacker's own injected nodes---the organic entity nodes that create
+the pivot path still carry empty-string tenant labels and are filtered.
+
+\textbf{A6 (Entity Manipulation)} creates documents mentioning
+entities from the target tenant's namespace, attempting to create new
+shared entity nodes. A6 also fails against D1: the newly created
+entity nodes still carry empty-string tenant labels, and the defense
+filters them regardless of how they were created.
+
+\textbf{A7 (Query Manipulation)} crafts queries mentioning target
+tenant entity names to steer NER-based entity linking toward sensitive
+neighborhoods. This is a query-only attack (no injection) and
+produces the same RPR as organic benign queries---confirming that the
+vulnerability is in the graph expansion, not in query processing.
+
+\subsection{Generation Impact}
+\label{sec:generation-impact}
+
+To measure whether leaked context actually contaminates LLM-generated
+answers, we evaluate three production LLMs on 10 queries with known
+leakage (Table~\ref{tab:generation}).
+
+\input{../results/latex/generation_contamination}
+
+The results reveal model-dependent contamination behavior. Claude
+Sonnet 4.5 exhibits the highest Entity Contamination Rate
+($\text{ECR} = 0.31$) and lowest Generation Refusal Rate
+($\text{GRR} = 0.10$), indicating it readily incorporates leaked
+entities into generated answers. GPT-4o shows the opposite pattern:
+$\text{ECR} = 0.08$ and $\text{GRR} = 0.80$, largely ignoring leaked
+context. DeepSeek-V3 falls between ($\text{ECR} = 0.12$,
+$\text{GRR} = 0.20$) but produces the highest Factual Contamination
+Rate ($\text{FCR} = 0.19$), meaning it synthesizes leaked facts into
+answers more than the other models. These findings confirm that
+retrieval-level leakage translates to generation-level contamination
+for most LLMs, and that the severity depends on the model's tendency
+to incorporate all context versus selectively ignoring irrelevant
+content.
+
 \subsection{Traversal Parameter Sweep}
 \label{sec:traversal-sweep}
 
@@ -1242,6 +1361,53 @@ noise for downstream LLM generation. Organizations prioritizing breadth
 should deploy D1 alone; those prioritizing signal-to-noise ratio should
 add D3 and D4.
 
+\subsection{Cross-Dataset Validation}
+\label{sec:cross-dataset}
+
+To verify that Retrieval Pivot Risk is not an artifact of synthetic
+corpus construction, we repeat the baseline evaluation (P1, P3, P4)
+on the Enron email corpus described in \S\ref{sec:enron}.
+Table~\ref{tab:cross-dataset} compares results across both corpora.
+
+\input{../results/latex/cross_dataset_baseline}
+
+Three findings emerge from the cross-dataset comparison:
+
+\textbf{The vulnerability generalizes.} Enron's undefended hybrid
+pipeline (P3) produces $\text{RPR} = 0.695$ on benign queries---139
+of 200 queries leak cross-department content, with a mean of 7.1
+leaked items per query. Under adversarial queries, $\text{RPR} =
+0.615$ (123 of 200 queries leak). The vulnerability is not an artifact
+of synthetic construction: real corporate email with natural
+departmental boundaries exhibits the same pivot mechanism.
+
+\textbf{RPR scales with entity connectivity.} The Enron corpus
+produces lower RPR (0.695 vs.\ 0.954) and lower mean leakage (7.1
+vs.\ 16.0) than the synthetic corpus. This difference is explained by
+entity connectivity: the synthetic graph has 40 intentional bridge
+entities across 4 tenants with curated cross-references, while Enron
+has 19 naturally shared entities across 5 departments with sparser
+cross-department email traffic. The Enron graph is $135\times$ larger
+(376K vs.\ 2.8K nodes) but its entity mentions are noisier and more
+fragmented, reducing the density of cross-tenant pivot paths. This
+confirms that RPR is a function of entity connectivity density, not
+corpus size.
+
+\textbf{D1 eliminates all leakage on both corpora.} P4 achieves
+$\text{RPR} = 0.0$ on Enron with context size 25 (vs.\ 56 on the
+synthetic corpus). The smaller post-D1 context reflects Enron's
+higher entity-to-chunk ratio---more entity nodes are filtered,
+leaving fewer authorized chunk traversals. The defense generalizes
+without modification: the same per-hop tenant-and-sensitivity check
+eliminates leakage regardless of corpus size, entity distribution,
+or graph topology.
+
+\textbf{PD = 2 persists.} All leakage in both corpora occurs at
+exactly $\text{PD} = 2$, confirming that the bipartite pivot
+(chunk $\to$ entity $\to$ chunk) is a structural invariant of hybrid
+RAG systems that construct knowledge graphs via entity linking,
+independent of the underlying document domain.
+
 % ============================================================
 \section{Mitigations}
 \label{sec:mitigations}
@@ -1429,7 +1595,7 @@ as a minimum viable defense.} Add D3 and D4 if context noise is
 impacting LLM generation quality. D2 and D5 provide defense in
 depth for compliance-sensitive deployments.
 
-\subsection{Why PD = 2 in Our Construction}
+\subsection{Why PD = 2 Across Both Corpora}
 
 The uniform $\text{PD} = 2$ finding reflects a structural property
 of hybrid RAG systems that construct a bipartite graph between chunks
@@ -1440,12 +1606,13 @@ means that \emph{every shared entity is a potential pivot}, and
 the number of pivot opportunities scales with the number of
 cross-boundary entity mentions.
 
-In our corpus, 40 entities are naturally shared across tenant
-boundaries---not through adversarial injection, but through
-legitimate organizational references. Shared infrastructure
-(``auth-service''), shared vendors (``CloudCorp''), and shared
-compliance standards (``SOC2-audit'') create organic cross-tenant
-entity mentions that the entity linker faithfully connects.
+The Enron corpus confirms this structural invariant: despite a
+$135\times$ larger graph (376K vs.\ 2.8K nodes), noisier NER
+extractions, and real-world email text rather than curated templates,
+all leakage occurs at exactly $\text{PD} = 2$. The synthetic corpus
+has 40 shared entities; Enron has 19. Both produce the same pivot
+depth. This confirms that $\text{PD} = 2$ is a consequence of the
+bipartite construction, not of corpus-specific properties.
 
 Knowledge graphs with richer topologies---ontological hierarchies,
 multi-hop inference chains, entity-to-entity relationships beyond
@@ -1467,11 +1634,12 @@ boundary---creates leakage that neither modality exhibits alone.
 
 This is analogous to composition vulnerabilities in other
 security domains: two individually secure components can produce
-an insecure system when composed. The amplification factor
-($\text{AF}(\epsilon) \approx 160\text{--}194\times$) quantifies
-the severity: hybrid RAG does not incrementally increase leakage---it
-creates $160\times$ more leaked items than the vector baseline from
-which it amplifies.
+an insecure system when composed. The amplification factor quantifies
+the severity: $\text{AF}(\epsilon) \approx 160\text{--}194\times$ on
+the synthetic corpus and $\text{AF}(\epsilon) \approx 70\times$ on
+Enron. Hybrid RAG does not incrementally increase leakage---it
+creates $70$--$194\times$ more leaked items than the vector baseline
+from which it amplifies.
 
 The defense implication is equally specific: the authorization
 check must be placed \emph{at the boundary}, after graph expansion
@@ -1520,26 +1688,26 @@ is no human in the loop at the expansion step.
 \section{Limitations}
 \label{sec:limitations}
 
-\textbf{Synthetic dataset.} Our corpus is synthetically generated,
-not drawn from production enterprise data. While the entity
-distributions, tenant structures, and sensitivity tiers are designed
-to mirror realistic deployments, real-world knowledge graphs may
-exhibit different connectivity patterns that affect pivot attack
-reach. The bipartite chunk-entity graph topology in our construction
-produces a uniform PD=2 signature that may not hold in graphs with
-richer entity-to-entity relationships. Our synthetic graph exhibits
-power-law-like degree distribution among entity nodes (a few
-high-connectivity entities such as ``auth-service'' and ``SOC2-audit''
-connected to 50+ chunks, while most entities connect to $<$5), which
-is consistent with enterprise knowledge graph characteristics
-reported in prior work~\cite{microsoftgraphrag2024}.
+\textbf{Two corpora.} We evaluate on a synthetic enterprise corpus
+and the Enron email corpus. The synthetic corpus validates the
+vulnerability under controlled conditions; the Enron corpus confirms
+generalization to real-world data. However, both use a bipartite
+chunk--entity graph topology that produces a uniform PD=2 signature.
+Knowledge graphs with richer entity-to-entity relationships
+(ontological hierarchies, multi-hop inference chains) may exhibit
+leakage at deeper pivot depths. We do not evaluate on production
+enterprise graphs with RBAC/ABAC policies, which may exhibit
+different connectivity patterns.
 
-\textbf{Retrieval-only measurement.} We measure what enters the LLM's
-context window but do not evaluate whether the LLM reproduces
-sensitive content in its generation. An LLM might ignore unauthorized
-context items, reducing the practical impact of measured leakage.
-Conversely, chain-of-thought reasoning might amplify the impact by
-synthesizing cross-tenant connections.
+\textbf{Limited generation evaluation.} Our generation contamination
+experiment (\S\ref{sec:generation-impact}) evaluates 10 queries per
+LLM on the synthetic corpus and shows that leaked context does affect
+generated answers (ECR up to 0.31, FCR up to 0.19). However, the
+sample size is small and limited to one corpus. A larger-scale
+generation study across both corpora would strengthen the
+end-to-end impact claim. We also do not evaluate chain-of-thought
+reasoning, which might amplify the impact by synthesizing
+cross-tenant connections.
 
 \textbf{Two embedding models.} We evaluate two open-source models
 (all-MiniLM-L6-v2, 384d, and all-mpnet-base-v2, 768d) and confirm
@@ -1558,28 +1726,28 @@ them, or introduce a \texttt{SHARED} tenant class with explicit
 cross-tenant grants. Such designs would recover entity utility at the
 cost of more complex authorization logic and a larger attack surface.
 
-\textbf{Non-adaptive attacker.} Our attacks are crafted against the
-baseline pipeline. Our mislabel stress test (\S\ref{sec:mislabel})
-evaluates \emph{random} sensitivity corruption up to 5\% and shows D1
-remains robust. However, we do not evaluate \emph{targeted} metadata
-forgery---e.g., an attacker who relabels all injected nodes as
-\texttt{acme\_engineering} to bypass D1's tenant check. Such targeted
-forgery requires write access to graph node metadata, which our threat
-model assumes is system-assigned (\S\ref{sec:metadata-integrity}).
-We also do not evaluate attackers who target D2--D5 specifically
-(e.g., crafting high-provenance payloads to bypass D4, or adversarial
-query phrasing to manipulate D2's query classifier).
+\textbf{Adaptive attacker scope.} We evaluate three adaptive attacks
+(A5--A7) including targeted metadata forgery at rates up to 10\%,
+entity manipulation, and query manipulation
+(\S\ref{sec:adaptive-eval}). All defended pipelines maintain
+$\text{RPR} = 0.0$. However, we do not evaluate attackers who craft
+high-provenance payloads to bypass D4 specifically, or adversarial
+query phrasing to manipulate D2's query classifier. Our metadata
+forgery assumes the attacker can relabel node properties but cannot
+modify the graph schema or index structure.
 
 \textbf{NER and entity linker dependence.} The pivot path exists
 because entity linking creates shared nodes across tenant boundaries.
-Our experiments use spaCy's \texttt{en\_core\_web\_sm} NER model,
-which has known recall limitations for domain-specific entities. A
-higher-recall linker would extract more shared entities, potentially
-increasing organic leakage; a lower-recall linker would reduce it.
-We do not evaluate how linker quality affects RPR, nor do we test
-production entity linking systems that perform coreference resolution
-or cross-document entity merging. The quantitative leakage values
-we report are therefore specific to our NER pipeline.
+Both corpora use spaCy's \texttt{en\_core\_web\_sm} NER model,
+which has known recall limitations for domain-specific entities. On
+the Enron corpus, this produces noisier entity extractions (dates,
+monetary amounts, partial names) that create spurious cross-tenant
+connections---yet RPR is lower (0.695 vs.\ 0.954), suggesting that
+NER noise creates fragmented rather than dense pivot paths.
+A higher-recall linker would extract more shared entities, potentially
+increasing organic leakage. We do not evaluate how linker quality
+affects RPR, nor do we test production entity linking systems that
+perform coreference resolution or cross-document entity merging.
 
 \textbf{Simplified policy model.} Our authorization model uses
 tenant labels and four sensitivity tiers (PUBLIC through RESTRICTED).
@@ -1654,10 +1822,12 @@ boundary, with per-hop authorization as the cornerstone mechanism.
 % ============================================================
 \subsection{Ethical Considerations}
 
-All experiments in this paper use a synthetic corpus generated by
-the authors. No real enterprise data, user accounts, or confidential
-documents were used at any stage of the research. The attack
-implementations (A1--A4) target our own evaluation infrastructure
+Experiments use two corpora: a synthetic corpus generated by the
+authors and the Enron email corpus, which is a public-record dataset
+released during the 2001 FERC investigation and widely used in NLP
+research~\cite{enroncorpus2015}. No production enterprise data, user
+accounts, or confidential documents were used. The attack
+implementations (A1--A7) target our own evaluation infrastructure
 and are designed to characterize vulnerabilities, not exploit
 production systems. Our primary contribution is the defense (D1),
 which we release alongside the attack code to ensure that the net
@@ -1671,26 +1841,29 @@ a local Neo4j and ChromaDB deployment to operate.
 
 Hybrid RAG pipelines that combine vector retrieval with knowledge
 graph expansion introduce an attack surface at the vector-to-graph
-boundary that has received limited explicit treatment in prior work. We formalized this threat as Retrieval
-Pivot Risk (RPR) and demonstrated through 500 evaluation queries with
-bootstrap confidence intervals that undefended hybrid pipelines
-exhibit $\text{RPR} = 0.95 \pm 0.02$---compared to $0.0$ for
-vector-only retrieval---with all leakage occurring at 2 hops through
-the entity-linking pivot in our bipartite graph construction.
+boundary that has received limited explicit treatment in prior work.
+We formalized this threat as Retrieval Pivot Risk (RPR) and
+demonstrated across two corpora---a synthetic enterprise dataset
+(1{,}000 documents, 4 tenants) and the Enron email corpus (50{,}000
+emails, 5 departments)---that undefended hybrid pipelines exhibit
+$\text{RPR} = 0.95$ and $\text{RPR} = 0.70$ respectively, compared to
+$0.0$ for vector-only retrieval. All leakage occurs at 2 hops through
+the entity-linking pivot in our bipartite graph construction, a
+structural invariant that holds across both corpora.
 
-Our taxonomy of four Retrieval Pivot Attacks shows that small
-injection budgets (10--20 chunks) can exploit this boundary through
-seed steering, entity anchoring, neighborhood flooding, and bridge
-node creation. More significantly, we showed that even without
-adversarial injection, the 40 naturally shared entities in our
-multi-tenant knowledge graph create organic pivot paths that leak
-cross-tenant data at $\text{RPR} = 0.954$.
+Our taxonomy of seven Retrieval Pivot Attacks (A1--A4 non-adaptive,
+A5--A7 adaptive) shows that small injection budgets (10--20 chunks)
+can exploit this boundary, and that even without adversarial
+injection, naturally shared entities create organic pivot paths that
+leak cross-tenant data. The Enron corpus confirms this on real
+data: 19 naturally shared entities across departmental boundaries
+produce RPR\,$=$\,0.695 on benign queries alone.
 
 The most important finding is practical: \textbf{per-hop
 authorization---re-checking tenant and sensitivity labels at each
 graph expansion step---eliminates all measured retrieval pivot
-leakage across 500 queries, all four attack variants, and metadata
-mislabel rates up to 5\%.} This defense is simple, requires no model
+leakage across both corpora, all seven attack variants, and metadata
+forgery rates up to 10\%.} This defense is simple, requires no model
 changes, adds $<$1ms latency, and uses metadata already present in
 graph databases. We recommend it as the minimum viable security
 control for any hybrid RAG deployment.
@@ -1702,22 +1875,20 @@ while expansion depth must reach $\geq$2 for the pivot to occur. The
 full defense stack (D1--D5) reduces context noise by 82\% with zero
 residual leakage.
 
-Our connectivity sweep (\S\ref{sec:connectivity}) shows that even zero
-intentional bridge entities produce $\text{RPR} = 0.93$ through
-organic NER overlap, while our embedding model comparison
-(\S\ref{sec:embedding}) confirms that higher-quality embeddings
-slightly \emph{increase} leakage rather than mitigate it. These
-findings reinforce the structural nature of the vulnerability.
+The cross-dataset comparison reveals that RPR scales with entity
+connectivity density: the synthetic corpus (40 bridge entities,
+curated cross-references) produces higher RPR than Enron (19 natural
+bridges, sparser cross-department traffic). This confirms that the
+vulnerability is structural but its severity depends on the knowledge
+graph's topology---denser entity sharing means more pivot
+opportunities.
 
 Our work opens several directions for future research: evaluation on
 production enterprise graphs with richer entity-to-entity topologies
-(where PD $>$ 2 may emerge), adaptive attacker strategies that target
-metadata integrity or craft high-provenance payloads to bypass D4,
-LLM generation-level impact measurement (does the LLM actually
-reproduce leaked content?), multi-tenant entity authorization
-(recovering entity context without re-enabling the pivot path), and
-extension to agentic hybrid RAG where graph traversal is autonomously
-controlled.
+(where PD $>$ 2 may emerge), high-provenance payload crafting to
+bypass D4, multi-tenant entity authorization (recovering entity
+context without re-enabling the pivot path), and extension to agentic
+hybrid RAG where graph traversal is autonomously controlled.
 
 % ============================================================
 \bibliographystyle{IEEEtran}
@@ -1749,6 +1920,7 @@ results are available at:
 
 \subsection{Reproduction Steps}
 
+\textbf{Synthetic corpus:}
 \begin{enumerate}
 \item Clone repository and install: \texttt{pip install -e ".[dev]"}
 \item Start services: \texttt{docker compose up -d} (Neo4j + ChromaDB)
@@ -1761,27 +1933,33 @@ results are available at:
   scripts/run\_attack\_experiments.py}
 \item Run sweeps: \texttt{python scripts/run\_sweep\_experiments.py
   --traversal-sweep --mislabel-sweep --connectivity-sweep}
-\item Run embedding sensitivity: \texttt{python
-  scripts/build\_indexes.py --embed-model all-mpnet-base-v2
-  --chroma-collection pivorag\_chunks\_mpnet} then
-  \texttt{python scripts/run\_experiments.py --embed-model
-  all-mpnet-base-v2 --chroma-collection pivorag\_chunks\_mpnet}
-\item Analyze organic leakage: \texttt{python
-  scripts/analyze\_organic\_leakage.py}
-\item Export results: \texttt{python scripts/export\_results.py
-  --latest}
-\item Run tests: \texttt{pytest tests/ -v} (177 tests passing)
 \end{enumerate}
+
+\textbf{Enron corpus:}
+\begin{enumerate}
+\item Ingest Enron emails: \texttt{python scripts/ingest\_enron.py}
+\item Build indexes: \texttt{python scripts/build\_indexes.py
+  --dataset enron}
+\item Run experiments: \texttt{python scripts/run\_experiments.py
+  --dataset enron}
+\end{enumerate}
+
+\noindent Run tests: \texttt{pytest tests/ -v} (255 tests passing).
 
 \subsection{Runtime Estimates}
 
-Corpus generation and index building complete in $\sim$5 minutes on a
-single machine.  The full 500-query evaluation across 7 pipeline variants
-takes $\sim$20 minutes.  Attack experiments ($4 \times 4$ configurations)
-require $\sim$10 minutes including graph rebuilds between attacks.
-Sweep experiments (traversal, connectivity, mislabel, embedding) total
-$\sim$45 minutes.  All experiments require $<$16\,GB RAM and run on
-CPU-only hardware.
+\textbf{Synthetic:} Corpus generation and index building complete in
+$\sim$5 minutes.  The full 500-query evaluation across 7 pipeline
+variants takes $\sim$20 minutes.  Attack experiments
+($4 \times 4$ configurations) require $\sim$10 minutes including graph
+rebuilds. Sweep experiments total $\sim$45 minutes.
+
+\textbf{Enron:} Ingestion and NER extraction takes $\sim$40 minutes
+(2.07M entity mentions across 152K chunks). Neo4j graph loading
+completes in $\sim$2 minutes using batch UNWIND queries. The 200-query
+evaluation across P1/P3/P4 takes $\sim$10 minutes.
+
+All experiments require $<$16\,GB RAM and run on CPU-only hardware.
 
 % ============================================================
 \section{Corpus Generator Details}

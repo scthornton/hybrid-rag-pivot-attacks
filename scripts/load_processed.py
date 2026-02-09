@@ -19,8 +19,6 @@ from pathlib import Path
 
 import click
 
-from pivorag.graph.schema import GraphEdge, GraphNode
-
 
 def load_json(path: Path, label: str) -> list[dict]:
     """Load a JSON file and report size."""
@@ -41,7 +39,8 @@ def rebuild_chunk_entity_map_ner(
 
     # Load with only NER — disable parser, tagger, lemmatizer for ~3x speedup
     # Keep tok2vec since NER depends on it for feature extraction
-    nlp = spacy.load("en_core_web_sm", disable=["tagger", "parser", "attribute_ruler", "lemmatizer"])
+    disabled = ["tagger", "parser", "attribute_ruler", "lemmatizer"]
+    nlp = spacy.load("en_core_web_sm", disable=disabled)
 
     # Build lookup: canonical_key → entity dict
     # canonical_key = f"{canonical_name}_{label}" matches entity_id format "ent_{canon}_{label}"
@@ -111,7 +110,7 @@ def rebuild_chunk_entity_map_ner(
 @click.option("--neo4j-batch-size", default=1000, type=int)
 @click.option("--skip-chroma", is_flag=True, help="Skip ChromaDB insertion")
 @click.option("--skip-neo4j", is_flag=True, help="Skip Neo4j insertion")
-@click.option("--ner-cache", default=None, help="Path to save/load NER chunk-entity map cache (JSON)")
+@click.option("--ner-cache", default=None, help="NER cache path (JSON)")
 def main(
     input_dir: str,
     collection: str,
@@ -273,7 +272,8 @@ def main(
                         rows=batch,
                     )
                 if (i // neo4j_batch_size) % 20 == 0:
-                    click.echo(f"  Chunk nodes: {min(i + neo4j_batch_size, len(chunk_rows))}/{len(chunk_rows)}...")
+                    done = min(i + neo4j_batch_size, len(chunk_rows))
+                    click.echo(f"  Chunk nodes: {done}/{len(chunk_rows)}...")
             click.echo(f"  Added {len(chunk_rows)} Chunk nodes")
 
             # Batch insert Entity nodes
@@ -298,7 +298,8 @@ def main(
                         rows=batch,
                     )
                 if (i // neo4j_batch_size) % 20 == 0:
-                    click.echo(f"  Entity nodes: {min(i + neo4j_batch_size, len(entity_rows))}/{len(entity_rows)}...")
+                    done = min(i + neo4j_batch_size, len(entity_rows))
+                    click.echo(f"  Entity nodes: {done}/{len(entity_rows)}...")
             click.echo(f"  Added {len(entity_rows)} Entity nodes")
 
             # Batch insert CONTAINS edges (doc → chunk)
@@ -316,7 +317,8 @@ def main(
                         rows=batch,
                     )
                 if (i // neo4j_batch_size) % 50 == 0:
-                    click.echo(f"  CONTAINS: {min(i + neo4j_batch_size, len(contains_rows))}/{len(contains_rows)}...")
+                    done = min(i + neo4j_batch_size, len(contains_rows))
+                    click.echo(f"  CONTAINS: {done}/{len(contains_rows)}...")
             click.echo(f"  Added {len(contains_rows)} CONTAINS edges")
 
             # Batch insert MENTIONS edges (chunk → entity)
@@ -341,7 +343,8 @@ def main(
                         rows=batch,
                     )
                 if (i // neo4j_batch_size) % 50 == 0:
-                    click.echo(f"  MENTIONS: {min(i + neo4j_batch_size, len(mentions_rows))}/{len(mentions_rows)}...")
+                    done = min(i + neo4j_batch_size, len(mentions_rows))
+                    click.echo(f"  MENTIONS: {done}/{len(mentions_rows)}...")
             click.echo(f"  Added {len(mentions_rows)} MENTIONS edges")
 
             # Batch insert relation edges (entity → entity)
