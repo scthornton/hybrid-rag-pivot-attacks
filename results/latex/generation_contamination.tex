@@ -1,25 +1,33 @@
 \begin{table}[t]
 \centering
-\caption{Generation contamination metrics. ECR (Entity Contamination Rate) measures
-leaked entity names in answers. ILS (Information Leakage Score) measures semantic
-similarity to leaked content. FCR (Factual Contamination Rate) and GRR (Generation
-Refusal Rate) assess factual leakage and model self-censoring.}
+\caption{Generation contamination metrics across datasets and LLMs.
+ECR = Entity Contamination Rate, ILS = Information Leakage Score,
+FCR = Factual Contamination Rate, GRR = Generation Refusal Rate.
+$n$ = queries with leakage evaluated. Judge: Claude Sonnet 4.5 for all rows.}
 \label{tab:generation}
 \small
-\begin{tabular}{l|cccc|c}
+\begin{tabular}{ll|cccc|r}
 \toprule
-\textbf{LLM} & \textbf{ECR} & \textbf{ILS} & \textbf{FCR} & \textbf{GRR} & \textbf{Cost} \\
+\textbf{Dataset} & \textbf{LLM} & \textbf{ECR} & \textbf{ILS} & \textbf{FCR} & \textbf{GRR} & $n$ \\
 \midrule
-  GPT-4o            & 0.077 & 0.305 & 0.050 & 0.800 & \$0.08 \\
-  Claude Sonnet 4.5 & 0.307 & 0.346 & 0.065 & 0.100 & \$0.18 \\
-  DeepSeek-V3       & 0.124 & 0.336 & 0.190 & 0.200 & \$0.01 \\
+\multirow{3}{*}{Synthetic}
+  & GPT-4o            & 0.077 & 0.305 & 0.050 & 0.800 & 10 \\
+  & Claude Sonnet 4.5 & 0.307 & 0.346 & 0.065 & 0.100 & 10 \\
+  & DeepSeek-V3       & 0.124 & 0.336 & 0.190 & 0.200 & 10 \\
+\midrule
+\multirow{2}{*}{Enron}
+  & Claude Sonnet 4.5 & 0.133 & 0.280 & 0.004 & 0.000 & 40 \\
+  & DeepSeek-V3       & 0.053 & 0.260 & 0.056 & 0.050 & 101 \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
 \begin{minipage}{0.95\linewidth}
 \footnotesize
-\textit{Note:} 10 queries with leakage evaluated per provider on synthetic dataset.
-Judge model: same provider as generator for each row.
-GPT-4o exhibits high refusal rate (GRR\,=\,0.80), largely ignoring leaked context.
+\textit{Note:} Synthetic evaluations used each provider as its own judge;
+Enron evaluations used Claude Sonnet 4.5 as judge for all providers.
+GPT-4o evaluation on Enron omitted due to expired API key.
+ECR drops on Enron (real data produces less distinctive leaked entities),
+while GRR drops (real email content is contextually relevant, reducing
+model self-censoring).
 \end{minipage}
 \end{table}
