@@ -579,6 +579,14 @@ $\text{AF}(\epsilon)$:
 $\Delta\text{Leakage} = \mathbb{E}[\text{Leakage@k}]_{\text{hybrid}}
 - \mathbb{E}[\text{Leakage@k}]_{\text{vector}}$.
 
+\noindent Because the vector-only baseline produces zero leakage in
+our setting, ratio metrics can be ill-conditioned ($\text{AF} =
+\infty$). We therefore use $\Delta$Leakage as the primary magnitude
+measure and AF($\epsilon$) only as a secondary, plottable indicator.
+The central security finding is not the exact amplification ratio but
+that hybridization \textbf{creates nonzero leakage} despite secure
+vector prefiltering.
+
 \subsection{Pivot Depth (PD)}
 
 PD measures the minimum graph distance from a seed node to the first
@@ -1593,16 +1601,27 @@ utility while preserving security.
 The practical recommendation is clear: \textbf{deploy D1 immediately
 as a minimum viable defense.} Add D3 and D4 if context noise is
 impacting LLM generation quality. D2 and D5 provide defense in
-depth for compliance-sensitive deployments.
+depth for compliance-sensitive deployments. Practically, this means
+systems should treat tenant-neutral entity nodes as \emph{privileged
+pivot infrastructure} that must carry explicit authorization semantics
+(or be excluded) in multi-tenant deployments; leaving them unlabeled
+creates a structurally inevitable cross-tenant pivot path.
 
 \subsection{Why PD = 2 Across Both Corpora}
 
-The uniform $\text{PD} = 2$ finding reflects a structural property
-of hybrid RAG systems that construct a bipartite graph between chunks
-and entities. The entity-linking step inherently creates a 2-hop
-path between any two chunks that mention the same entity: Chunk A
-(hop 0) $\to$ shared entity (hop 1) $\to$ Chunk B (hop 2). This
-means that \emph{every shared entity is a potential pivot}, and
+\textbf{Proposition (Pivot depth in bipartite entity-link graphs).}
+\emph{In a bipartite graph constructed from chunk nodes and entity
+nodes via NER-based entity linking, any entity co-mentioned by chunks
+from different tenants induces a length-2 path between those chunks
+(chunk $\to$ entity $\to$ chunk). Therefore, if cross-tenant leakage
+occurs via shared entities under expansion depth $d \geq 2$, the
+minimum pivot depth to the first unauthorized chunk is
+$\text{PD} = 2$.}
+
+This follows directly from the bipartite construction: the
+entity-linking step creates a 2-hop path between any two chunks that
+mention the same entity. Chunk A (hop 0) $\to$ shared entity (hop 1)
+$\to$ Chunk B (hop 2). Every shared entity is a potential pivot, and
 the number of pivot opportunities scales with the number of
 cross-boundary entity mentions.
 
