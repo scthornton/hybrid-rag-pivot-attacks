@@ -1,0 +1,115 @@
+{
+  "dataset": "enron",
+  "benign": {
+    "P1": {
+      "rpr": 0.0,
+      "mean_leakage": 0.0,
+      "amplification_factor": 1.0,
+      "mean_pivot_depth": -1,
+      "total_queries": 200,
+      "queries_with_leakage": 0,
+      "mean_severity_weighted_leakage": 0.0,
+      "af_epsilon": 0.0,
+      "delta_leakage": 0.0,
+      "pd_distribution": {
+        "min": Infinity,
+        "median": Infinity,
+        "max": Infinity
+      }
+    },
+    "P3": {
+      "rpr": 0.695,
+      "mean_leakage": 7.145,
+      "amplification_factor": Infinity,
+      "mean_pivot_depth": 2.0,
+      "total_queries": 200,
+      "queries_with_leakage": 139,
+      "mean_severity_weighted_leakage": 8.595,
+      "af_epsilon": 71.44999999999999,
+      "delta_leakage": 7.145,
+      "pd_distribution": {
+        "min": 2,
+        "median": 2,
+        "max": 2
+      }
+    },
+    "P4": {
+      "rpr": 0.0,
+      "mean_leakage": 0.0,
+      "amplification_factor": 1.0,
+      "mean_pivot_depth": -1,
+      "total_queries": 200,
+      "queries_with_leakage": 0,
+      "mean_severity_weighted_leakage": 0.0,
+      "af_epsilon": 0.0,
+      "delta_leakage": 0.0,
+      "pd_distribution": {
+        "min": Infinity,
+        "median": Infinity,
+        "max": Infinity
+      }
+    }
+  },
+  "adversarial": {
+    "P1": {
+      "rpr": 0.0,
+      "mean_leakage": 0.0,
+      "amplification_factor": 1.0,
+      "mean_pivot_depth": -1,
+      "total_queries": 200,
+      "queries_with_leakage": 0,
+      "mean_severity_weighted_leakage": 0.0,
+      "af_epsilon": 0.0,
+      "delta_leakage": 0.0,
+      "pd_distribution": {
+        "min": Infinity,
+        "median": Infinity,
+        "max": Infinity
+      }
+    },
+    "P3": {
+      "rpr": 0.615,
+      "mean_leakage": 6.98,
+      "amplification_factor": Infinity,
+      "mean_pivot_depth": 2.0,
+      "total_queries": 200,
+      "queries_with_leakage": 123,
+      "mean_severity_weighted_leakage": 7.96,
+      "af_epsilon": 69.8,
+      "delta_leakage": 6.98,
+      "pd_distribution": {
+        "min": 2,
+        "median": 2,
+        "max": 2
+      }
+    },
+    "P4": {
+      "rpr": 0.0,
+      "mean_leakage": 0.0,
+      "amplification_factor": 1.0,
+      "mean_pivot_depth": -1,
+      "total_queries": 200,
+      "queries_with_leakage": 0,
+      "mean_severity_weighted_leakage": 0.0,
+      "af_epsilon": 0.0,
+      "delta_leakage": 0.0,
+      "pd_distribution": {
+        "min": Infinity,
+        "median": Infinity,
+        "max": Infinity
+      }
+    }
+  },
+  "context_sizes": {
+    "benign": {
+      "P1": 10.0,
+      "P3": 45.28,
+      "P4": 25.055
+    },
+    "adversarial": {
+      "P1": 10.0,
+      "P3": 43.75,
+      "P4": 23.82
+    }
+  }
+}

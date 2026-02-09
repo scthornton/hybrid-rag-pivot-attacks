@@ -1,0 +1,29 @@
+\begin{table}[t]
+\centering
+\caption{Cross-dataset baseline: retrieval security metrics for undefended (P3)
+and defended (P4) hybrid RAG across synthetic and Enron corpora.
+RPR = Retrieval Pivot Risk, Leak = mean leaked items per query,
+PD = Pivot Depth (hops), Ctx = mean context size.}
+\label{tab:cross-dataset}
+\small
+\begin{tabular}{ll|cccc}
+\toprule
+\textbf{Dataset} & \textbf{Pipeline} & \textbf{RPR} & \textbf{Leak} & \textbf{PD} & \textbf{Ctx} \\
+\midrule
+  \multirow{3}{*}{Synthetic} & P1 (Vector) & 0.000 & 0.0 & -- & 10 \\
+                             & P3 (Hybrid) & 0.954 & 16.0 & 2.0 & 110 \\
+                             & P4 (+D1)    & 0.000 & 0.0 & -- & 56 \\
+\midrule
+  \multirow{3}{*}{Enron}     & P1 (Vector) & 0.000 & 0.0 & -- & 10 \\
+                             & P3 (Hybrid) & 0.695 & 7.1 & 2.0 & 45 \\
+                             & P4 (+D1)    & 0.000 & 0.0 & -- & 25 \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\begin{minipage}{0.95\linewidth}
+\footnotesize
+\textit{Note:} Synthetic corpus: 1000 documents, 4 tenants, 40 bridge entities.
+Enron corpus: 50{,}000 emails, 5 departments, 19 cross-department entities.
+Both corpora evaluated with 200 benign queries.
+\end{minipage}
+\end{table}
