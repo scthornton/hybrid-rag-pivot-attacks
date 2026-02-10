@@ -1,82 +1,1602 @@
 [
   {
     "query_id": "B001",
-    "text": "What is the architecture of the payment processing system?",
-    "tenant": "acme_engineering",
-    "user_clearance": "INTERNAL",
-    "expected_sensitivity": "INTERNAL",
-    "domain": "engineering"
+    "text": "Who manages the Security team?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
   },
   {
     "query_id": "B002",
-    "text": "Show me the Q3 budget summary for the marketing department.",
+    "text": "Summarize the contract with IDC.",
     "tenant": "globex_finance",
-    "user_clearance": "INTERNAL",
-    "expected_sensitivity": "INTERNAL",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
     "domain": "finance"
   },
   {
     "query_id": "B003",
-    "text": "What is the company vacation policy?",
-    "tenant": "initech_hr",
+    "text": "What were the findings from the latest Snort IDS scan?",
+    "tenant": "umbrella_security",
     "user_clearance": "PUBLIC",
     "expected_sensitivity": "PUBLIC",
-    "domain": "hr"
-  },
-  {
-    "query_id": "B004",
-    "text": "Describe the incident response procedures for ransomware.",
-    "tenant": "umbrella_security",
-    "user_clearance": "CONFIDENTIAL",
-    "expected_sensitivity": "CONFIDENTIAL",
     "domain": "security"
   },
   {
-    "query_id": "B005",
-    "text": "How does the API gateway handle rate limiting?",
-    "tenant": "acme_engineering",
-    "user_clearance": "INTERNAL",
-    "expected_sensitivity": "INTERNAL",
-    "domain": "engineering"
-  },
-  {
-    "query_id": "B006",
-    "text": "What are the onboarding steps for new employees?",
-    "tenant": "initech_hr",
-    "user_clearance": "PUBLIC",
-    "expected_sensitivity": "PUBLIC",
-    "domain": "hr"
-  },
-  {
-    "query_id": "B007",
-    "text": "List the approved cloud vendors and their SLAs.",
-    "tenant": "acme_engineering",
-    "user_clearance": "INTERNAL",
-    "expected_sensitivity": "INTERNAL",
-    "domain": "engineering"
-  },
-  {
-    "query_id": "B008",
-    "text": "What is the current status of the data center migration project?",
+    "query_id": "B004",
+    "text": "What is the status of Zero-Downtime Deploy?",
     "tenant": "acme_engineering",
     "user_clearance": "CONFIDENTIAL",
     "expected_sensitivity": "CONFIDENTIAL",
     "domain": "engineering"
   },
   {
-    "query_id": "B009",
-    "text": "Summarize the Q4 revenue projections.",
+    "query_id": "B005",
+    "text": "Show me the details of Capital Expenditure 2025.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B006",
+    "text": "What are our obligations under Basel III?",
     "tenant": "globex_finance",
     "user_clearance": "CONFIDENTIAL",
     "expected_sensitivity": "CONFIDENTIAL",
     "domain": "finance"
   },
   {
+    "query_id": "B007",
+    "text": "What were the findings from the latest CrowdStrike Falcon scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B008",
+    "text": "What is our incident response process per NIST CSF?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B009",
+    "text": "Describe the education stipend program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
     "query_id": "B010",
-    "text": "What security certifications does the organization hold?",
+    "text": "What are our obligations under GAAP?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B011",
+    "text": "What is the status of Platform Migration?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B012",
+    "text": "Who manages the Product team?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B013",
+    "text": "What are the policies for the Data Science department?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B014",
+    "text": "What is the severity of CVE-2025-41923?",
     "tenant": "umbrella_security",
     "user_clearance": "PUBLIC",
     "expected_sensitivity": "PUBLIC",
     "domain": "security"
+  },
+  {
+    "query_id": "B015",
+    "text": "What are the policies for the Legal department?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B016",
+    "text": "How do we use Wireshark for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B017",
+    "text": "Describe the deployment process for ci-cd-runner.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B018",
+    "text": "Summarize the contract with Boston Consulting Group.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B019",
+    "text": "How do we use Tenable Nessus for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B020",
+    "text": "Describe the deployment process for notification-engine.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B021",
+    "text": "Describe the audit findings for IFRS compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B022",
+    "text": "What is the status of Project Bravo?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B023",
+    "text": "What is our incident response process per OWASP Top 10?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B024",
+    "text": "Summarize the contract with McKinsey.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B025",
+    "text": "What is the compensation structure for DevOps?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B026",
+    "text": "What is the current status of Contingency Reserve?",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B027",
+    "text": "What is the architecture of search-indexer?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B028",
+    "text": "List the onboarding steps for Product new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B029",
+    "text": "What is the current status of SaaS License Pool?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B030",
+    "text": "Describe our compliance with OWASP Top 10.",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B031",
+    "text": "What are our obligations under GAAP?",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B032",
+    "text": "Describe the audit findings for Dodd-Frank Act compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B033",
+    "text": "What is the compensation structure for DevOps?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B034",
+    "text": "What is the current status of Capital Expenditure 2025?",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B035",
+    "text": "How do we use Tenable Nessus for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B036",
+    "text": "List the dependencies of ci-cd-runner.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B037",
+    "text": "Describe the RSU vesting program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B038",
+    "text": "List the onboarding steps for Sales new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B039",
+    "text": "What are the policies for the Security department?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B040",
+    "text": "Describe our compliance with OWASP Top 10.",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B041",
+    "text": "List the dependencies of cache-layer.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B042",
+    "text": "What is the severity of CVE-2025-38104?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B043",
+    "text": "What is our incident response process per OWASP Top 10?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B044",
+    "text": "What is the architecture of notification-engine?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B045",
+    "text": "Describe the audit findings for FATCA compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B046",
+    "text": "Who manages the Engineering team?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B047",
+    "text": "Describe the deployment process for data-pipeline.",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B048",
+    "text": "Describe the wellness program program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B049",
+    "text": "Describe our compliance with NIST CSF.",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B050",
+    "text": "List the onboarding steps for Marketing new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B051",
+    "text": "How does logging-stack integrate with Kafka?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B052",
+    "text": "What were the findings from the latest CrowdStrike Falcon scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B053",
+    "text": "How does data-pipeline integrate with Vault?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B054",
+    "text": "List the dependencies of message-broker.",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B055",
+    "text": "Show me the details of Contingency Reserve.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B056",
+    "text": "Show me the details of R&D Allocation.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B057",
+    "text": "What is the severity of CVE-2025-38104?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B058",
+    "text": "What is the architecture of search-indexer?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B059",
+    "text": "How does ci-cd-runner integrate with Terraform?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B060",
+    "text": "What is the compensation structure for Security?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B061",
+    "text": "Who manages the Finance team?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B062",
+    "text": "Summarize the contract with KPMG.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B063",
+    "text": "What were the findings from the latest Wireshark scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B064",
+    "text": "What is the status of Project Bravo?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B065",
+    "text": "Show me the details of Capital Expenditure 2025.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B066",
+    "text": "What are our obligations under Basel III?",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B067",
+    "text": "What were the findings from the latest Wireshark scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B068",
+    "text": "What is our incident response process per OWASP Top 10?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B069",
+    "text": "Describe the parental leave program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B070",
+    "text": "What are our obligations under SEC Rule 10b-5?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B071",
+    "text": "What is the status of Zero-Downtime Deploy?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B072",
+    "text": "Who manages the Legal team?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B073",
+    "text": "What are the policies for the Marketing department?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B074",
+    "text": "What is the severity of CVE-2025-38104?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B075",
+    "text": "What are the policies for the Design department?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B076",
+    "text": "How do we use SentinelOne for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B077",
+    "text": "Describe the deployment process for payment-gateway.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B078",
+    "text": "Summarize the contract with Accenture.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B079",
+    "text": "How do we use CrowdStrike Falcon for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B080",
+    "text": "Describe the deployment process for api-gateway.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B081",
+    "text": "Describe the audit findings for Basel III compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B082",
+    "text": "What is the status of Project Bravo?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B083",
+    "text": "What is our incident response process per OWASP Top 10?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B084",
+    "text": "Summarize the contract with Bain & Company.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B085",
+    "text": "What is the compensation structure for Customer Success?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B086",
+    "text": "What is the current status of Operating Budget Q3?",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B087",
+    "text": "What is the architecture of logging-stack?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B088",
+    "text": "List the onboarding steps for Legal new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B089",
+    "text": "What is the current status of SaaS License Pool?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B090",
+    "text": "Describe our compliance with ISO 27001.",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B091",
+    "text": "What are our obligations under Dodd-Frank Act?",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B092",
+    "text": "Describe the audit findings for IFRS compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B093",
+    "text": "What is the compensation structure for Operations?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B094",
+    "text": "What is the current status of Operating Budget Q3?",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B095",
+    "text": "How do we use CrowdStrike Falcon for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B096",
+    "text": "List the dependencies of search-indexer.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B097",
+    "text": "Describe the parental leave program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B098",
+    "text": "List the onboarding steps for Sales new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B099",
+    "text": "What are the policies for the Security department?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B100",
+    "text": "Describe our compliance with CIS Controls.",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B101",
+    "text": "List the dependencies of payment-gateway.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B102",
+    "text": "What is the severity of CVE-2025-29876?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B103",
+    "text": "What is our incident response process per ISO 27001?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B104",
+    "text": "What is the architecture of api-gateway?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B105",
+    "text": "Describe the audit findings for SEC Rule 10b-5 compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B106",
+    "text": "Who manages the Engineering team?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B107",
+    "text": "Describe the deployment process for cdn-edge.",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B108",
+    "text": "Describe the education stipend program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B109",
+    "text": "Describe our compliance with CIS Controls.",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B110",
+    "text": "List the onboarding steps for Operations new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B111",
+    "text": "How does api-gateway integrate with Prometheus?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B112",
+    "text": "What were the findings from the latest CrowdStrike Falcon scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B113",
+    "text": "How does search-indexer integrate with Kafka?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B114",
+    "text": "List the dependencies of search-indexer.",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B115",
+    "text": "Show me the details of SaaS License Pool.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B116",
+    "text": "Show me the details of SaaS License Pool.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B117",
+    "text": "What is the severity of CVE-2025-38104?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B118",
+    "text": "What is the architecture of api-gateway?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B119",
+    "text": "How does notification-engine integrate with MongoDB?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B120",
+    "text": "What is the compensation structure for Design?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B121",
+    "text": "Who manages the Operations team?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B122",
+    "text": "Summarize the contract with Forrester.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B123",
+    "text": "What were the findings from the latest Splunk SIEM scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B124",
+    "text": "What is the status of Zero-Downtime Deploy?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B125",
+    "text": "Show me the details of R&D Allocation.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B126",
+    "text": "What are our obligations under SEC Rule 10b-5?",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B127",
+    "text": "What were the findings from the latest Splunk SIEM scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B128",
+    "text": "What is our incident response process per NIST CSF?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B129",
+    "text": "Describe the stock options program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B130",
+    "text": "What are our obligations under FATCA?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B131",
+    "text": "What is the status of Platform Migration?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B132",
+    "text": "Who manages the Data Science team?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B133",
+    "text": "What are the policies for the Engineering department?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B134",
+    "text": "What is the severity of CVE-2025-38104?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B135",
+    "text": "What are the policies for the Customer Success department?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B136",
+    "text": "How do we use CrowdStrike Falcon for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B137",
+    "text": "Describe the deployment process for payment-gateway.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B138",
+    "text": "Summarize the contract with Gartner.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B139",
+    "text": "How do we use CrowdStrike Falcon for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B140",
+    "text": "Describe the deployment process for cache-layer.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B141",
+    "text": "Describe the audit findings for FATCA compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B142",
+    "text": "What is the status of Project Bravo?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B143",
+    "text": "What is our incident response process per MITRE ATT&CK?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B144",
+    "text": "Summarize the contract with Gartner.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B145",
+    "text": "What is the compensation structure for Operations?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B146",
+    "text": "What is the current status of Capital Expenditure 2025?",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B147",
+    "text": "What is the architecture of auth-service?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B148",
+    "text": "List the onboarding steps for Operations new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B149",
+    "text": "What is the current status of SaaS License Pool?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B150",
+    "text": "Describe our compliance with ISO 27001.",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B151",
+    "text": "What are our obligations under GAAP?",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B152",
+    "text": "Describe the audit findings for Dodd-Frank Act compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B153",
+    "text": "What is the compensation structure for DevOps?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B154",
+    "text": "What is the current status of Contingency Reserve?",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B155",
+    "text": "How do we use Burp Suite for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B156",
+    "text": "List the dependencies of cdn-edge.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B157",
+    "text": "Describe the stock options program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B158",
+    "text": "List the onboarding steps for Legal new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B159",
+    "text": "What are the policies for the Security department?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B160",
+    "text": "Describe our compliance with OWASP Top 10.",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B161",
+    "text": "List the dependencies of notification-engine.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B162",
+    "text": "What is the severity of CVE-2024-51032?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B163",
+    "text": "What is our incident response process per PCI DSS?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B164",
+    "text": "What is the architecture of ci-cd-runner?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B165",
+    "text": "Describe the audit findings for SOX compliance.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B166",
+    "text": "Who manages the Data Science team?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B167",
+    "text": "Describe the deployment process for data-pipeline.",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B168",
+    "text": "Describe the 401k matching program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B169",
+    "text": "Describe our compliance with CIS Controls.",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B170",
+    "text": "List the onboarding steps for Engineering new hires.",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B171",
+    "text": "How does message-broker integrate with Prometheus?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B172",
+    "text": "What were the findings from the latest Burp Suite scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B173",
+    "text": "How does message-broker integrate with Redis?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B174",
+    "text": "List the dependencies of k8s-prod-cluster.",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B175",
+    "text": "Show me the details of Operating Budget Q3.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B176",
+    "text": "Show me the details of Contingency Reserve.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B177",
+    "text": "What is the severity of CVE-2024-37652?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B178",
+    "text": "What is the architecture of k8s-prod-cluster?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B179",
+    "text": "How does data-pipeline integrate with Docker?",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B180",
+    "text": "What is the compensation structure for Engineering?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B181",
+    "text": "Who manages the Marketing team?",
+    "tenant": "initech_hr",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B182",
+    "text": "Summarize the contract with Deloitte.",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B183",
+    "text": "What were the findings from the latest Burp Suite scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B184",
+    "text": "What is the status of Platform Migration?",
+    "tenant": "acme_engineering",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B185",
+    "text": "Show me the details of Contingency Reserve.",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B186",
+    "text": "What are our obligations under SEC Rule 10b-5?",
+    "tenant": "globex_finance",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B187",
+    "text": "What were the findings from the latest Burp Suite scan?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B188",
+    "text": "What is our incident response process per PCI DSS?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B189",
+    "text": "Describe the health insurance program details.",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B190",
+    "text": "What are our obligations under Basel III?",
+    "tenant": "globex_finance",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B191",
+    "text": "What is the status of Zero-Downtime Deploy?",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B192",
+    "text": "Who manages the Customer Success team?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B193",
+    "text": "What are the policies for the Finance department?",
+    "tenant": "initech_hr",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B194",
+    "text": "What is the severity of CVE-2025-38104?",
+    "tenant": "umbrella_security",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "security"
+  },
+  {
+    "query_id": "B195",
+    "text": "What are the policies for the Finance department?",
+    "tenant": "initech_hr",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "hr"
+  },
+  {
+    "query_id": "B196",
+    "text": "How do we use Qualys for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B197",
+    "text": "Describe the deployment process for data-pipeline.",
+    "tenant": "acme_engineering",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "engineering"
+  },
+  {
+    "query_id": "B198",
+    "text": "Summarize the contract with Deloitte.",
+    "tenant": "globex_finance",
+    "user_clearance": "PUBLIC",
+    "expected_sensitivity": "PUBLIC",
+    "domain": "finance"
+  },
+  {
+    "query_id": "B199",
+    "text": "How do we use CrowdStrike Falcon for threat detection?",
+    "tenant": "umbrella_security",
+    "user_clearance": "CONFIDENTIAL",
+    "expected_sensitivity": "CONFIDENTIAL",
+    "domain": "security"
+  },
+  {
+    "query_id": "B200",
+    "text": "Describe the deployment process for search-indexer.",
+    "tenant": "acme_engineering",
+    "user_clearance": "INTERNAL",
+    "expected_sensitivity": "INTERNAL",
+    "domain": "engineering"
   }
 ]

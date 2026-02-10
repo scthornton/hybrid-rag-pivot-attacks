@@ -17,6 +17,7 @@ import logging
 import random
 import re
 import time
+from html import unescape
 from pathlib import Path
 from typing import Any
 from urllib.error import URLError
@@ -153,12 +154,25 @@ def _fetch_edgar_submissions(cik: str) -> dict[str, Any] | None:
         return None
 
 
+def _strip_html(text: str) -> str:
+    """Strip HTML tags and decode entities to plain text."""
+    # Insert newlines for block-level elements so section headers start on new lines
+    text = re.sub(r"</?(div|p|tr|li|h[1-6]|br\s*/?)>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = unescape(text)
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n[ \t]+", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
 def _fetch_filing_text(url: str) -> str | None:
     """Fetch the full text of a single filing document."""
     req = Request(url, headers={"User-Agent": EDGAR_USER_AGENT})
     try:
         with urlopen(req, timeout=60) as resp:  # noqa: S310
-            return resp.read().decode("utf-8", errors="replace")
+            raw = resp.read().decode("utf-8", errors="replace")
+            return _strip_html(raw)
     except (URLError, TimeoutError) as e:
         logger.warning("Failed to fetch filing from %s: %s", url, e)
         return None
@@ -171,7 +185,6 @@ def _extract_10k_sections(text: str) -> list[dict[str, str]]:
     This is a heuristic parser — 10-Ks don't have a standard machine-readable
     section format, so we look for common Item header patterns.
     """
-    sections = []
     # Pattern: "Item N." or "ITEM N." followed by title text
     pattern = re.compile(
         r"(?:^|\n)\s*(ITEM\s+(\d+[A-Za-z]?))\s*[.:\-—]\s*([^\n]+)",
@@ -179,6 +192,8 @@ def _extract_10k_sections(text: str) -> list[dict[str, str]]:
     )
 
     matches = list(pattern.finditer(text))
+    # Deduplicate by section key, keeping the longest match
+    best: dict[str, dict[str, str]] = {}
     for i, match in enumerate(matches):
         item_num = match.group(2).lower()
         title = match.group(3).strip()
@@ -191,13 +206,14 @@ def _extract_10k_sections(text: str) -> list[dict[str, str]]:
             continue
 
         section_key = f"item_{item_num}"
-        sections.append({
-            "section": section_key,
-            "title": title,
-            "text": section_text[:10000],  # Cap at 10K chars per section
-        })
+        if section_key not in best or len(section_text) > len(best[section_key]["text"]):
+            best[section_key] = {
+                "section": section_key,
+                "title": title,
+                "text": section_text[:10000],
+            }
 
-    return sections
+    return list(best.values())
 
 
 # ---------------------------------------------------------------------------
