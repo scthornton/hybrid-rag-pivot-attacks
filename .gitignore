@@ -21,6 +21,8 @@ chroma_db/
 # Results (per-variant raw files excluded, publication outputs tracked)
 results/tables/P[0-9]_*.json
 results/tables/attack_experiments_*.json
+results/tables/generation_*.json
+results/checkpoints/
 
 # Keep publication outputs (LaTeX, summary CSV, aggregate experiment JSONs, plots)
 # results/latex/ — tracked
